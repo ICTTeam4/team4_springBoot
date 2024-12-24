@@ -54,6 +54,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/upload/**").permitAll() // URL 경로
                         .requestMatchers("/oauth2/**").permitAll() // URL 경로
+                        .requestMatchers("/gs-guide-websocket/**","/chat/**").permitAll()
                         // 특정 URL에 인증없이 허용
                         .requestMatchers("/members/register", "/members/login",
                                 "/guestbook/list", "/guestbook/detail/**", "api/guestbook/download/**","/members/send-phone-auth","/members/verify-phone-auth")
@@ -88,7 +89,7 @@ public class SecurityConfig {
         CorsConfiguration corsConfig = new CorsConfiguration();
 
         // 허용할 Origin 설정
-        corsConfig.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
+        corsConfig.setAllowedOrigins(Arrays.asList("http://localhost:3000","http://localhost:8080"));
         // 허용할 http 메서드 설정
         corsConfig.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         // 허용할 헤더 설정
