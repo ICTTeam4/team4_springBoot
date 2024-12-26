@@ -51,7 +51,7 @@ public class SalesPostController {
           UUID uuid = UUID.randomUUID();
           String file_name = uuid.toString() + "_" + file.getOriginalFilename();
           System.out.println(file_name);
-          String path = "/upload";
+          // String path = "/upload";
           // File uploadDir = new File(path);
           // if (!uploadDir.exists()) {
           //   uploadDir.mkdirs();
