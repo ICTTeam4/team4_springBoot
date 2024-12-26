@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+ <mapper namespace="com.saintkream.server.domain.salespost.mapper.SalesPostMapper">
+  <insert id="getSalesPostWrite" parameterType="SalesPostVO">
+    INSERT INTO post (
+            member_id,selling_area_id,title,sell_price,description,category_id,is_direct,is_delivery
+        ) VALUES (
+            #{member_id}, #{selling_area_id}, #{title}, #{sell_price}, #{description},#{category_id},#{is_direct},#{is_delivery}
+        )
+  </insert>
+ </mapper>
