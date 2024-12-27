@@ -9,6 +9,16 @@
       "projectName": "final",
       "args": "",
       "envFile": "${workspaceFolder}/.env"
+    },
+    {
+      "type": "java",
+      "name": "Spring Boot-FinalApplication<saintkream>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "mainClass": "com.saintkream.server.FinalApplication",
+      "projectName": "saintkream",
+      "args": "",
+      "envFile": "${workspaceFolder}/.env"
     }
   ]
 }
