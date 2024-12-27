@@ -9,7 +9,7 @@ import com.saintkream.server.domain.auth.vo.MembersVO;
 public interface MembersMapper {
     // public int getMembersJoin(MembersVO mvo);
 
-    public MembersVO getMembersById(String m_id);
+    public MembersVO getMembersByIdEmail(String email );
 
     public MembersVO findUserByProvider(MembersVO mvo);
 

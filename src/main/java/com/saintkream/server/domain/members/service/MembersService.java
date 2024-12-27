@@ -11,6 +11,6 @@ public interface MembersService {
 
   // public int getMembersJoin(MembersVO mvo); //수업버전 가입 
 
-  public MembersVO getMembersById(String m_id); // 수업버전 중복검사 
+  public MembersVO getMembersByIdEmail(String email); // 수업버전 중복검사 
 
 }
