@@ -72,7 +72,7 @@ public class MyUserDetailService implements UserDetailsService {
         // 아이디가 존재하면 DB에 있는 것, 아니면 DB에 없는 것
         MembersVO mvo2 = membersMapper.findUserByProvider(mvo);
         if (mvo2 == null) {
-            membersMapper.insertSNSMember(mvo);//바로 가입하는법.
+            membersMapper.insertSNSMember(mvo);//바로 가입하는법. 소셜로그인한사람은 추후 휴대폰인증은  마이페이지 등에서 따로 필요. 
         }
      
         return new User(mvo.getEmail(), "", new ArrayList<>());
