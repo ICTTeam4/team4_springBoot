@@ -1,5 +1,6 @@
 package com.saintkream.server.domain.salespost.service;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,13 +20,23 @@ public class SalesPostServiceImpl implements SalesPostService{
   }
 
   @Override
-  public int getFileWrite(Map<String, String> map) {
-    return salesPostMapper.getFileWrite(map);
+  public List<String> getFileIds(List<String> file_names) {
+    return salesPostMapper.getFileIds(file_names);
   }
 
   @Override
-  public int getPostFileWrite(Map<String, String> map) {
-    return salesPostMapper.getPostFileWrite(map);
+  public int getPostFileWrite(List<String> file_names) {
+    return salesPostMapper.getPostFileWrite(file_names);
+  }
+
+  @Override
+  public int getPostFileTableWrite(List<String> file_ids, Integer pwr_id) {
+    return salesPostMapper.getPostFileTableWrite(file_ids, pwr_id);
+  }
+
+  @Override
+  public int getSelectLastInsert() {
+    return salesPostMapper.getSelectlastInsert();
   }
   
 }
