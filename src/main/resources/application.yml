@@ -10,7 +10,7 @@ spring:
         name : saintkream
 
     datasource:
-        url: jdbc:mysql://it119kr.asuscomm.com:3306/project
+        url: jdbc:mysql://it119kr.asuscomm.com:3306/final
         username: project
         password: pt^VJjrV~g
         driver-class-name: com.mysql.cj.jdbc.Driver
