@@ -1,6 +1,7 @@
 package com.saintkream.server.domain.salespost.controller;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -31,18 +32,23 @@ public class SalesPostController {
     DataVO dataVO = new DataVO();
     try {
       
-      System.out.println("-----------------------------------------");
       if (svo.getIs_delivery().equals("false")) {
         svo.setIs_delivery("0");
       } else {
         svo.setIs_delivery("1");
       }
-      if (svo.getIs_direct().equals("true")) {
-        svo.setIs_direct("1");
-      } else {
+      if (svo.getIs_direct().equals("false")) {
         svo.setIs_direct("0");
+      } else {
+        svo.setIs_direct("1");
       }
+      List<String> file_names = new ArrayList<>();
       salesPostService.getSalesPostWrite(svo);
+      System.out.println("-----------------------------------------");
+      // System.out.println("pwr_id: "+pwr_id);
+      int pwr_id = salesPostService.getSelectLastInsert();
+      System.out.println("salesPostService.getSelectLastInsert() : "+salesPostService.getSelectLastInsert());
+      System.out.println("svo.getFiles()"+svo.getFiles());
       if (svo.getFiles() != null) {
         List<MultipartFile> files = svo.getFiles();
         for (MultipartFile file : files) {
@@ -59,7 +65,14 @@ public class SalesPostController {
           String staticPath = new File("src/main/resources/static").getAbsolutePath();
           File uploadDir = new File(staticPath);
           file.transferTo(new File(uploadDir, file_name));
+          file_names.add(file_name);
         }
+        salesPostService.getPostFileWrite(file_names);
+        List<String> file_ids = salesPostService.getFileIds(file_names);
+        for (String a : file_ids) {
+          System.out.println("file_ids: "+a);
+        }
+        int result = salesPostService.getPostFileTableWrite(file_ids,pwr_id);
       }
     } catch (Exception e) {
       // TODO: handle exception
