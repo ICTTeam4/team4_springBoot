@@ -18,7 +18,8 @@ public class MembersServiceImpl implements MembersService {
    
     @Override
     public boolean isNameAvailable(String nickname) {
-        return membersMapper.checkNickname(nickname) == 0;
+        int count = membersMapper.checkNickname(nickname); // Mapper에서 반환된 int 값
+        return count == 0; // 중복이 없으면 true 반환
     }
 
     @Override
@@ -28,7 +29,7 @@ public class MembersServiceImpl implements MembersService {
     }
     @Override
      public int registerMember(MembersVO mvo) {
-        return membersMapper.insertMember(mvo);
+        return membersMapper.insertSNSMember(mvo);
     }
 
     @Override

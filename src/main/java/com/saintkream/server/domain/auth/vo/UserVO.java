@@ -27,6 +27,7 @@ public class UserVO implements UserDetails {
 
     private List<GrantedAuthority> authorities = new ArrayList<>();
 
+   
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return authorities;
@@ -40,30 +41,6 @@ public class UserVO implements UserDetails {
     @Override
     public String getUsername() {
         return m_id;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'isAccountNonExpired'");
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'isAccountNonLocked'");
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'isCredentialsNonExpired'");
-    }
-
-    @Override
-    public boolean isEnabled() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'isEnabled'");
     }
 
    

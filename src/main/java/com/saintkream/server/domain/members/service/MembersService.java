@@ -3,9 +3,9 @@ package com.saintkream.server.domain.members.service;
 import com.saintkream.server.domain.auth.vo.MembersVO;
 
 public interface MembersService {
-  boolean isNameAvailable(String nickname); // 닉네임 중복 확인 - yb
+  public boolean isNameAvailable(String nickname); // 닉네임 중복 확인 - yb
 
-  boolean isEmailAvailable(String email); // 이메일 중복 확인 - yb 
+  public boolean isEmailAvailable(String email); // 이메일 중복 확인 - yb 
 
   public int registerMember(MembersVO mvo); // 회원 가입 -  yb 
 

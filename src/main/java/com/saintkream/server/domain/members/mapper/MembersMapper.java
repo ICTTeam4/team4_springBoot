@@ -17,5 +17,5 @@ public interface MembersMapper {
 
     public Integer checkEmail(@Param("email") String email); // 이메일 중복 확인 yb
 
-    public int insertMember(MembersVO mvo); // 회원 가입 yb
+    public int insertSNSMember(MembersVO mvo); // 회원 가입 yb
 }

@@ -3,6 +3,7 @@ package com.saintkream.server.config;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -44,23 +45,54 @@ public class OAth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSu
                     provider = "kakao";
                 } else if (uri.contains("naver")) {
                     provider = "naver";
+                } else if (uri.contains("google")) {
+                    provider = "google";
                 } else {
                     provider = "unknown";
                 }
 
                 // 성공 후 토큰을 만들어서 클라이언트에게 리다이렉트 한다.
                 // 사용자 정보를 DB에 넣자
-                 UserDetails userDetails =
-                 userDetailService.loadUserByOAuth2User(oAuth2User,provider);
+                userDetailService.loadUserByOAuth2User(oAuth2User, provider);
                 // String token = jwtUtil.generateToken(userDetails);
 
-                String id = oAuth2User.getAttribute("id").toString();
-                String name = oAuth2User.getAttribute("name");
-                String email = oAuth2User.getAttribute("email");
+                String id = null;
+                String email = "unknown";
+                String name = "unknown";
+
+                // ID 필드 처리
+                if (provider.equals("google")) {
+                    id = oAuth2User.getAttribute("email"); // Google은 'sub'을 ID로 사용. 그러나 provider 구분위해서  sub 빼고 이메일로 대체하자.
+                    email = oAuth2User.getAttribute("email") != null ? oAuth2User.getAttribute("email") : "unknown";
+                    name = oAuth2User.getAttribute("name") != null ? oAuth2User.getAttribute("name") : "unknown";
+                }  else if (provider.equals("kakao")) {
+                    Long kakaoId = oAuth2User.getAttribute("id"); // Kakao는 'id'를 Long으로 반환
+                    id = kakaoId != null ? String.valueOf(kakaoId) : null;
+                    email = oAuth2User.getAttribute("email") != null ? oAuth2User.getAttribute("email") : "unknown";
+                    name = oAuth2User.getAttribute("name") != null ? oAuth2User.getAttribute("name") : "unknown";
+                } else if (provider.equals("naver")) {
+                    id = oAuth2User.getAttribute("id"); // 네이버는 'id'가 최상위에 존재
+                    email = oAuth2User.getAttribute("email") != null ? oAuth2User.getAttribute("email") : "unknown";
+                    name = oAuth2User.getAttribute("name") != null ? oAuth2User.getAttribute("name") : "unknown";
+
+                    if (id == null) {
+                        throw new IllegalArgumentException("Naver ID is missing in the OAuth2User attributes");
+                    }
+                }
+
+                // ID가 없으면 에러 처리
+                if (id == null) {
+                    throw new IllegalArgumentException(
+                            "ID is missing in the OAuth2User attributes for provider: " + provider);
+                }
+                // Google, Kakao 공통 필드 처리
+                if (provider.equals("google") || provider.equals("kakao")) {
+                    email = oAuth2User.getAttribute("email") != null ? oAuth2User.getAttribute("email") : "unknown";
+                    name = oAuth2User.getAttribute("name") != null ? oAuth2User.getAttribute("name") : "unknown";
+                }
+
                 String token = jwtUtil.generateToken(id);
 
-                // 클라이언트에 토큰, 이름, email 등 정보를 가지고 간다.
-                // response.setCharacterEncoding("UTF-8");
                 String redirectUrl = String.format(
                         "http://localhost:3000/login?token=%s&username=%s&name=%s&email=%s",
                         URLEncoder.encode(token, StandardCharsets.UTF_8),
@@ -75,5 +107,4 @@ public class OAth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSu
             response.sendRedirect("/login?error");
         }
     }
-
 }

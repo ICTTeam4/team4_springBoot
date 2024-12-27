@@ -27,6 +27,7 @@ public class CustomerOAuth2UserService extends DefaultOAuth2UserService {
 
         // 어떤 제공자 인지 알수 있다.(kakao, naver, google)
         String provider = userRequest.getClientRegistration().getRegistrationId();
+        System.out.println("하윤서치: 프로바이더" + provider);
         if (provider.equals("kakao")) {
             Map<String, Object> kakaoAccount = (Map<String, Object>) attributes.get("kakao_account");
             if (kakaoAccount == null) {
@@ -51,11 +52,10 @@ public class CustomerOAuth2UserService extends DefaultOAuth2UserService {
         } else if (provider.equals("naver")) {
             Map<String, Object> response = (Map<String, Object>) attributes.get("response");
             if (response == null) {
-                throw new OAuth2AuthenticationException("Kakao error");
+                throw new OAuth2AuthenticationException("naver error");
             }
             String name = (String) response.get("name");
             String email = (String) response.get("email");
-            String phone = (String) response.get("phone");
 
             log.info("naver email : " + email);
             log.info("naver name : " + name);
@@ -63,6 +63,25 @@ public class CustomerOAuth2UserService extends DefaultOAuth2UserService {
                     "email", email,
                     "name", name,
                     "id", response.get("id")), "email");
+
+        } else if (provider.equals("google")) {
+            String name = (String) attributes.get("name");
+            String email = (String) attributes.get("email");
+            String id = (String) attributes.get("sub"); // Google의 고유 사용자 ID
+
+            if (name == null || email == null || id == null) {
+                throw new OAuth2AuthenticationException("Google user attributes are missing");
+            }
+
+            log.info("google email : " + email);
+            log.info("google name : " + name);
+            return new DefaultOAuth2User(
+                    oAuth2User.getAuthorities(),
+                    Map.of(
+                            "email", email,
+                            "name", name,
+                            "id", id),
+                    "email");
 
         }
         return oAuth2User;

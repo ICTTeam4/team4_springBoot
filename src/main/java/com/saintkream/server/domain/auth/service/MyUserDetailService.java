@@ -30,7 +30,7 @@ public class MyUserDetailService implements UserDetailsService {
         if (member == null) {
             throw new UsernameNotFoundException("없는 아이디 입니다.");
         }
-        return new User(member.getM_id(), member.getM_pw(), new ArrayList<>());
+        return new User(member.getM_id(), member.getPassword(), new ArrayList<>());
     }
 
     // DB에서 개인 정보 추출,
@@ -43,7 +43,8 @@ public class MyUserDetailService implements UserDetailsService {
     public UserDetails loadUserByOAuth2User(OAuth2User oAuth2User, String provider) {
         String email = oAuth2User.getAttribute("email");
         String name = oAuth2User.getAttribute("name");
-
+        System.out.println(oAuth2User);
+        System.out.println(provider);
         // kakao Long 이고 String 변경안됨
         String id = "";
         MembersVO mvo = new MembersVO();
@@ -52,18 +53,27 @@ public class MyUserDetailService implements UserDetailsService {
             id = String.valueOf(kakaoId);
             mvo.setSns_email_kakao(email);
             mvo.setName(name);
-            mvo.setEmail(id);
+            mvo.setEmail(email); // long형 자료는 지금으로선 의미가 없다고 보고  일단 email씀. 원랜 id가 맞음 (고유번호)
             mvo.setSns_provider("kakao");
 
         } else if (provider.equals("naver")) {
             id = oAuth2User.getAttribute("id");
             mvo.setSns_email_naver(email);
             mvo.setName(name);
-            mvo.setEmail(id);
+            mvo.setEmail(email);  //마찬가지로 지금은 일단 email씀 원랜 id가 맞음 (고유번호)
             mvo.setSns_provider("naver");
+        } else if (provider.equals("google")) {
+            id = oAuth2User.getAttribute("email");
+            mvo.setSns_email_google(email);
+            mvo.setName(name);
+            mvo.setEmail(email);
+            mvo.setSns_provider("google");
         }
         // 아이디가 존재하면 DB에 있는 것, 아니면 DB에 없는 것
         MembersVO mvo2 = membersMapper.findUserByProvider(mvo);
+        if (mvo2 == null) {
+            membersMapper.insertSNSMember(mvo);//바로 가입하는법.
+        }
      
         return new User(mvo.getEmail(), "", new ArrayList<>());
     }
