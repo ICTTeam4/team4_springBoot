@@ -38,5 +38,10 @@ public class SalesPostServiceImpl implements SalesPostService{
   public int getSelectLastInsert() {
     return salesPostMapper.getSelectlastInsert();
   }
+
+  @Override
+  public List<SalesPostVO> getSalesPostList() {
+    return salesPostMapper.getSalesPostList();
+  }
   
 }
