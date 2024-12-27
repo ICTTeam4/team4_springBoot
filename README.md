@@ -1,1 +1,1 @@
-Saint Kream 백엔드 파트입니다.
+Saint Kream 백엔드 파트입니다!
