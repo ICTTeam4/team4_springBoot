@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+ <mapper namespace="com.saintkream.server.domain.salespost.mapper.SalesPostMapper">
+  <insert id="getSalesPostWrite" parameterType="SalesPostVO">
+    INSERT INTO post (
+            member_id,selling_area_id,title,sell_price,description,category_id,is_direct,is_delivery
+        ) VALUES (
+            #{member_id}, #{selling_area_id}, #{title}, #{sell_price}, #{description},#{category_id},#{is_direct},#{is_delivery}
+        )
+  </insert>
+  <insert id="getPostFileWrite" parameterType="list">
+    INSERT INTO file_table (file_name) VALUES 
+    <foreach collection="file_names" item="fileName" separator=",">
+        (#{fileName})
+    </foreach>
+  </insert>
+  <select id="getFileIds" parameterType="list" resultType="String">
+    SELECT * FROM file_table WHERE file_name IN  
+    <foreach collection="file_names" item="fileName" open="(" separator="," close=")">
+        #{fileName}
+    </foreach>
+  </select>
+  <insert id="getPostFileTableWrite" parameterType="map">
+    INSERT INTO post_files (pwr_id,file_id) VALUES 
+    <foreach collection="file_ids" item="file_id" separator=",">
+        (#{pwr_id},#{file_id})
+    </foreach>
+  </insert>
+  <select id="getSelectlastInsert" parameterType="int">
+        SELECT LAST_INSERT_ID();
+  </select>
+ </mapper>
