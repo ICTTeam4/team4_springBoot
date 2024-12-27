@@ -32,35 +32,45 @@
   <select id="getSelectlastInsert" parameterType="int">
         SELECT LAST_INSERT_ID();
   </select>
+
   <select id="getSalesPostList" resultType="SalesPostVO" resultMap="PostWithFilesMap">
   SELECT 
-    
     f.file_name,     
-    m.* 
-  FROM 
+    m.name,
+    p.title,
+    p.sell_price,
+    p.created_at,
+    p.category_id,
+    p.view_count
+
+    FROM 
     post AS p
-  LEFT JOIN 
+    LEFT JOIN 
     post_files AS pf
-  ON 
+    ON 
     p.pwr_id = pf.pwr_id
-  LEFT JOIN 
+    LEFT JOIN 
     file_table AS f
-  ON 
+    ON 
     pf.file_id = f.file_id
-  LEFT JOIN 
+    LEFT JOIN 
     members AS m
-  ON 
+    ON 
     p.member_id = m.member_id
   </select>
 
   <resultMap id="PostWithFilesMap" type="SalesPostVO">
     <!-- PostVO의 기본 필드 -->
-    <id property="pwrId" column="pwr_id" />
+    <id property="pwr_id" column="pwr_id" />
     <result property="title" column="title" />
+    <result property="sell_price" column="sell_price"/>
+    <result property="created_at" column="created_at"/>
+    <result property="category_id" column="category_id"/>
+    <result property="view_count" column="view_count" />
 
     <!-- FileVO 리스트를 매핑 -->
     <collection property="fileList" ofType="FileVO">
         <result property="fileName" column="file_name" />
     </collection>
-</resultMap>
+  </resultMap>
  </mapper>

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.saintkream.server.auth.vo.DataVO;
+import com.saintkream.server.domain.auth.vo.DataVO;
 import com.saintkream.server.domain.salespost.service.SalesPostService;
 import com.saintkream.server.domain.salespost.vo.SalesPostVO;
 
@@ -68,11 +68,13 @@ public class SalesPostController {
     }
     return "응답응답";
   }
+
   @GetMapping("/itemlist")
   public DataVO getitemList() {
     DataVO dataVO = new DataVO();
     try {
       List<SalesPostVO> list = salesPostService.getSalesPostList();
+      System.out.println("-----");
       dataVO.setSuccess(true);
       dataVO.setMessage("조회 성공");
       dataVO.setData(list);
