@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.saintkream.server.auth.vo.DataVO;
+import com.saintkream.server.domain.auth.vo.DataVO;
 import com.saintkream.server.domain.salespost.service.SalesPostService;
 import com.saintkream.server.domain.salespost.vo.SalesPostVO;
 
