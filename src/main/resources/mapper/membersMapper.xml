@@ -13,6 +13,11 @@
 <select id="checkEmail" parameterType="String" resultType="int">
  SELECT IFNULL(COUNT(*), 0) FROM members WHERE email = #{email} 
  </select>
+<!-- 로그인시 아이디확인 -->
+ <select id="getMembersByIdEmail" parameterType="String" resultType="MembersVO">
+ SELECT * FROM members WHERE email = #{email} 
+ </select>
+
 <!--  회원가입  yb-->
 <insert id="insertMember" parameterType="MembersVO"> 
 INSERT INTO members 

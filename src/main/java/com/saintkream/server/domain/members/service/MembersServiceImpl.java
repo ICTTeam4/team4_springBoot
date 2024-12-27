@@ -33,8 +33,7 @@ public class MembersServiceImpl implements MembersService {
     }
 
     @Override
-    public MembersVO getMembersById(String m_id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getMembersById'");
+    public MembersVO getMembersByIdEmail(String email) {
+       return membersMapper.getMembersByIdEmail(email);
     }
 }
