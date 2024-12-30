@@ -6,10 +6,10 @@
  <mapper namespace="com.saintkream.server.domain.salespost.mapper.SalesPostMapper">
   <insert id="getSalesPostWrite" parameterType="SalesPostVO">
     INSERT INTO post (
-            member_id,selling_area_id,title,sell_price,description,category_id,is_direct,is_delivery
-        ) VALUES (
-            #{member_id}, #{selling_area_id}, #{title}, #{sell_price}, #{description},#{category_id},#{is_direct},#{is_delivery}
-        )
+      member_id,selling_area_id,title,sell_price,description,sup_category,sub_category,is_direct,is_delivery
+    ) VALUES (
+      #{member_id}, #{selling_area_id}, #{title}, #{sell_price},#{description}, #{sup_category},#{sub_category},#{is_direct},#{is_delivery}
+    )
   </insert>
   <insert id="getPostFileWrite" parameterType="list">
     INSERT INTO file_table (file_name) VALUES 
@@ -32,4 +32,45 @@
   <select id="getSelectlastInsert" parameterType="int">
         SELECT LAST_INSERT_ID();
   </select>
+
+  <select id="getSalesPostList" resultType="SalesPostVO" resultMap="PostWithFilesMap">
+  SELECT 
+    f.file_name,     
+    m.name,
+    p.title,
+    p.sell_price,
+    p.created_at,
+    p.category_id,
+    p.view_count
+
+    FROM 
+    post AS p
+    LEFT JOIN 
+    post_files AS pf
+    ON 
+    p.pwr_id = pf.pwr_id
+    LEFT JOIN 
+    file_table AS f
+    ON 
+    pf.file_id = f.file_id
+    LEFT JOIN 
+    members AS m
+    ON 
+    p.member_id = m.member_id
+  </select>
+
+  <resultMap id="PostWithFilesMap" type="SalesPostVO">
+    <!-- PostVO의 기본 필드 -->
+    <id property="pwr_id" column="pwr_id" />
+    <result property="title" column="title" />
+    <result property="sell_price" column="sell_price"/>
+    <result property="created_at" column="created_at"/>
+    <result property="category_id" column="category_id"/>
+    <result property="view_count" column="view_count" />
+
+    <!-- FileVO 리스트를 매핑 -->
+    <collection property="fileList" ofType="FileVO">
+        <result property="fileName" column="file_name" />
+    </collection>
+  </resultMap>
  </mapper>
