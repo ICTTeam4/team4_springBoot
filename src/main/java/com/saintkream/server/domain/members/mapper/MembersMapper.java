@@ -9,7 +9,7 @@ import com.saintkream.server.domain.auth.vo.MembersVO;
 public interface MembersMapper {
     // public int getMembersJoin(MembersVO mvo);
 
-    public MembersVO getMembersById(String m_id);
+    public MembersVO getMembersByIdEmail(String email );
 
     public MembersVO findUserByProvider(MembersVO mvo);
 
@@ -18,4 +18,5 @@ public interface MembersMapper {
     public Integer checkEmail(@Param("email") String email); // 이메일 중복 확인 yb
 
     public int insertSNSMember(MembersVO mvo); // 회원 가입 yb
+    public int insertMember(MembersVO mvo); // 회원 가입 yb
 }

@@ -28,13 +28,16 @@ public class MembersServiceImpl implements MembersService {
         return count == null || count == 0;
     }
     @Override
-     public int registerMember(MembersVO mvo) {
+     public int registerSNSMember(MembersVO mvo) {
         return membersMapper.insertSNSMember(mvo);
+    }
+    @Override
+     public int registerMember(MembersVO mvo) {
+        return membersMapper.insertMember(mvo);
     }
 
     @Override
-    public MembersVO getMembersById(String m_id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getMembersById'");
+    public MembersVO getMembersByIdEmail(String email) {
+       return membersMapper.getMembersByIdEmail(email);
     }
 }
