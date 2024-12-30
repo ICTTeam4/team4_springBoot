@@ -28,8 +28,12 @@ public class MembersServiceImpl implements MembersService {
         return count == null || count == 0;
     }
     @Override
-     public int registerMember(MembersVO mvo) {
+     public int registerSNSMember(MembersVO mvo) {
         return membersMapper.insertSNSMember(mvo);
+    }
+    @Override
+     public int registerMember(MembersVO mvo) {
+        return membersMapper.insertMember(mvo);
     }
 
     @Override
