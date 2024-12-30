@@ -35,6 +35,7 @@
 
   <select id="getSalesPostList" resultType="SalesPostVO" resultMap="PostWithFilesMap">
   SELECT 
+    p.pwr_id,
     f.file_name,
     m.name,
     p.title,
