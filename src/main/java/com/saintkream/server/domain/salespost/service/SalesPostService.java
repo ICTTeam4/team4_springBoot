@@ -11,4 +11,5 @@ public interface SalesPostService {
   int getPostFileWrite(List<String> file_names);
   int getPostFileTableWrite(List<String> file_ids,Integer pwr_id);
   int getSelectLastInsert();
+  List<SalesPostVO> getSalesPostList();
 }

@@ -12,6 +12,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SalesPostVO {
-  private String pwr_id,member_id,selling_area_id,title,status,sell_price,view_count,description,created_at,file_name,category_id,is_direct,is_delivery;
+  private String pwr_id,member_id,selling_area_id,title,status,sell_price,view_count,description,created_at,file_name,sup_category,sub_category,is_direct,is_delivery;
   private List<MultipartFile> files;
+  private List<FileVO> fileList;
+  private String name;
 }

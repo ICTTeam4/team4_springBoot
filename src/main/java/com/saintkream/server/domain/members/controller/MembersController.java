@@ -182,7 +182,14 @@ public class MembersController {
         dataVO.setSuccess(true);
         dataVO.setMessage("로그인 성공");
         dataVO.setToken(token);
-        dataVO.setData(membersVO);
+        dataVO.setData(Map.of(
+            "member_id", membersVO.getMember_id(),  // member_id 추가
+            "email", membersVO.getEmail(),
+            "nickname", membersVO.getNickname(),
+            "name", membersVO.getName(),
+            "tel_no", membersVO.getTel_no()
+        ));
+        //dataVO.setData(membersVO);
 
         return dataVO;
     } catch (Exception e) {

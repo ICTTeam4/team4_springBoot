@@ -16,7 +16,6 @@ public class DataVO {
     private String token;
     private String message;
     private UserDetails userDetails;
-    // private MembersVO data2; 
 
     // 사용 방법
     // DataVO dataVO = new DataVO()
