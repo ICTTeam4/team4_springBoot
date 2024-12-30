@@ -19,4 +19,5 @@ public interface MembersMapper {
 
     public int insertSNSMember(MembersVO mvo); // 회원 가입 yb
     public int insertMember(MembersVO mvo); // 회원 가입 yb
+    public  int updateNickname(@Param("email") String email, @Param("newNickname") String newNickname);
 }

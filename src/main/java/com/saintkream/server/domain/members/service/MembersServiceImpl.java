@@ -40,4 +40,9 @@ public class MembersServiceImpl implements MembersService {
     public MembersVO getMembersByIdEmail(String email) {
        return membersMapper.getMembersByIdEmail(email);
     }
+
+    @Override
+    public int updateNickname(String email, String newNickname) {
+        return membersMapper.updateNickname(email, newNickname);
+    }
 }

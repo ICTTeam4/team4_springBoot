@@ -25,6 +25,13 @@ INSERT INTO members
 VALUES (#{name}, #{email}, #{tel_no}, #{password}, #{adv_agree}, #{personal_agree}, NOW(), #{status}, #{nickname}) 
 </insert>
 
+<!-- 마이페이지 닉네임 변경경 -->
+<update id="updateNickname" parameterType="MembersVO">
+    UPDATE members
+    SET nickname = #{newNickname}
+    WHERE email = #{email}
+</update>
+
 
 	<select id="findUserByProvider" parameterType="MembersVO" resultType="MembersVO">
 		select * from members  

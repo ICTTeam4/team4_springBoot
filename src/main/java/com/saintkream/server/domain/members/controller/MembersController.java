@@ -10,6 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,7 +29,6 @@ import net.nurigo.sdk.message.model.Message;
 import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
 import net.nurigo.sdk.message.response.SingleMessageSentResponse;
 import net.nurigo.sdk.message.service.DefaultMessageService;
-
 
 @Slf4j
 @RestController
@@ -182,7 +182,14 @@ public class MembersController {
         dataVO.setSuccess(true);
         dataVO.setMessage("로그인 성공");
         dataVO.setToken(token);
-        dataVO.setData(membersVO);
+        dataVO.setData(Map.of(
+            "member_id", membersVO.getMember_id(),  
+            "email", membersVO.getEmail(),
+            "nickname", membersVO.getNickname(),
+            "name", membersVO.getName(),
+            "tel_no", membersVO.getTel_no()
+        ));
+        //dataVO.setData(membersVO);
 
         return dataVO;
     } catch (Exception e) {
@@ -194,11 +201,32 @@ public class MembersController {
 }
 
 
-@PostMapping("/logout")
-public ResponseEntity<?> logout(@RequestHeader("Authorization") String token) {
-    log.info("로그아웃 요청 데이터!!!!!!!!!!!!: {}", token);
-    return ResponseEntity.ok(Map.of("message", "로그아웃 성공"));
+@PutMapping("/update-nickname")
+@ResponseBody
+public ResponseEntity<?> updateNickname(@RequestBody Map<String, String> request) {
+    System.out.println("닉네임 변경한다!!!! : " + request);
+    String email = request.get("email");
+    String newNickname = request.get("newNickname");
+
+    try {
+        // 닉네임 중복 체크
+        if (!membersService.isNameAvailable(newNickname)) {
+            return ResponseEntity.badRequest().body(Map.of("message", "닉네임이 이미 사용 중입니다.", "status", "failure"));
+        }
+
+        // 닉네임 업데이트
+        int result = membersService.updateNickname(email, newNickname);
+        if (result > 0) {
+            return ResponseEntity.ok(Map.of("message", "닉네임이 성공적으로 변경되었습니다.", "status", "success"));
+        } else {
+            return ResponseEntity.badRequest().body(Map.of("message", "닉네임 변경 실패", "status", "failure"));
+        }
+    } catch (Exception e) {
+        log.error("닉네임 변경 중 오류 발생: {}", e.getMessage());
+        return ResponseEntity.badRequest().body(Map.of("message", "닉네임 변경 중 오류가 발생했습니다.", "status", "failure"));
+    }
 }
+
 
    @GetMapping("/userInfo")
     public ResponseEntity<?> hayooninfo(@RequestParam String email) {
