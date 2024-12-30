@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.saintkream.server.domain.searchitems.mapper.SearchItemsMapper">
+
+    <!-- 키워드로 검색 -->
+  <select id="searchItems" parameterType="map" resultType="com.saintkream.server.domain.searchitems.vo.SearchItemsVO">
+    SELECT 
+        pwr_id, member_id, selling_area_id, title, status, sell_price, view_count,
+        description, created_at, is_direct, is_delivery, sup_category, sub_category
+    FROM post
+    WHERE 
+        1=1
+        <if test="category != null">
+            AND category = #{category}
+        </if>
+        <if test="keyword != null and keyword != ''">
+            AND (
+                title LIKE CONCAT('%', #{keyword}, '%')
+                OR description LIKE CONCAT('%', #{keyword}, '%')
+                OR selling_area_id LIKE CONCAT('%', #{keyword}, '%')
+                OR sup_category LIKE CONCAT('%', #{keyword}, '%')
+                OR sub_category LIKE CONCAT('%', #{keyword}, '%')
+            )
+        </if>
+</select>
+
+
+</mapper>
