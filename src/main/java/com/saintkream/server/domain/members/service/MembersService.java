@@ -8,6 +8,7 @@ public interface MembersService {
   public boolean isEmailAvailable(String email); // 이메일 중복 확인 - yb 
 
   public int registerMember(MembersVO mvo); // 회원 가입 -  yb 
+  public int registerSNSMember(MembersVO mvo); // 회원 가입 -  yb 
 
   // public int getMembersJoin(MembersVO mvo); //수업버전 가입 
 

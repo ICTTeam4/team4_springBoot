@@ -177,6 +177,7 @@ public class MembersController {
         }
 
         String token = jwtUtil.generateToken(membersVO.getEmail());
+        log.info("토큰 :",token);
         dataVO.setSuccess(true);
         dataVO.setMessage("로그인 성공");
         dataVO.setToken(token);
