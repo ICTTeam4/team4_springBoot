@@ -16,6 +16,9 @@ public class SalesPostServiceImpl implements SalesPostService{
 
   @Override
   public int getSalesPostWrite(SalesPostVO svo) {
+    System.out.println("entered Sales Post write service impl");
+    System.out.println(svo.toString());
+    svo.setPwr_id("1");
     return salesPostMapper.getSalesPostWrite(svo);
   }
 

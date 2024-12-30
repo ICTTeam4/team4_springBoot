@@ -6,10 +6,10 @@
  <mapper namespace="com.saintkream.server.domain.salespost.mapper.SalesPostMapper">
   <insert id="getSalesPostWrite" parameterType="SalesPostVO">
     INSERT INTO post (
-            member_id,selling_area_id,title,sell_price,description,category_id,is_direct,is_delivery
-        ) VALUES (
-            #{member_id}, #{selling_area_id}, #{title}, #{sell_price}, #{description},#{category_id},#{is_direct},#{is_delivery}
-        )
+      member_id,selling_area_id,title,sell_price,description,sup_category,sub_category,is_direct,is_delivery
+    ) VALUES (
+      #{member_id}, #{selling_area_id}, #{title}, #{sell_price},#{description}, #{sup_category},#{sub_category},#{is_direct},#{is_delivery}
+    )
   </insert>
   <insert id="getPostFileWrite" parameterType="list">
     INSERT INTO file_table (file_name) VALUES 

@@ -30,6 +30,7 @@ public class SalesPostController {
   @PostMapping("/salesinsert")
   public String getPostDetail(@ModelAttribute("data") SalesPostVO svo) {
     DataVO dataVO = new DataVO();
+    System.out.println("svo.tostring()"+svo.toString());
     try {
       
       if (svo.getIs_delivery().equals("false")) {
