@@ -3,6 +3,7 @@ package com.saintkream.server.domain.members.controller;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -199,6 +200,19 @@ public ResponseEntity<?> logout(@RequestHeader("Authorization") String token) {
     return ResponseEntity.ok(Map.of("message", "로그아웃 성공"));
 }
 
+   @GetMapping("/userInfo")
+    public ResponseEntity<?> hayooninfo(@RequestParam String email) {
+        try {
+            MembersVO membersVO = membersService.getMembersByIdEmail(email);
+            if (membersVO == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("회원 정보가 없습니다.");
+            }
+            return ResponseEntity.ok(membersVO);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 에러 발생");
+        }
+    }
+}
     
 
-}
+
