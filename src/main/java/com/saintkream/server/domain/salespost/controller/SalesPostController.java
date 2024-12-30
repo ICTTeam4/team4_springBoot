@@ -28,7 +28,7 @@ public class SalesPostController {
   private SalesPostService salesPostService;
 
   @PostMapping("/salesinsert")
-  public String getPostDetail(@ModelAttribute("data") SalesPostVO svo) {
+  public DataVO getPostDetail(@ModelAttribute("data") SalesPostVO svo) {
     DataVO dataVO = new DataVO();
     System.out.println("svo.tostring()"+svo.toString());
     try {
@@ -54,7 +54,7 @@ public class SalesPostController {
           UUID uuid = UUID.randomUUID();
           String file_name = uuid.toString() + "_" + file.getOriginalFilename();
           System.out.println(file_name);
-          String staticPath = new File("src/main/resources/static").getAbsolutePath();
+          String staticPath = new File("src/main/resources/static/images").getAbsolutePath();
           File uploadDir = new File(staticPath);
           file.transferTo(new File(uploadDir, file_name));
           file_names.add(file_name);
@@ -62,12 +62,18 @@ public class SalesPostController {
         salesPostService.getPostFileWrite(file_names);
         List<String> file_ids = salesPostService.getFileIds(file_names);
         int result = salesPostService.getPostFileTableWrite(file_ids,pwr_id);
-        
+        if (result == 0) {
+          dataVO.setSuccess(false);
+          dataVO.setMessage("게스트북 수정 실패");
+          return dataVO;
+      }
+      dataVO.setSuccess(true);
+      dataVO.setMessage("게스트북 수정 성공");
       }
     } catch (Exception e) {
       // TODO: handle exception
     }
-    return "응답응답";
+    return dataVO;
   }
 
   @GetMapping("/itemlist")
@@ -75,6 +81,7 @@ public class SalesPostController {
     DataVO dataVO = new DataVO();
     try {
       List<SalesPostVO> list = salesPostService.getSalesPostList();
+      System.out.println( "list to String :  "+ list.toString());
       System.out.println("-----");
       dataVO.setSuccess(true);
       dataVO.setMessage("조회 성공");

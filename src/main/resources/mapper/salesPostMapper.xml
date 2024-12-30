@@ -35,12 +35,13 @@
 
   <select id="getSalesPostList" resultType="SalesPostVO" resultMap="PostWithFilesMap">
   SELECT 
-    f.file_name,     
+    f.file_name,
     m.name,
     p.title,
     p.sell_price,
     p.created_at,
-    p.category_id,
+    p.sup_category,
+    p.sub_category,
     p.view_count
 
     FROM 
