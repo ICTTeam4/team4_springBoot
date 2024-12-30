@@ -28,8 +28,9 @@ public class SalesPostController {
   private SalesPostService salesPostService;
 
   @PostMapping("/salesinsert")
-  public String getPostDetail(@ModelAttribute("data") SalesPostVO svo) {
+  public DataVO getPostDetail(@ModelAttribute("data") SalesPostVO svo) {
     DataVO dataVO = new DataVO();
+    System.out.println("svo.tostring()"+svo.toString());
     try {
       
       if (svo.getIs_delivery().equals("false")) {
@@ -44,11 +45,7 @@ public class SalesPostController {
       }
       List<String> file_names = new ArrayList<>();
       salesPostService.getSalesPostWrite(svo);
-      System.out.println("-----------------------------------------");
-      // System.out.println("pwr_id: "+pwr_id);
       int pwr_id = salesPostService.getSelectLastInsert();
-      System.out.println("salesPostService.getSelectLastInsert() : "+salesPostService.getSelectLastInsert());
-      System.out.println("svo.getFiles()"+svo.getFiles());
       if (svo.getFiles() != null) {
         List<MultipartFile> files = svo.getFiles();
         for (MultipartFile file : files) {
@@ -57,27 +54,44 @@ public class SalesPostController {
           UUID uuid = UUID.randomUUID();
           String file_name = uuid.toString() + "_" + file.getOriginalFilename();
           System.out.println(file_name);
-          // String path = "/upload";
-          // File uploadDir = new File(path);
-          // if (!uploadDir.exists()) {
-          //   uploadDir.mkdirs();
-          // }
-          String staticPath = new File("src/main/resources/static").getAbsolutePath();
+          String staticPath = new File("src/main/resources/static/images").getAbsolutePath();
           File uploadDir = new File(staticPath);
           file.transferTo(new File(uploadDir, file_name));
           file_names.add(file_name);
         }
         salesPostService.getPostFileWrite(file_names);
         List<String> file_ids = salesPostService.getFileIds(file_names);
-        for (String a : file_ids) {
-          System.out.println("file_ids: "+a);
-        }
         int result = salesPostService.getPostFileTableWrite(file_ids,pwr_id);
+        if (result == 0) {
+          dataVO.setSuccess(false);
+          dataVO.setMessage("게스트북 수정 실패");
+          return dataVO;
+      }
+      dataVO.setSuccess(true);
+      dataVO.setMessage("게스트북 수정 성공");
       }
     } catch (Exception e) {
       // TODO: handle exception
     }
-    return "응답응답";
+    return dataVO;
   }
+
+  @GetMapping("/itemlist")
+  public DataVO getitemList() {
+    DataVO dataVO = new DataVO();
+    try {
+      List<SalesPostVO> list = salesPostService.getSalesPostList();
+      System.out.println( "list to String :  "+ list.toString());
+      System.out.println("-----");
+      dataVO.setSuccess(true);
+      dataVO.setMessage("조회 성공");
+      dataVO.setData(list);
+    } catch (Exception e) {
+      dataVO.setSuccess(false);
+      dataVO.setMessage("조회 실패");
+    }
+    return dataVO;
+  }
+  
 
 }
