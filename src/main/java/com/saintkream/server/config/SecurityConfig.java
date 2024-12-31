@@ -58,7 +58,7 @@ public class SecurityConfig {
                         // 특정 URL에 인증없이 허용
                         .requestMatchers("/members/register", "/members/login",
                                 "/members/send-phone-auth", "/members/verify-phone-auth", "/members/**",
-                                "/api/salespost/salesinsert", "/searchItems")
+                                "/api/salespost/salesinsert", "/searchItems", "/searchItems/**")
                         .permitAll()
                         .requestMatchers("/outerList",
                                 "/topList",
@@ -66,7 +66,9 @@ public class SecurityConfig {
                                 "/shoesList",
                                 "/bagsList",
                                 "/accessoriesList",
-                                "/itemSearchResult")
+                                "/itemSearchResult",
+                                "/itemSearchResult/**",
+                                "/members/send-phone-auth","/members/verify-phone-auth","/members/**","/api/salespost/**","/images/**")
                         .permitAll()
                         // 나머지는 인증 필요
                         .anyRequest().authenticated())

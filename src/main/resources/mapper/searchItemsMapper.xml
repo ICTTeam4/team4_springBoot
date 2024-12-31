@@ -5,16 +5,16 @@
 
 <mapper namespace="com.saintkream.server.domain.searchitems.mapper.SearchItemsMapper">
 
-    <!-- 키워드로 검색 -->
-  <select id="searchItems" parameterType="map" resultType="com.saintkream.server.domain.searchitems.vo.SearchItemsVO">
+  <!-- 키워드로 검색 -->
+<select id="searchItems" parameterType="map" resultType="com.saintkream.server.domain.searchitems.vo.SearchItemsVO">
     SELECT 
         pwr_id, member_id, selling_area_id, title, status, sell_price, view_count,
         description, created_at, is_direct, is_delivery, sup_category, sub_category
     FROM post
     WHERE 
         1=1
-        <if test="category != null">
-            AND category = #{category}
+        <if test="category != null and category != ''">
+            AND sup_category = #{category} <!-- category 대신 sup_category 사용 -->
         </if>
         <if test="keyword != null and keyword != ''">
             AND (

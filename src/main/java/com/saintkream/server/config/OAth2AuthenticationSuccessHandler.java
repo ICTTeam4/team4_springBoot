@@ -94,11 +94,12 @@ public class OAth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSu
                 String token = jwtUtil.generateToken(id);
 
                 String redirectUrl = String.format(
-                        "http://localhost:3000/login?token=%s&username=%s&name=%s&email=%s",
+                        "http://localhost:3000/login?token=%s&username=%s&name=%s&email=%s&provider=%s",
                         URLEncoder.encode(token, StandardCharsets.UTF_8),
                         URLEncoder.encode(id, StandardCharsets.UTF_8),
                         URLEncoder.encode(name, StandardCharsets.UTF_8),
-                        URLEncoder.encode(email, StandardCharsets.UTF_8));
+                        URLEncoder.encode(email, StandardCharsets.UTF_8),
+                        URLEncoder.encode(provider, StandardCharsets.UTF_8));
 
                 response.sendRedirect(redirectUrl);
             }
