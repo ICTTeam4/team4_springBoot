@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.saintkream.server.common.util.JwtUtil;
 import com.saintkream.server.domain.auth.vo.DataVO;
 import com.saintkream.server.domain.auth.vo.MembersVO;
+import com.saintkream.server.domain.auth.vo.PasswordCheckRequest;
 import com.saintkream.server.domain.members.service.MembersService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -238,6 +239,25 @@ public ResponseEntity<?> updateNickname(@RequestBody Map<String, String> request
             return ResponseEntity.ok(membersVO);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 에러 발생");
+        }
+    }
+
+    @PostMapping("/check-password")
+    public ResponseEntity<Boolean> checkPassword(@RequestBody PasswordCheckRequest request) {
+        try {
+            // 이메일로 사용자 조회
+            MembersVO member = membersService.getMembersByIdEmail(request.getEmail());
+    
+            if (member == null) {
+                return ResponseEntity.ok(false); // 사용자 없음
+            }
+    
+            // 비밀번호 검증
+            boolean matches = passwordEncoder.matches(request.getOldPassword(), member.getPassword());
+            return ResponseEntity.ok(matches);
+        } catch (Exception e) {
+            log.error("비밀번호 확인 중 오류 발생: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
         }
     }
 }
