@@ -12,4 +12,6 @@ public interface SalesPostService {
   int getPostFileTableWrite(List<String> file_ids,Integer pwr_id);
   int getSelectLastInsert();
   List<SalesPostVO> getSalesPostList();
+  int upViewCount(int pwr_id);
+  SalesPostVO getSalesPostOne(int pwr_id);
 }

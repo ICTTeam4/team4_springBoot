@@ -3,9 +3,13 @@ spring:
     name: saintkream
 
   datasource:
-    url: jdbc:mysql://it119kr.asuscomm.com:3306/final
+    # url: jdbc:mysql://it119kr.asuscomm.com:3306/final
+    # username: project
+    # password: pt^VJjrV~g
+    # driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://218.52.42.170:3306/final
     username: project
-    password: pt^VJjrV~g
+    password: $a94s)xl@M
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   web:

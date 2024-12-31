@@ -11,27 +11,37 @@
       #{member_id}, #{selling_area_id}, #{title}, #{sell_price},#{description}, #{sup_category},#{sub_category},#{is_direct},#{is_delivery}
     )
   </insert>
+
   <insert id="getPostFileWrite" parameterType="list">
     INSERT INTO file_table (file_name) VALUES 
     <foreach collection="file_names" item="fileName" separator=",">
         (#{fileName})
     </foreach>
   </insert>
+
   <select id="getFileIds" parameterType="list" resultType="String">
     SELECT * FROM file_table WHERE file_name IN  
     <foreach collection="file_names" item="fileName" open="(" separator="," close=")">
         #{fileName}
     </foreach>
   </select>
+
   <insert id="getPostFileTableWrite" parameterType="map">
     INSERT INTO post_files (pwr_id,file_id) VALUES 
     <foreach collection="file_ids" item="file_id" separator=",">
         (#{pwr_id},#{file_id})
     </foreach>
   </insert>
+
   <select id="getSelectlastInsert" parameterType="int">
         SELECT LAST_INSERT_ID();
   </select>
+
+  <update id="upViewCount" parameterType="int">
+        UPDATE post
+        SET view_count = view_count + 1
+        WHERE pwr_id = #{pwr_id}
+  </update>
 
   <select id="getSalesPostList" resultType="SalesPostVO" resultMap="PostWithFilesMap">
   SELECT 
@@ -62,6 +72,40 @@
     p.member_id = m.member_id
   </select>
 
+  <select id="getSalesPostOne" parameterType="int" resultType="SalesPostVO" resultMap="PostWithFilesMap">
+  SELECT 
+    p.pwr_id,
+    f.file_name,
+    m.name,
+    p.title,
+    p.sell_price,
+    p.created_at,
+    p.sup_category,
+    p.sub_category,
+    p.view_count,
+    p.description,
+    p.selling_area_id,
+    p.is_direct,
+    p.is_delivery
+
+    FROM 
+    post AS p
+    LEFT JOIN 
+    post_files AS pf
+    ON 
+    p.pwr_id = pf.pwr_id
+    LEFT JOIN 
+    file_table AS f
+    ON 
+    pf.file_id = f.file_id
+    LEFT JOIN 
+    members AS m
+    ON 
+    p.member_id = m.member_id
+    WHERE
+    p.pwr_id = #{pwr_id}
+  </select>
+
   <resultMap id="PostWithFilesMap" type="SalesPostVO">
     <!-- PostVO의 기본 필드 -->
     <id property="pwr_id" column="pwr_id" />
@@ -73,6 +117,9 @@
     <result property="description" column="description" />
     <result property="sup_category" column="sup_category" />
     <result property="sub_category" column="sub_category" />
+    <result property="selling_area_id" column="selling_area_id" />
+    <result property="is_direct" column="is_direct" />
+    <result property="is_delivery" column="is_delivery" />
 
     <!-- FileVO 리스트를 매핑 -->
     <collection property="fileList" ofType="FileVO">
