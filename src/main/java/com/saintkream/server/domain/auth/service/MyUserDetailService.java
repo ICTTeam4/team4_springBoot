@@ -11,7 +11,6 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
 import com.saintkream.server.domain.auth.mapper.AuthMapper;
-import com.saintkream.server.domain.auth.vo.DataVO;
 import com.saintkream.server.domain.auth.vo.MembersVO;
 import com.saintkream.server.domain.auth.vo.UserVO;
 import com.saintkream.server.domain.members.mapper.MembersMapper;
@@ -19,13 +18,13 @@ import com.saintkream.server.domain.members.mapper.MembersMapper;
 @Service
 public class MyUserDetailService implements UserDetailsService {
     @Autowired
-    private AuthMapper authMapper;
+     private AuthMapper authMapper;
     @Autowired
     private MembersMapper membersMapper;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserVO member = authMapper.selectMember(username);
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        UserVO member = authMapper.selectMember(email);
         if (member == null) {
             throw new UsernameNotFoundException("없는 아이디 입니다.");
         }
@@ -33,8 +32,8 @@ public class MyUserDetailService implements UserDetailsService {
     }
 
     // DB에서 개인 정보 추출,
-    public UserVO getUserDetail(String m_id) {
-        return authMapper.selectMember(m_id);
+    public UserVO getUserDetail(String email) {
+        return authMapper.selectMember(email);
     }
 
     // UserDetails userDetails = userDetailService.loadUserByOAuth2User(oAuth2User,
