@@ -16,7 +16,8 @@ public class MembersVO {
     private String status = "ACTIVE"; // 기본값 설정 yb
 
 
-    
+       // **신규 회원 여부** (DB 저장 안 함)
+       private transient boolean isNew; 
 
 }
 
