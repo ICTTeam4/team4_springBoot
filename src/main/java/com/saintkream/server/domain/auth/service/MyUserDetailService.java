@@ -21,14 +21,14 @@ public class MyUserDetailService implements UserDetailsService {
      private AuthMapper authMapper;
     @Autowired
     private MembersMapper membersMapper;
-
+//authmapper가 아닌  membersMapper로 통합. 반드시 필요함. 필수필수필수
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        UserVO member = authMapper.selectMember(email);
+        MembersVO member = membersMapper.getMembersByIdEmail(email);
         if (member == null) {
             throw new UsernameNotFoundException("없는 아이디 입니다.");
         }
-        return new User(member.getM_id(), member.getPassword(), new ArrayList<>());
+        return new User(member.getEmail(), member.getPassword(), new ArrayList<>());
     }
 
     // DB에서 개인 정보 추출,

@@ -95,7 +95,7 @@ public class SecurityConfig {
         corsConfig.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         // 허용할 헤더 설정
         corsConfig.setAllowedHeaders(Arrays.asList("*"));
-        corsConfig.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+        // corsConfig.setAllowedHeaders(List.of("Authorization", "Content-Type"));
         // 인증정보 허용
         corsConfig.setAllowCredentials(true);
 

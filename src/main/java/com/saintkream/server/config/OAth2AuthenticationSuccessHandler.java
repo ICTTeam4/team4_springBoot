@@ -95,7 +95,10 @@ public class OAth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSu
                     name = oAuth2User.getAttribute("name") != null ? oAuth2User.getAttribute("name") : "unknown";
                 }
 
-                String token = jwtUtil.generateToken(id);
+                String token = jwtUtil.generateToken(email);   //토큰을 이메일로 대체.  필수. 
+                //고유번호는 db에서 사용안하기때문에  실제 email로만 구분해야함.
+                //인증충돌방지위해서 소셜로그인인 경우, 고유번호 id대신 email로 구분.
+
 
                 if (mvo.isNew()) {
                     // **신규**: 회원가입 페이지로 이동
