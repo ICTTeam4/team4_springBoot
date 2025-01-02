@@ -1,5 +1,8 @@
 {
   "configurations": [
+    
+
+
     {
       "type": "java",
       "name": "Spring Boot-FinalApplication<final>",
@@ -22,11 +25,11 @@
     },
     {
       "type": "java",
-      "name": "Spring Boot-FinalApplication<saintkreamserver>",
+      "name": "Spring Boot-FinalApplication<finalserver_1>",
       "request": "launch",
       "cwd": "${workspaceFolder}",
       "mainClass": "com.saintkream.server.FinalApplication",
-      "projectName": "saintkreamserver",
+      "projectName": "finalserver_1",
       "args": "",
       "envFile": "${workspaceFolder}/.env"
     },
