@@ -22,6 +22,26 @@
     },
     {
       "type": "java",
+      "name": "Spring Boot-FinalApplication<finalserver_1>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "mainClass": "com.saintkream.server.FinalApplication",
+      "projectName": "finalserver_1",
+      "args": "",
+      "envFile": "${workspaceFolder}/.env"
+    },
+    {
+      "type": "java",
+      "name": "Spring Boot-FinalApplication<backend>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "mainClass": "com.saintkream.server.FinalApplication",
+      "projectName": "backend",
+      "args": "",
+      "envFile": "${workspaceFolder}/.env"
+    },
+    {
+      "type": "java",
       "name": "Spring Boot-FinalApplication<saintkreamserver>",
       "request": "launch",
       "cwd": "${workspaceFolder}",
