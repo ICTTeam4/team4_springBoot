@@ -23,13 +23,18 @@ public class ReviewsController {
 
     @RequestMapping("/submit")
     public ResponseEntity<?> submitReview(
-        @RequestParam String content,
-        @RequestParam int rate,
-        @RequestParam(required = false) MultipartFile[] images) {
+        @RequestParam(name = "content") String content,
+        @RequestParam(name = "rate") int rate,
+        @RequestParam(name = "member_id") int member_id, // member_id를 int로 변경
+        @RequestParam(name = "images", required = false) MultipartFile[] images) {
+            log.info("content: {}", content);
+            log.info("rate: {}", rate);
+            log.info("member_id: {}", member_id);
+            log.info("images: {}", (images != null ? images.length : 0));
   
   try {
         // 이미지가 없더라도 예외가 발생하지 않도록 서비스 호출
-        reviewsService.saveReview(content, rate, images);
+        reviewsService.saveReview(content, rate, images,member_id);
         return ResponseEntity.ok().body(Map.of(
             "success", true,
             "message", "Review submitted successfully"
