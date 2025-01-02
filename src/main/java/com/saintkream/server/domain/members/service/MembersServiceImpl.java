@@ -45,4 +45,24 @@ public class MembersServiceImpl implements MembersService {
     public int updateNickname(String email, String newNickname) {
         return membersMapper.updateNickname(email, newNickname);
     }
+
+    @Override
+    public int updatePassword(MembersVO mvo) {
+        return membersMapper.updatePassword(mvo);
+    }
+
+    @Override
+    public int updatePhone(MembersVO mvo) {
+        return membersMapper.updatePhone(mvo);
+    }
+
+    @Override
+    public int updateAdvAgree(MembersVO mvo) {
+        return membersMapper.updateAdvAgree(mvo);
+    }
+
+    @Override
+    public int  withdrawMember(MembersVO mvo) {
+        return membersMapper.withdrawMember(mvo);
+    }
 }

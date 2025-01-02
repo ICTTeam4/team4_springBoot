@@ -1,6 +1,7 @@
 package com.saintkream.server.config;
 
 import java.util.Arrays;
+import java.util.List;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -57,8 +58,7 @@ public class SecurityConfig {
                         .requestMatchers("/gs-guide-websocket/**", "/chat/**").permitAll()
                         // 특정 URL에 인증없이 허용
                         .requestMatchers("/members/register", "/members/login",
-                                "/members/send-phone-auth", "/members/verify-phone-auth", "/members/**",
-                                "/api/salespost/salesinsert", "/searchItems", "/searchItems/**")
+                                "/members/send-phone-auth","/members/verify-phone-auth","/members/**","/api/salespost/**", "/api/salespost/salesinsert", "/searchItems", "/searchItems/**","static/**","/images/**","/HayoonReview/**")
                         .permitAll()
                         .requestMatchers("/outerList",
                                 "/topList",
@@ -105,6 +105,7 @@ public class SecurityConfig {
         corsConfig.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         // 허용할 헤더 설정
         corsConfig.setAllowedHeaders(Arrays.asList("*"));
+        // corsConfig.setAllowedHeaders(List.of("Authorization", "Content-Type"));
         // 인증정보 허용
         corsConfig.setAllowCredentials(true);
 

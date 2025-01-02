@@ -19,4 +19,10 @@ public interface MembersService {
 
   int updateNickname(String email, String newNickname); // 닉네임 업데이트!
 
+  public int updatePassword(MembersVO mvo); // 비밀번호 업데이트( 마이페이지)
+  public int updatePhone(MembersVO mvo); // 휴대폰번호 업데이트( 마이페이지)
+  public int updateAdvAgree(MembersVO mvo); // 휴대폰번호 업데이트( 마이페이지)
+  public int  withdrawMember(MembersVO mvo); // 삭제
+
+
 }

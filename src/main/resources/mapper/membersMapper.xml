@@ -32,6 +32,32 @@ VALUES (#{name}, #{email}, #{tel_no}, #{password}, #{adv_agree}, #{personal_agre
     WHERE email = #{email}
 </update>
 
+<!-- 패스워드업데이트 - 마이페이지  -->
+<update id="updatePassword" parameterType="MembersVO">
+    UPDATE members
+    SET password = #{password}
+    WHERE member_id = #{member_id}
+</update>
+<!-- 폰번호 업데이트 - 마이페이지  -->
+<update id="updatePhone" parameterType="MembersVO">
+    UPDATE members
+    SET tel_no = #{tel_no}
+    WHERE member_id = #{member_id}
+</update>
+<!-- 광고성업데이트  -->
+<update id="updateAdvAgree" parameterType="MembersVO">
+    UPDATE members
+    SET adv_agree = #{adv_agree}
+    WHERE member_id = #{member_id}
+</update>
+<!-- 삭제 -->
+<update id="withdrawMember" parameterType="MembersVO">
+    UPDATE members
+    SET status = 'INACTIVE'
+    WHERE member_id = #{member_id}
+</update>
+
+
 
 	<select id="findUserByProvider" parameterType="MembersVO" resultType="MembersVO">
 		select * from members  
