@@ -35,13 +35,13 @@ public class AccountServiceImpl implements AccountService { // interface → cla
     }
 
     @Override
-    public void setDefaultAccount(Long id, Long userId) {
-        accountMapper.clearDefaultAccount(userId); 
+    public void setDefaultAccount(Long id, Long member_id) {
+        accountMapper.clearDefaultAccount(member_id); 
         accountMapper.setDefaultAccount(id);
     }
 
     @Override
-    public List<AccountVO> getAccountsByMemberId(Long userId) {
-        return accountMapper.getAccountsByMemberId(userId);
+    public List<AccountVO> getAccountsByMemberId(Long member_id) {
+        return accountMapper.getAccountsByMemberId(member_id);
     }
 }

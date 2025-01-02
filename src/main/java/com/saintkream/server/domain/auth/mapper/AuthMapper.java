@@ -10,5 +10,4 @@ import com.saintkream.server.domain.auth.vo.UserVO;
 @Mapper
 public interface AuthMapper {
     UserVO selectMember(@Param("email") String email);
-    
 }

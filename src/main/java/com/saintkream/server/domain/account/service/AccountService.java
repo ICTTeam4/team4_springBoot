@@ -8,6 +8,6 @@ public interface AccountService {
     void addAccount(AccountVO accountVO);
     void updateAccount(Long id, AccountVO accountVO);
     void deleteAccount(Long id);
-    void setDefaultAccount(Long id, Long userId);
-    List<AccountVO> getAccountsByMemberId(Long userId);
+    void setDefaultAccount(Long id, Long member_id);
+    List<AccountVO> getAccountsByMemberId(Long member_id);
 }

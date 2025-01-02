@@ -6,8 +6,8 @@ import com.saintkream.server.domain.auth.vo.AddressVO;
 
 public interface AddressService {
     void addAddress(AddressVO addressVO);
-    void updateAddress(Long id, AddressVO addressVO);
-    void deleteAddress(Long id);
-    void setDefaultAddress(Long id, Long userId);
-    List<AddressVO> getAddressList(Long userId);
+    void updateAddress(String id, AddressVO addressVO);
+    void deleteAddress(String id);
+    void setDefaultAddress(String id, String userId);
+    List<AddressVO> getAddressList(String userId);
 }

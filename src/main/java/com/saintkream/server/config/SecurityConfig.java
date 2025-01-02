@@ -1,6 +1,7 @@
 package com.saintkream.server.config;
 
 import java.util.Arrays;
+import java.util.List;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -37,14 +38,14 @@ public class SecurityConfig {
         this.jwtUtil = jwtUtil;
         this.userDetailService = userDetailService;
     }
-   // 서버에 들어는 모든 요청은 SecurityFilterChain 을 거친다.
+    // 서버에 들어는 모든 요청은 SecurityFilterChain 을 거친다.
     // addFilterBefore 때문에 JwtRequestFilter가 먼저 실행된다.
 
     // 클라이언트에서 http://localhost:8080/oauth2/authorization/kakao 클릭하면
     // SecurityFilter 자동으로 OAutheAuthorizationReqeustRedirectFiler 가 특정URL에 오면
     // 자동으로 application.yml 에 등록을 보고 자동 처리
 
-     @Bean
+    @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         log.info("SecurityFilterChain 호출\n");
         http
@@ -54,10 +55,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/upload/**").permitAll() // URL 경로
                         .requestMatchers("/oauth2/**").permitAll() // URL 경로
-                        .requestMatchers("/gs-guide-websocket/**","/chat/**").permitAll()
+                        .requestMatchers("/gs-guide-websocket/**", "/chat/**").permitAll()
                         // 특정 URL에 인증없이 허용
-                        .requestMatchers("/members/register", "/members/login",
-                                "/members/send-phone-auth","/members/verify-phone-auth","/members/**","/api/salespost/**","/images/**","/address/**","/account/**")
+                        .requestMatchers("/api/**","/members/**" )
                         .permitAll()
                         // 나머지는 인증 필요
                         .anyRequest().authenticated())
@@ -89,11 +89,12 @@ public class SecurityConfig {
         CorsConfiguration corsConfig = new CorsConfiguration();
 
         // 허용할 Origin 설정
-        corsConfig.setAllowedOrigins(Arrays.asList("http://localhost:3000","http://localhost:8080"));
+        corsConfig.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://localhost:8080"));
         // 허용할 http 메서드 설정
         corsConfig.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         // 허용할 헤더 설정
         corsConfig.setAllowedHeaders(Arrays.asList("*"));
+        // corsConfig.setAllowedHeaders(List.of("Authorization", "Content-Type"));
         // 인증정보 허용
         corsConfig.setAllowCredentials(true);
 
@@ -102,7 +103,7 @@ public class SecurityConfig {
         return source;
     }
 
-     @Bean
+    @Bean
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
@@ -111,7 +112,5 @@ public class SecurityConfig {
     AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
         return authConfig.getAuthenticationManager();
     }
-
-    
 
 }

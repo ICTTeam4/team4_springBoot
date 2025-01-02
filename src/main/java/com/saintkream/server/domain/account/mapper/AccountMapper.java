@@ -19,9 +19,9 @@ public interface AccountMapper {
     void deleteAccount(Long id);
 
     // 기본 계좌 처리
-    void clearDefaultAccount(Long userId);  // 사용자의 모든 계좌에서 기본 설정 제거
+    void clearDefaultAccount(Long member_id);  // 사용자의 모든 계좌에서 기본 설정 제거
     void setDefaultAccount(Long id);       // 특정 계좌를 기본 계좌로 설정
 
     // 계좌 목록 조회
-    List<AccountVO> getAccountsByMemberId(Long userId);
+    List<AccountVO> getAccountsByMemberId(Long member_id);
 }

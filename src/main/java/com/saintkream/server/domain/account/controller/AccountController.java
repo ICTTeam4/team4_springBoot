@@ -14,10 +14,9 @@ import com.saintkream.server.domain.auth.vo.AccountVO;
 
 import lombok.extern.slf4j.Slf4j;
 
-@RestController
-
-@RequestMapping("/accounts")
 @Slf4j
+@RestController
+@RequestMapping("/api/accounts")
 public class AccountController {
 
     @Autowired
@@ -25,7 +24,7 @@ public class AccountController {
 
     @PostMapping
     public ResponseEntity<Map<String, String>> addAccount(@RequestBody AccountVO account) {
-        log.info("계좌 추가 됐니? : {}", account);
+        log.info("계좌 추가 요청 데이터: {}", account);
         Map<String, String> response = new HashMap<>();
         try {
             accountService.addAccount(account);
@@ -41,8 +40,8 @@ public class AccountController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Map<String, String>> updateAccount(@PathVariable Long id, @RequestBody AccountVO account) {
-        log.info("계좌 업데이트 됐니? : {}", id, account);
+    public ResponseEntity<Map<String, String>> updateAccount(@PathVariable("id") Long id, @RequestBody AccountVO account) {
+        log.info("계좌 업데이트 요청 데이터: id={}, account={}", id, account);
         Map<String, String> response = new HashMap<>();
         try {
             account.setId(id); // AccountVO에 id 설정
@@ -59,8 +58,8 @@ public class AccountController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Map<String, String>> deleteAccount(@PathVariable Long id) {
-        log.info("계좌 삭제 됐니?: {}", id, id);
+    public ResponseEntity<Map<String, String>> deleteAccount(@PathVariable("id") Long id) {
+        log.info("계좌 삭제 요청 데이터: id={}", id);
         Map<String, String> response = new HashMap<>();
         try {
             accountService.deleteAccount(id);
@@ -76,8 +75,8 @@ public class AccountController {
     }
 
     @PutMapping("/{id}/set-default")
-    public ResponseEntity<Map<String, String>> setDefaultAccount(@PathVariable Long id, @RequestParam Long memberId) {
-        log.info(" 기본 정산계좌로 바뀌었니?: memberId={}, accountId={}", id, memberId);
+    public ResponseEntity<Map<String, String>> setDefaultAccount(@PathVariable("id") Long id, @RequestParam("memberId") Long memberId) {
+        log.info("기본 정산 계좌 설정 요청: memberId={}, accountId={}", memberId, id);
         Map<String, String> response = new HashMap<>();
         try {
             accountService.setDefaultAccount(id, memberId);
@@ -93,8 +92,8 @@ public class AccountController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getAccountsByMemberId(@RequestParam Long memberId) {
-        log.info(" 계좌 목록 조회 요청 데이터: memberId={}", memberId);
+    public ResponseEntity<?> getAccountsByMemberId(@RequestParam("memberId") Long memberId) {
+        log.info("계좌 목록 조회 요청: memberId={}", memberId);
         try {
             List<AccountVO> accounts = accountService.getAccountsByMemberId(memberId);
             log.info("GET /accounts - 응답 데이터: {}", accounts);

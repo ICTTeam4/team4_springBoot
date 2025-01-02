@@ -8,12 +8,14 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -26,6 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.saintkream.server.common.util.JwtUtil;
 import com.saintkream.server.domain.auth.vo.DataVO;
 import com.saintkream.server.domain.auth.vo.MembersVO;
+import com.saintkream.server.domain.auth.vo.PasswordCheckRequest;
 import com.saintkream.server.domain.members.service.MembersService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +37,7 @@ import net.nurigo.sdk.message.model.Message;
 import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
 import net.nurigo.sdk.message.response.SingleMessageSentResponse;
 import net.nurigo.sdk.message.service.DefaultMessageService;
-
+import org.springframework.http.MediaType;
 
 @Slf4j
 @RestController
@@ -160,28 +163,34 @@ public class MembersController {
         }
     }
 
-
-
-
     @PostMapping("/login")
-        public DataVO membersLogin(@RequestBody MembersVO mvo) {
-    log.info("로그인 요청 데이터!!!!!!!: {}", mvo);
-    DataVO dataVO = new DataVO();
-    try {
-        MembersVO membersVO = membersService.getMembersByIdEmail(mvo.getEmail());
+    public DataVO membersLogin(@RequestBody MembersVO mvo) {
+        log.info("로그인 요청 데이터!!!!!!!: {}", mvo);
+        DataVO dataVO = new DataVO();
+        try {
+            MembersVO membersVO = membersService.getMembersByIdEmail(mvo.getEmail());
 
-        if (membersVO == null) {
+            if (membersVO == null) {
+                dataVO.setSuccess(false);
+                dataVO.setMessage("존재하지 않는 이메일입니다.");
+                return dataVO;
+            }
+
+             // 1) status 확인
+        //    만약 'INACTIVE' 상태면 로그인 실패 처리
+        if ("INACTIVE".equalsIgnoreCase(membersVO.getStatus())) {
             dataVO.setSuccess(false);
-            dataVO.setMessage("존재하지 않는 이메일입니다.");
+            dataVO.setMessage("해당 계정은 탈퇴 또는 비활성 상태입니다.");
             return dataVO;
         }
 
-           // 비밀번호 검증
-           if (!passwordEncoder.matches(mvo.getPassword(), membersVO.getPassword())) {
-            dataVO.setSuccess(false);
-            dataVO.setMessage("비밀번호가 일치하지 않습니다.");
-            return dataVO;
-        }
+
+            // 비밀번호 검증
+            if (!passwordEncoder.matches(mvo.getPassword(), membersVO.getPassword())) {
+                dataVO.setSuccess(false);
+                dataVO.setMessage("비밀번호가 일치하지 않습니다.");
+                return dataVO;
+            }
 
         String token = jwtUtil.generateToken(membersVO.getEmail());
         log.info("토큰 :",token);

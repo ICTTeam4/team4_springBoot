@@ -17,10 +17,14 @@ public interface MembersMapper {
 
     public Integer checkEmail(@Param("email") String email); // 이메일 중복 확인 yb
 
-    public int insertSNSMember(MembersVO mvo); // 회원 가입 yb
+    public int insertSNSMember(MembersVO mvo); // 회원 가입 HY
     public int insertMember(MembersVO mvo); // 회원 가입 yb
 
     public  int updateNickname(@Param("email") String email, @Param("newNickname") String newNickname);
 
     public void updateProfileImage(@Param("email") String email, @Param("imageUrl") String imageUrl); // 마이페이지 이미지 변경경
+    public int updatePassword(MembersVO mvo);
+    public int updatePhone(MembersVO mvo);
+    public int updateAdvAgree(MembersVO mvo);
+    public int  withdrawMember(MembersVO mvo);
 }

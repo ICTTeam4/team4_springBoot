@@ -2,7 +2,9 @@ package com.saintkream.server.domain.salespost.controller;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Slf4j
@@ -91,6 +94,38 @@ public class SalesPostController {
       dataVO.setMessage("조회 실패");
     }
     return dataVO;
+  }
+
+  @GetMapping("/itemone")
+  public DataVO getitemOne(@RequestParam("id") int pwr_id) {
+    DataVO dataVO = new DataVO();
+    try {
+      SalesPostVO SPVO = salesPostService.getSalesPostOne(pwr_id);
+      log.info("------------");
+      log.info("SPVO:", SPVO.getFile_name());
+      dataVO.setSuccess(true);
+      dataVO.setMessage("조회 성공");
+      dataVO.setData(SPVO);
+
+    } catch (Exception e) {
+      dataVO.setSuccess(false);
+      dataVO.setMessage("조회 실패");
+    }
+    return dataVO;
+  }
+
+  @PostMapping("/upviewcount")
+  public Map<String, String> upViewCount(@RequestBody Map<String, Integer> request) {
+    int pwr_id = request.get("id");
+    int result = salesPostService.upViewCount(pwr_id);
+
+    Map<String, String> response = new HashMap<>();
+    if (result > 0) {
+        response.put("message", "조회수 증가 완료");
+    } else {
+        response.put("message", "조회수 증가 실패");
+    }
+    return response;
   }
   
 

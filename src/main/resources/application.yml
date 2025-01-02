@@ -11,6 +11,10 @@ spring:
     username: project
     password: pt^VJjrV~g
     driver-class-name: com.mysql.cj.jdbc.Driver
+    # url: jdbc:mysql://218.52.42.170:3306/final
+    # username: project
+    # password: $a94s)xl@M
+    # driver-class-name: com.mysql.cj.jdbc.Driver
 
   web:
     resources:
@@ -85,8 +89,17 @@ server:
 mybatis:
   mapper-locations: mapper/*.xml
   type-aliases-package: com.saintkream.server
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
 jwt:
   # JWT 비밀키 및 만료 시간 설정
   secret: "abcdASDF1234abcdQWER0987poiuPOIU"
   expiration: 3600000
+
+
+logging:
+  level:
+    root: info
+    org.apache.ibatis: debug
+    org.mybatis: debug

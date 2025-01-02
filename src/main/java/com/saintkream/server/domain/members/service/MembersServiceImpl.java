@@ -46,9 +46,29 @@ public class MembersServiceImpl implements MembersService {
         return membersMapper.updateNickname(email, newNickname);
     }
 
-    //마이페이지 이미지 변경경
+    @Override
+    public int updatePassword(MembersVO mvo) {
+        return membersMapper.updatePassword(mvo);
+    }
+
+    @Override
+    public int updatePhone(MembersVO mvo) {
+        return membersMapper.updatePhone(mvo);
+    }
+
+    @Override
+    public int updateAdvAgree(MembersVO mvo) {
+        return membersMapper.updateAdvAgree(mvo);
+    }
+
+    @Override
+    public int  withdrawMember(MembersVO mvo) {
+        return membersMapper.withdrawMember(mvo);
+    }
+
     @Override
     public void updateProfileImage(String email, String imageUrl) {
-        membersMapper.updateProfileImage(email, imageUrl);
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'updateProfileImage'");
     }
 }

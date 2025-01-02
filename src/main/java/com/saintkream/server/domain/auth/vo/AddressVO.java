@@ -4,8 +4,8 @@ import lombok.Data;
 
 @Data
 public class AddressVO {
-    private Long id;          // add_id
-    private Long memberId;    // member_id
+    private  String id;          // add_id
+    private String memberId;    // member_id
     private String name;      // name
     private String phone;     // phone
     private String zipcode;   // zipcode

@@ -28,17 +28,17 @@ public class AddressServiceImpl implements AddressService {
     }
 
     @Override
-    public void updateAddress(Long id, AddressVO addressVO) {
+    public void updateAddress(String id, AddressVO addressVO) {
         addressVO.setId(id);
         addressMapper.updateAddress(addressVO);
     }
 
     @Override
-    public void deleteAddress(Long id) {
+    public void deleteAddress(String id) {
         addressMapper.deleteAddress(id);
     }
     @Override
-    public void setDefaultAddress(Long id, Long memberId) {
+    public void setDefaultAddress(String id, String memberId) {
         // 기존 기본 배송지 초기화
         addressMapper.clearDefaultAddress(memberId);
         // 새로운 기본 배송지 설정
@@ -46,7 +46,7 @@ public class AddressServiceImpl implements AddressService {
     }
 
     @Override
-    public List<AddressVO> getAddressList(Long userId) {
+    public List<AddressVO> getAddressList(String userId) {
         return addressMapper.getAddressList(userId);
     }
 

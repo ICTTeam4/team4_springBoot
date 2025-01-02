@@ -23,35 +23,35 @@
     </insert>
 
 
-  <update id="updateAddress" parameterType="AddressVO">
-      UPDATE address
-        SET
-            name = #{name},
-            phone = #{phone},
-            zipcode = #{zipcode},
-            address = #{address},
-            detail_address = #{detailAddress},
-            is_default = CASE WHEN #{isDefault} THEN 1 ELSE 0 END,
-            updated_at = CURRENT_TIMESTAMP
-        WHERE add_id = #{id};
-    </update>
+ <update id="updateAddress">
+    UPDATE address
+    SET name = #{name}, 
+        phone = #{phone}, 
+        zipcode = #{zipcode}, 
+        address = #{address}, 
+        detail_address = #{detailAddress}, 
+        is_default = CASE WHEN #{isDefault} THEN 1 ELSE 0 END, 
+        updated_at = CURRENT_TIMESTAMP
+    WHERE add_id = #{id}
+</update>
+
 
 
       <!-- 주소 삭제 -->
-    <delete id="deleteAddress" parameterType="long">
+    <delete id="deleteAddress" parameterType="String">
     DELETE FROM address
     WHERE add_id = #{id};
     </delete>
 
     <!-- 기존 기본 배송지를 초기화하는 쿼리 -->
-    <update id="clearDefaultAddress" parameterType="long">
+    <update id="clearDefaultAddress" parameterType="String">
     UPDATE address
     SET is_default = 0
     WHERE member_id = #{memberId};
     </update>
 
     <!-- 선택한 주소를 기본 배송지로 설정하는 쿼리 -->
-    <update id="setDefaultAddress" parameterType="long">
+    <update id="setDefaultAddress" parameterType="String">
     UPDATE address
     SET is_default = 1
     WHERE add_id = #{id};
@@ -59,7 +59,7 @@
 
 
 
-    <select id="getAddressesByMemberId" parameterType="long" resultType="AddressVO">
+    <select id="getAddressesByMemberId" parameterType="String" resultType="AddressVO">
     SELECT *
     FROM address
     WHERE member_id = #{memberId}
@@ -67,16 +67,16 @@
     </select>
 
     <!-- 특정 주소 가져오기 -->
-    <select id="getAddressById" parameterType="int" resultType="AddressVO">
+    <select id="getAddressById" parameterType="String" resultType="AddressVO">
         SELECT *
         FROM address
-        WHERE add_id = #{addId}
+        WHERE add_id = #{id}
     </select>
 
 
 
      <select id="getAddressList"
-          parameterType="long"
+          parameterType="String"
           resultType="AddressVO">
     SELECT 
       add_id AS id,

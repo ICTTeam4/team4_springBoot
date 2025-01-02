@@ -56,7 +56,7 @@ public class CustomerOAuth2UserService extends DefaultOAuth2UserService {
             }
             String name = (String) response.get("name");
             String email = (String) response.get("email");
-
+            
             log.info("naver email : " + email);
             log.info("naver name : " + name);
             return new DefaultOAuth2User(oAuth2User.getAuthorities(), Map.of(
