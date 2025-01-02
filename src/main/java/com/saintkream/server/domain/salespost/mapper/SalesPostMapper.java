@@ -16,4 +16,6 @@ public interface SalesPostMapper {
   int getPostFileTableWrite(@Param("file_ids") List<String> file_ids, @Param("pwr_id") Integer pwr_id);
   int getSelectlastInsert();
   List<SalesPostVO> getSalesPostList();
+  int upViewCount(int pwr_id);
+  SalesPostVO getSalesPostOne(int pwr_id);
 }
