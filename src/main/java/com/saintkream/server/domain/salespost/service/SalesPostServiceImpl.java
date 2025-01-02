@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.saintkream.server.domain.salespost.mapper.SalesPostMapper;
 import com.saintkream.server.domain.salespost.vo.SalesPostVO;
@@ -46,5 +47,17 @@ public class SalesPostServiceImpl implements SalesPostService{
   public List<SalesPostVO> getSalesPostList() {
     return salesPostMapper.getSalesPostList();
   }
+
+  @Override
+  public int upViewCount(int pwr_id) {
+    return salesPostMapper.upViewCount(pwr_id);
+  }
+
+  @Override
+  public SalesPostVO getSalesPostOne(int pwr_id) {
+    return salesPostMapper.getSalesPostOne(pwr_id);
+  }
+
+  
   
 }
