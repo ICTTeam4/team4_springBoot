@@ -37,6 +37,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         log.info("JwtRequestFilter 호출\n");
         // 요청 헤더에서 Authorization 값 확인
+        log.info("Authorization Header: " + request.getHeader("Authorization"));
         final String requestTokenHeader = request.getHeader("Authorization");
         String username = null;
         String jwtToken = null;
