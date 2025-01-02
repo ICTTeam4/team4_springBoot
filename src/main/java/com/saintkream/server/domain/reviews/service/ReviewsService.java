@@ -1,7 +1,13 @@
 package com.saintkream.server.domain.reviews.service;
 
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface ReviewsService {
- public void saveReview(String content, int rate, MultipartFile[] images,int member_id);
+ public void saveReview(String content, int rate, MultipartFile[] images,Integer member_id);
+ public List<Map<String, Object>> getReviewsByMemberId(Integer member_id);
+ public List<Map<String, Object>> getReviewsByBuyerOrSeller(Integer member_id);
 }

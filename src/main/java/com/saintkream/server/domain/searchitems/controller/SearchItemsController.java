@@ -20,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @CrossOrigin(origins = "http://localhost:3000") // 프론트엔드 주소
-@RequestMapping("/searchItems")
+@RequestMapping("/api/searchItems")
 public class SearchItemsController {
 
     @Autowired
