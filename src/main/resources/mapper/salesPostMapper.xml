@@ -35,6 +35,7 @@
 
   <select id="getSalesPostList" resultType="SalesPostVO" resultMap="PostWithFilesMap">
   SELECT 
+    p.pwr_id,
     f.file_name,
     m.name,
     p.title,
@@ -66,7 +67,8 @@
     <result property="title" column="title" />
     <result property="sell_price" column="sell_price"/>
     <result property="created_at" column="created_at"/>
-    <result property="category_id" column="category_id"/>
+    <result property="sup_category" column="sup_category"/>
+    <result property="sub_category" column="sub_category"/>
     <result property="view_count" column="view_count" />
 
     <!-- FileVO 리스트를 매핑 -->
