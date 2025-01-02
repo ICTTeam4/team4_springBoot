@@ -17,4 +17,6 @@ public interface MembersService {
 
   int updateNickname(String email, String newNickname); // 닉네임 업데이트!
 
+  public void updateProfileImage(String email, String imageUrl); // 이미지 변경 업데이트
+
 }

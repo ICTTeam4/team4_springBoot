@@ -45,4 +45,10 @@ public class MembersServiceImpl implements MembersService {
     public int updateNickname(String email, String newNickname) {
         return membersMapper.updateNickname(email, newNickname);
     }
+
+    //마이페이지 이미지 변경경
+    @Override
+    public void updateProfileImage(String email, String imageUrl) {
+        membersMapper.updateProfileImage(email, imageUrl);
+    }
 }

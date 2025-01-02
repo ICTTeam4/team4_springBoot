@@ -1,8 +1,13 @@
 package com.saintkream.server.domain.members.controller;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.saintkream.server.common.util.JwtUtil;
 import com.saintkream.server.domain.auth.vo.DataVO;
@@ -183,7 +189,7 @@ public class MembersController {
         dataVO.setMessage("로그인 성공");
         dataVO.setToken(token);
         dataVO.setData(Map.of(
-            "member_id", membersVO.getMember_id(),  // member_id 추가
+            "member_id", membersVO.getMember_id(),  
             "email", membersVO.getEmail(),
             "nickname", membersVO.getNickname(),
             "name", membersVO.getName(),
@@ -236,6 +242,71 @@ public ResponseEntity<?> logout(@RequestHeader("Authorization") String token) {
     return ResponseEntity.ok(Map.of("message", "로그아웃 성공"));
 }
 
+
+
+// 마이페이지 이미지 변경  <?> => 와일드카드 (어떤 타입이라도 허용한다는 뜻)
+@PostMapping("/upload-profile-image")
+public ResponseEntity<?> uploadProfileImage(@RequestParam("file") MultipartFile file, @RequestParam("email") String email) {
+    log.info("프로필 이미지 업로드 요청: 이메일 = {}, 파일 이름 = {}", email, file.getOriginalFilename());
+    try {
+        // 절대 경로로 파일 저장
+        String absolutePath = System.getProperty("user.dir") + "/src/main/resources/static/uploads/";
+        String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
+        Path uploadPath = Paths.get(absolutePath + fileName);
+
+        // 디렉토리 생성
+        Files.createDirectories(uploadPath.getParent());
+        log.info("디렉토리 생성 확인: {}", uploadPath.getParent().toAbsolutePath());
+
+        // 파일 저장
+        Files.write(uploadPath, file.getBytes());
+        log.info("파일 저장 완료: {}", uploadPath.toAbsolutePath());
+
+        // DB 업데이트
+        String imageUrl = "/uploads/" + fileName; // 상대 경로
+        membersService.updateProfileImage(email, imageUrl);
+
+        return ResponseEntity.ok(Map.of("status", "success", "imageUrl", imageUrl));
+    } catch (Exception e) {
+        log.error("파일 저장 중 오류 발생: {}", e.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(Map.of("status", "failure", "message", e.getMessage()));
+    }
+}
+
+
+    //이미지 삭제
+     @PostMapping("/delete-profile-image")
+    public ResponseEntity<?> deleteProfileImage(@RequestParam("email") String email) {
+        try {
+            // 기본 이미지로 변경 (DB에서 이미지 경로를 null로 설정)
+            membersService.updateProfileImage(email, null);
+            return ResponseEntity.ok(Map.of("status", "success"));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("status", "failure", "message", e.getMessage()));
+        }
+    }
+
+
+//     @GetMapping("/members/get-profile")
+// public ResponseEntity<?> getProfile(@RequestParam("email") String email) {
+//     try {
+//         MembersVO user = membersService.getMembersByIdEmail(email);
+//         if (user != null) {
+//             return ResponseEntity.ok(Map.of("success", true, "user", user));
+//         } else {
+//             return ResponseEntity.ok(Map.of("success", false, "message", "사용자를 찾을 수 없습니다."));
+//         }
+//     } catch (Exception e) {
+//         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+//                 .body(Map.of("success", false, "message", e.getMessage()));
+//     }
+// }
+
+
+    
+}
+
+
     
 
-}
