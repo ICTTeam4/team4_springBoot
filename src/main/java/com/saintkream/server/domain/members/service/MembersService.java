@@ -23,6 +23,8 @@ public interface MembersService {
   public int updatePhone(MembersVO mvo); // 휴대폰번호 업데이트( 마이페이지)
   public int updateAdvAgree(MembersVO mvo); // 휴대폰번호 업데이트( 마이페이지)
   public int  withdrawMember(MembersVO mvo); // 삭제
+  public MembersVO getMemberDetail(String member_id); // 회원 상세 조회회
+  
 
 
 

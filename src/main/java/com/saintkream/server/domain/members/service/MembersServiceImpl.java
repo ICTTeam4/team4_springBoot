@@ -67,6 +67,11 @@ public class MembersServiceImpl implements MembersService {
     }
 
     @Override
+    public MembersVO getMemberDetail(String member_id) {
+        return membersMapper.getMemberDetail(member_id);        
+    }
+
+    @Override
     public void updateProfileImage(String email, String imageUrl) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'updateProfileImage'");

@@ -128,5 +128,19 @@ public class SalesPostController {
     return response;
   }
   
+  @PostMapping("/updatestatus")
+  public Map<String, String> updataStatus(@RequestBody Map<String, Integer> request) {
+    int pwr_id = request.get("pwr_id");
+    int result = salesPostService.updateStatus(pwr_id);
+
+    Map<String, String> response = new HashMap<>();
+    if (result > 0) {
+        response.put("message", "판매 완료");
+    } else {
+        response.put("message", "판매완료 실패");
+    }
+    return response;
+  }
+  
 
 }
