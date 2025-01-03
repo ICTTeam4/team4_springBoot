@@ -25,4 +25,8 @@ public interface MembersService {
   public int  withdrawMember(MembersVO mvo); // 삭제
 
 
+
+
+  public void updateProfileImage(String email, String imageUrl); // 이미지 변경 업데이트
+
 }
