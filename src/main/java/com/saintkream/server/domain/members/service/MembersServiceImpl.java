@@ -65,4 +65,9 @@ public class MembersServiceImpl implements MembersService {
     public int  withdrawMember(MembersVO mvo) {
         return membersMapper.withdrawMember(mvo);
     }
+
+    @Override
+    public MembersVO getMemberDetail(String member_id) {
+        return membersMapper.getMemberDetail(member_id);        
+    }
 }

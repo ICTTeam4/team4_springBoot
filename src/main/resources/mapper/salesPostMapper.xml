@@ -43,6 +43,12 @@
         WHERE pwr_id = #{pwr_id}
   </update>
 
+  <update id="updateStatus" parameterType="int">
+        UPDATE post
+        SET status = '판매완료'
+        WHERE pwr_id = #{pwr_id}
+  </update>
+
   <select id="getSalesPostList" resultType="SalesPostVO" resultMap="PostWithFilesMap">
   SELECT 
     p.pwr_id,
