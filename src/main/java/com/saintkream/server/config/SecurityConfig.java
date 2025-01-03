@@ -59,7 +59,6 @@ public class SecurityConfig {
                         // 특정 URL에 인증없이 허용
                         .requestMatchers("/members/**","/api/**","static/**","/images/**")
                         .permitAll()
-                        // 나머지는 인증 필요
                         .anyRequest().authenticated())
 
                 // oath2Login 설정
