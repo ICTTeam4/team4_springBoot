@@ -65,4 +65,10 @@ public class MembersServiceImpl implements MembersService {
     public int  withdrawMember(MembersVO mvo) {
         return membersMapper.withdrawMember(mvo);
     }
+
+    @Override
+    public void updateProfileImage(String email, String imageUrl) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'updateProfileImage'");
+    }
 }

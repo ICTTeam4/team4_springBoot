@@ -1,6 +1,7 @@
 package com.saintkream.server.domain.reviews.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -12,6 +13,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.PreparedStatement;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -24,9 +28,9 @@ public class ReviewsServiceImpl implements ReviewsService {
     // 실제 이미지 저장 경로로 수정 필요
 
     @Override
-    public void saveReview(String content, int rate, MultipartFile[] images) {
+    public void saveReview(String content, int rate, MultipartFile[] images, Integer member_id) {
         // 리뷰 데이터베이스 저장
-        int reviewId = saveReviewToDatabase(content, rate);
+        int reviewId = saveReviewToDatabase(content, rate, member_id);
 
         // 이미지를 선택한 경우에만 처리
         if (images != null && images.length > 0) {
@@ -42,13 +46,14 @@ public class ReviewsServiceImpl implements ReviewsService {
         // 이미지를 업로드하지 않은 경우에도 리뷰 저장이 완료됨
     }
 
-    private int saveReviewToDatabase(String content, int rate) {
+    private int saveReviewToDatabase(String content, int rate, int member_id) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        String sql = "INSERT INTO reviews (content, rate, created_at) VALUES (?, ?, NOW())";
+        String sql = "INSERT INTO reviews (content, rate, created_at,member_id) VALUES (?, ?, NOW(),?)";
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[] { "review_id" });
             ps.setString(1, content);
             ps.setInt(2, rate);
+            ps.setInt(3, member_id);
             return ps;
         }, keyHolder);
         if (keyHolder.getKey() == null) {
@@ -91,4 +96,64 @@ public class ReviewsServiceImpl implements ReviewsService {
         String sql = "INSERT INTO review_file (review_id, file_id) VALUES (?, ?)";
         jdbcTemplate.update(sql, reviewId, fileId);
     }
+
+    @Override
+public List<Map<String, Object>> getReviewsByMemberId(Integer member_id) {
+    String sql = "SELECT r.review_id, r.content, r.rate, r.created_at, 'mine' as type, r.member_id, " +
+                 "f.file_url, f.file_name " +
+                 "FROM reviews r " +
+                 "LEFT JOIN review_file rf ON r.review_id = rf.review_id " +
+                 "LEFT JOIN file_table f ON rf.file_id = f.file_id " +
+                 "WHERE r.member_id = ?";
+
+    return jdbcTemplate.query(sql, ps -> {
+        ps.setInt(1, member_id);
+    }, (rs, rowNum) -> {
+        Map<String, Object> review = new HashMap<>();
+        review.put("review_id", rs.getInt("review_id"));
+        review.put("content", rs.getString("content"));
+        review.put("rate", rs.getInt("rate"));
+        review.put("created_at", rs.getTimestamp("created_at"));
+        review.put("type", rs.getString("type"));
+        review.put("member_id", rs.getInt("member_id"));
+        review.put("file_url", rs.getString("file_url")); // 이미지 URL 추가
+        review.put("file_name", rs.getString("file_name")); // 이미지 파일명 추가
+        return review;
+    });
+}
+
+    
+@Override
+public List<Map<String, Object>> getReviewsByBuyerOrSeller(Integer member_id) {
+    String sql = "SELECT r.review_id, r.content, r.rate, r.created_at, r.member_id, " +
+                 "CASE " +
+                 "  WHEN r.buyer_id = ? THEN 'buyer' " +
+                 "  WHEN r.seller_id = ? THEN 'seller' " +
+                 "END AS type, " +
+                 "f.file_url, f.file_name " +
+                 "FROM reviews r " +
+                 "LEFT JOIN review_file rf ON r.review_id = rf.review_id " +
+                 "LEFT JOIN file_table f ON rf.file_id = f.file_id " +
+                 "WHERE r.buyer_id = ? OR r.seller_id = ?";
+
+    return jdbcTemplate.query(sql, ps -> {
+        ps.setInt(1, member_id);
+        ps.setInt(2, member_id);
+        ps.setInt(3, member_id);
+        ps.setInt(4, member_id);
+    }, (rs, rowNum) -> {
+        Map<String, Object> review = new HashMap<>();
+        review.put("review_id", rs.getInt("review_id"));
+        review.put("content", rs.getString("content"));
+        review.put("rate", rs.getInt("rate"));
+        review.put("created_at", rs.getTimestamp("created_at"));
+        review.put("type", rs.getString("type"));
+        review.put("member_id", rs.getInt("member_id"));
+        review.put("file_url", rs.getString("file_url")); // 이미지 URL 추가
+        review.put("file_name", rs.getString("file_name")); // 이미지 파일명 추가
+        return review;
+    });
+}
+
+    
 }
