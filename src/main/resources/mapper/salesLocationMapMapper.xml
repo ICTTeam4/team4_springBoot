@@ -1,8 +1,48 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper
-    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.saintkream.server.domain.searchitems.mapper.SalesLocationMapMapper">
+  
+  <!-- 판매자의 위도 및 경도 정보 가져오기 -->
+  <select id="getSellerLocation" resultType="com.saintkream.server.domain.salelocationmap.vo.SalesLocationMapVO">
+    SELECT 
+      pwr_id,
+      latitude,
+      longitude
+    FROM post
+    WHERE pwr_id = #{pwr_id}
+  </select>
+
+  <!-- 따릉이 및 세탁소 주변 정보 가져오기 -->
+  <select id="getNearbyLocations" resultType="com.saintkream.server.domain.salelocationmap.vo.SalesLocationMapVO">
+    SELECT 
+      'ddareung' AS type,
+      ddr_lat AS latitude,
+      ddr_lng AS longitude
+    FROM ddareung_tb
+    WHERE 
+      (6371 * ACOS(
+        COS(RADIANS(#{latitude})) * COS(RADIANS(ddr_lat)) *
+        COS(RADIANS(ddr_lng) - RADIANS(#{longitude})) +
+        SIN(RADIANS(#{latitude})) * SIN(RADIANS(ddr_lat))
+      )) &lt;= 1
+    
+    UNION ALL
+    
+    SELECT 
+      'laundry' AS type,
+      laundry_lat AS latitude,
+      laundry_lng AS longitude
+    FROM laundry_tb
+    WHERE 
+      (6371 * ACOS(
+        COS(RADIANS(#{latitude})) * COS(RADIANS(laundry_lat)) *
+        COS(RADIANS(laundry_lng) - RADIANS(#{longitude})) +
+        SIN(RADIANS(#{latitude})) * SIN(RADIANS(laundry_lat))
+      )) &lt;= 1
+    
+    ORDER BY type, latitude, longitude
+  </select>
 
 </mapper>

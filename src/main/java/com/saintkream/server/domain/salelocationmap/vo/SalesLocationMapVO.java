@@ -14,8 +14,15 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SalesLocationMapVO {
-    private String pwr_id,
-                longitude,
-                latitude;
+  // post테이블 정보
+  private String pwr_id,
+      longitude,
+      latitude;
 
+  // 따릉이 테이블 정보
+  // 세탁소 테이블 정보
+  private int ddr_lat,
+      ddr_lng,
+      laundry_lat,
+      laundry_lng;
 }
