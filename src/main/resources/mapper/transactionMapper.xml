@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+ <mapper namespace="com.saintkream.server.domain.transaction.mapper.TransactionMapper">
+    <insert id="setTransactionDetails" parameterType="TransactionVO">
+        INSERT INTO transactiondetails (
+            trans_id,trans_price,pwr_id,buyer_id,trans_method
+            ) VALUES (
+            #{trans_id},#{trans_price},#{pwr_id},#{buyer_id},#{trans_method}
+            )
+    </insert>
+
+    <select id="getTransactionDetails" parameterType="String" resultType="TransactionVO">
+        SELECT * FROM transactiondetails 
+        WHERE pwr_id = #{pwr_id}
+    </select>
+ </mapper>
