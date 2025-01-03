@@ -98,53 +98,62 @@ public class ReviewsServiceImpl implements ReviewsService {
     }
 
     @Override
-    public List<Map<String, Object>> getReviewsByMemberId(Integer member_id) {
-        String sql = "SELECT review_id, content, rate, created_at, 'mine' as type, member_id " +
-                     "FROM reviews " +
-                     "WHERE member_id = ?";
+public List<Map<String, Object>> getReviewsByMemberId(Integer member_id) {
+    String sql = "SELECT r.review_id, r.content, r.rate, r.created_at, 'mine' as type, r.member_id, " +
+                 "f.file_url, f.file_name " +
+                 "FROM reviews r " +
+                 "LEFT JOIN review_file rf ON r.review_id = rf.review_id " +
+                 "LEFT JOIN file_table f ON rf.file_id = f.file_id " +
+                 "WHERE r.member_id = ?";
+
+    return jdbcTemplate.query(sql, ps -> {
+        ps.setInt(1, member_id);
+    }, (rs, rowNum) -> {
+        Map<String, Object> review = new HashMap<>();
+        review.put("review_id", rs.getInt("review_id"));
+        review.put("content", rs.getString("content"));
+        review.put("rate", rs.getInt("rate"));
+        review.put("created_at", rs.getTimestamp("created_at"));
+        review.put("type", rs.getString("type"));
+        review.put("member_id", rs.getInt("member_id"));
+        review.put("file_url", rs.getString("file_url")); // 이미지 URL 추가
+        review.put("file_name", rs.getString("file_name")); // 이미지 파일명 추가
+        return review;
+    });
+}
+
     
-        return jdbcTemplate.query(sql, ps -> {
-            ps.setInt(1, member_id); // member_id 조건
-        }, (rs, rowNum) -> {
-            Map<String, Object> review = new HashMap<>();
-            review.put("review_id", rs.getInt("review_id"));
-            review.put("content", rs.getString("content"));
-            review.put("rate", rs.getInt("rate"));
-            review.put("created_at", rs.getTimestamp("created_at"));
-            review.put("type", rs.getString("type")); // 항상 'mine'
-            review.put("member_id", rs.getInt("member_id")); // 원래 member_id 값
-            return review;
-        });
-    }
-    
-    @Override
-    public List<Map<String, Object>> getReviewsByBuyerOrSeller(Integer member_id) {
-        String sql = "SELECT review_id, content, rate, created_at, member_id, " +
-                     "CASE " +
-                     "  WHEN buyer_id = ? THEN 'buyer' " +
-                     "  WHEN seller_id = ? THEN 'seller' " +
-                     "END AS type, " +
-                     "buyer_id, seller_id " + // buyer_id와 seller_id를 그대로 가져옴
-                     "FROM reviews " +
-                     "WHERE buyer_id = ? OR seller_id = ?";
-    
-        return jdbcTemplate.query(sql, ps -> {
-            ps.setInt(1, member_id); // CASE for buyer
-            ps.setInt(2, member_id); // CASE for seller
-            ps.setInt(3, member_id); // WHERE for buyer
-            ps.setInt(4, member_id); // WHERE for seller
-        }, (rs, rowNum) -> {
-            Map<String, Object> review = new HashMap<>();
-            review.put("review_id", rs.getInt("review_id"));
-            review.put("content", rs.getString("content"));
-            review.put("rate", rs.getInt("rate"));
-            review.put("created_at", rs.getTimestamp("created_at"));
-            review.put("type", rs.getString("type"));
-            review.put("buyer_id", rs.getInt("buyer_id")); // buyer_id 추가
-            review.put("seller_id", rs.getInt("seller_id")); // seller_id 추가
-            review.put("member_id", rs.getInt("member_id")); // seller_id 추가
-            return review;
-        });
-    }
+@Override
+public List<Map<String, Object>> getReviewsByBuyerOrSeller(Integer member_id) {
+    String sql = "SELECT r.review_id, r.content, r.rate, r.created_at, r.member_id, " +
+                 "CASE " +
+                 "  WHEN r.buyer_id = ? THEN 'buyer' " +
+                 "  WHEN r.seller_id = ? THEN 'seller' " +
+                 "END AS type, " +
+                 "f.file_url, f.file_name " +
+                 "FROM reviews r " +
+                 "LEFT JOIN review_file rf ON r.review_id = rf.review_id " +
+                 "LEFT JOIN file_table f ON rf.file_id = f.file_id " +
+                 "WHERE r.buyer_id = ? OR r.seller_id = ?";
+
+    return jdbcTemplate.query(sql, ps -> {
+        ps.setInt(1, member_id);
+        ps.setInt(2, member_id);
+        ps.setInt(3, member_id);
+        ps.setInt(4, member_id);
+    }, (rs, rowNum) -> {
+        Map<String, Object> review = new HashMap<>();
+        review.put("review_id", rs.getInt("review_id"));
+        review.put("content", rs.getString("content"));
+        review.put("rate", rs.getInt("rate"));
+        review.put("created_at", rs.getTimestamp("created_at"));
+        review.put("type", rs.getString("type"));
+        review.put("member_id", rs.getInt("member_id"));
+        review.put("file_url", rs.getString("file_url")); // 이미지 URL 추가
+        review.put("file_name", rs.getString("file_name")); // 이미지 파일명 추가
+        return review;
+    });
+}
+
     
 }
