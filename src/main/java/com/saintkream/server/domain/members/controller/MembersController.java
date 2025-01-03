@@ -1,9 +1,14 @@
 package com.saintkream.server.domain.members.controller;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -12,12 +17,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.saintkream.server.common.util.JwtUtil;
 import com.saintkream.server.domain.auth.vo.DataVO;
@@ -187,53 +194,126 @@ public class MembersController {
                 return dataVO;
             }
 
-            String token = jwtUtil.generateToken(membersVO.getEmail());
-            log.info("토큰 :", token);
-            dataVO.setSuccess(true);
-            dataVO.setMessage("로그인 성공");
-            dataVO.setToken(token);
-            dataVO.setData(Map.of(
-                    "member_id", membersVO.getMember_id(),
-                    "email", membersVO.getEmail(),
-                    "nickname", membersVO.getNickname(),
-                    "name", membersVO.getName(),
-                    "tel_no", membersVO.getTel_no()));
-            // dataVO.setData(membersVO);
+        String token = jwtUtil.generateToken(membersVO.getEmail());
+        log.info("토큰 :",token);
+        dataVO.setSuccess(true);
+        dataVO.setMessage("로그인 성공");
+        dataVO.setToken(token);
+        dataVO.setData(Map.of(
+            "member_id", membersVO.getMember_id(),  
+            "email", membersVO.getEmail(),
+            "nickname", membersVO.getNickname(),
+            "name", membersVO.getName(),
+            "tel_no", membersVO.getTel_no()
+        ));
+        //dataVO.setData(membersVO);
 
-            return dataVO;
-        } catch (Exception e) {
-            log.error("로그인 중 오류 발생: {}", e.getMessage());
-            dataVO.setSuccess(false);
-            dataVO.setMessage("로그인 오류 발생");
-            return dataVO;
-        }
+        return dataVO;
+    } catch (Exception e) {
+        log.error("로그인 중 오류 발생: {}", e.getMessage());
+        dataVO.setSuccess(false);
+        dataVO.setMessage("로그인 오류 발생");
+        return dataVO;
     }
+}
 
-    @PutMapping("/update-nickname")
-    @ResponseBody
-    public ResponseEntity<?> updateNickname(@RequestBody Map<String, String> request) {
-        System.out.println("닉네임 변경한다!!!! : " + request);
-        String email = request.get("email");
-        String newNickname = request.get("newNickname");
 
+@PutMapping("/update-nickname")
+@ResponseBody
+public ResponseEntity<?> updateNickname(@RequestBody Map<String, String> request) {
+    System.out.println("닉네임 변경한다!!!! : " + request);
+    String email = request.get("email");
+    String newNickname = request.get("newNickname");
+
+    try {
+        // 닉네임 중복 체크
+        if (!membersService.isNameAvailable(newNickname)) {
+            return ResponseEntity.badRequest().body(Map.of("message", "닉네임이 이미 사용 중입니다.", "status", "failure"));
+        }
+
+        // 닉네임 업데이트
+        int result = membersService.updateNickname(email, newNickname);
+        if (result > 0) {
+            return ResponseEntity.ok(Map.of("message", "닉네임이 성공적으로 변경되었습니다.", "status", "success"));
+        } else {
+            return ResponseEntity.badRequest().body(Map.of("message", "닉네임 변경 실패", "status", "failure"));
+        }
+    } catch (Exception e) {
+        log.error("닉네임 변경 중 오류 발생: {}", e.getMessage());
+        return ResponseEntity.badRequest().body(Map.of("message", "닉네임 변경 중 오류가 발생했습니다.", "status", "failure"));
+    }
+}
+
+
+
+
+@PostMapping("/logout")
+public ResponseEntity<?> logout(@RequestHeader("Authorization") String token) {
+    log.info("로그아웃 요청 데이터!!!!!!!!!!!!: {}", token);
+    return ResponseEntity.ok(Map.of("message", "로그아웃 성공"));
+}
+
+
+
+// 마이페이지 이미지 변경  <?> => 와일드카드 (어떤 타입이라도 허용한다는 뜻)
+@PostMapping("/upload-profile-image")
+public ResponseEntity<?> uploadProfileImage(@RequestParam("file") MultipartFile file, @RequestParam("email") String email) {
+    log.info("프로필 이미지 업로드 요청: 이메일 = {}, 파일 이름 = {}", email, file.getOriginalFilename());
+    try {
+        // 절대 경로로 파일 저장
+        String absolutePath = System.getProperty("user.dir") + "/src/main/resources/static/uploads/";
+        String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
+        Path uploadPath = Paths.get(absolutePath + fileName);
+
+        // 디렉토리 생성
+        Files.createDirectories(uploadPath.getParent());
+        log.info("디렉토리 생성 확인: {}", uploadPath.getParent().toAbsolutePath());
+
+        // 파일 저장
+        Files.write(uploadPath, file.getBytes());
+        log.info("파일 저장 완료: {}", uploadPath.toAbsolutePath());
+
+        // DB 업데이트
+        String imageUrl = "/uploads/" + fileName; // 상대 경로
+        membersService.updateProfileImage(email, imageUrl);
+
+        return ResponseEntity.ok(Map.of("status", "success", "imageUrl", imageUrl));
+    } catch (Exception e) {
+        log.error("파일 저장 중 오류 발생: {}", e.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(Map.of("status", "failure", "message", e.getMessage()));
+    }
+}
+
+
+    //이미지 삭제
+     @PostMapping("/delete-profile-image")
+    public ResponseEntity<?> deleteProfileImage(@RequestParam("email") String email) {
         try {
-            // 닉네임 중복 체크
-            if (!membersService.isNameAvailable(newNickname)) {
-                return ResponseEntity.badRequest().body(Map.of("message", "닉네임이 이미 사용 중입니다.", "status", "failure"));
-            }
-
-            // 닉네임 업데이트
-            int result = membersService.updateNickname(email, newNickname);
-            if (result > 0) {
-                return ResponseEntity.ok(Map.of("message", "닉네임이 성공적으로 변경되었습니다.", "status", "success"));
-            } else {
-                return ResponseEntity.badRequest().body(Map.of("message", "닉네임 변경 실패", "status", "failure"));
-            }
+            // 기본 이미지로 변경 (DB에서 이미지 경로를 null로 설정)
+            membersService.updateProfileImage(email, null);
+            return ResponseEntity.ok(Map.of("status", "success"));
         } catch (Exception e) {
-            log.error("닉네임 변경 중 오류 발생: {}", e.getMessage());
-            return ResponseEntity.badRequest().body(Map.of("message", "닉네임 변경 중 오류가 발생했습니다.", "status", "failure"));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("status", "failure", "message", e.getMessage()));
         }
     }
+
+
+//     @GetMapping("/members/get-profile")
+// public ResponseEntity<?> getProfile(@RequestParam("email") String email) {
+//     try {
+//         MembersVO user = membersService.getMembersByIdEmail(email);
+//         if (user != null) {
+//             return ResponseEntity.ok(Map.of("success", true, "user", user));
+//         } else {
+//             return ResponseEntity.ok(Map.of("success", false, "message", "사용자를 찾을 수 없습니다."));
+//         }
+//     } catch (Exception e) {
+//         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+//                 .body(Map.of("success", false, "message", e.getMessage()));
+//     }
+// }
+
 
     @GetMapping("/userInfo")
     public ResponseEntity<?> hayooninfo(@RequestParam String email) {
@@ -396,6 +476,4 @@ public class MembersController {
     }
     return dataVO;
   }
-
-
 }

@@ -1,10 +1,13 @@
 package com.saintkream.server.domain.reviews.controller;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,30 +19,68 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-@RequestMapping("/HayoonReview")
+@RequestMapping("/api/HayoonReview")
 public class ReviewsController {
     @Autowired
     private ReviewsService reviewsService;
 
     @RequestMapping("/submit")
     public ResponseEntity<?> submitReview(
-        @RequestParam String content,
-        @RequestParam int rate,
-        @RequestParam(required = false) MultipartFile[] images) {
-  
-  try {
-        // 이미지가 없더라도 예외가 발생하지 않도록 서비스 호출
-        reviewsService.saveReview(content, rate, images);
-        return ResponseEntity.ok().body(Map.of(
-            "success", true,
-            "message", "Review submitted successfully"
-        ));
-    } catch (Exception e) {
-        log.error("Error submitting review", e);
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of(
-            "success", false,
-            "message", "Failed to submit review: " + e.getMessage()
-        ));
+            @RequestParam(name = "content") String content,
+            @RequestParam(name = "rate") int rate,
+            @RequestParam(name = "member_id") int member_id, // member_id를 int로 변경
+            @RequestParam(name = "images", required = false) MultipartFile[] images) {
+        log.info("content: {}", content);
+        log.info("rate: {}", rate);
+        log.info("member_id: {}", member_id);
+        log.info("images: {}", (images != null ? images.length : 0));
+
+        try {
+            // 이미지가 없더라도 예외가 발생하지 않도록 서비스 호출
+            reviewsService.saveReview(content, rate, images, member_id);
+            return ResponseEntity.ok().body(Map.of(
+                    "success", true,
+                    "message", "Review submitted successfully"));
+        } catch (Exception e) {
+            log.error("Error submitting review", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of(
+                    "success", false,
+                    "message", "Failed to submit review: " + e.getMessage()));
+        }
     }
-}
+    @GetMapping("/list")
+    public ResponseEntity<?> getReviews(@RequestParam(name = "member_id", required = true) Integer member_id) {
+        log.info("Received request with member_id: {}", member_id);
+    
+        try {
+            // 내 후기만 가져옴
+            List<Map<String, Object>> myReviews = reviewsService.getReviewsByMemberId(member_id);
+            
+            // 구매자와 판매자 리뷰를 가져옴
+            List<Map<String, Object>> buyerOrSellerReviews = reviewsService.getReviewsByBuyerOrSeller(member_id);
+    
+            // 모든 데이터를 합침
+            List<Map<String, Object>> allReviews = new ArrayList<>();
+            allReviews.addAll(myReviews);
+            allReviews.addAll(buyerOrSellerReviews);
+    
+            log.info("Fetched reviews: {}", allReviews);
+    
+            return ResponseEntity.ok(Map.of(
+                "success", true,
+                "data", allReviews
+            ));
+        } catch (Exception e) {
+            log.error("Error fetching reviews", e);
+            return ResponseEntity.status(500).body(Map.of(
+                "success", false,
+                "message", "Failed to fetch reviews: " + e.getMessage()
+            ));
+        }
+    }
+    
+    
+
+    
+    
 }

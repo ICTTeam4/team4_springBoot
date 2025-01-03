@@ -46,6 +46,7 @@ public class SalesPostController {
       } else {
         svo.setIs_direct("1");
       }
+      svo.setStatus("판매중");
       List<String> file_names = new ArrayList<>();
       salesPostService.getSalesPostWrite(svo);
       int pwr_id = salesPostService.getSelectLastInsert();
@@ -67,11 +68,11 @@ public class SalesPostController {
         int result = salesPostService.getPostFileTableWrite(file_ids,pwr_id);
         if (result == 0) {
           dataVO.setSuccess(false);
-          dataVO.setMessage("게스트북 수정 실패");
+          dataVO.setMessage("오류가 발생하였습니다");
           return dataVO;
       }
       dataVO.setSuccess(true);
-      dataVO.setMessage("게스트북 수정 성공");
+      dataVO.setMessage("판매글이 등록되었습니다다");
       }
     } catch (Exception e) {
       // TODO: handle exception
@@ -106,7 +107,6 @@ public class SalesPostController {
       dataVO.setSuccess(true);
       dataVO.setMessage("조회 성공");
       dataVO.setData(SPVO);
-
     } catch (Exception e) {
       dataVO.setSuccess(false);
       dataVO.setMessage("조회 실패");
