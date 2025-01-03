@@ -21,8 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping("/api/saleslocationmap")
 public class SalesLocationMapController {
 
-  @Autowired
-  private SalesLocationMapService salesLocationMapService;
+
 
   @GetMapping("/locationinfo")
   public DataVO getLocationInfo(@RequestParam("id") int pwr_id) {
