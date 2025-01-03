@@ -1,5 +1,7 @@
 package com.saintkream.server.domain.transaction.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -56,6 +58,24 @@ public class TransactionController {
             dataVO.setData(tvo);
 
         } catch (Exception e) {
+            dataVO.setSuccess(false);
+            dataVO.setMessage("조회 실패");
+        }
+        return dataVO;
+    }
+
+    @GetMapping("/getbuydata")
+    public DataVO getBuyData(@RequestParam("member_id") String buyer_id) {
+        DataVO dataVO = new DataVO();
+        try {
+            log.info("구매자아이디 " + buyer_id);
+            List<TransactionVO> list = transactionService.getBuyData(buyer_id);
+            log.info("리스트정보확인 " + list);
+            dataVO.setSuccess(true);
+            dataVO.setMessage("조회 성공");
+            dataVO.setData(list);
+        } catch (Exception e) {
+            log.error("Error while fetching buy data for buyer_id: {}", buyer_id, e);
             dataVO.setSuccess(false);
             dataVO.setMessage("조회 실패");
         }

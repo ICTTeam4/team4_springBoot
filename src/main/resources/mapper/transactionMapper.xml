@@ -12,8 +12,68 @@
             )
     </insert>
 
+    <!-- 주문내역 상세조회 -->
     <select id="getTransactionDetails" parameterType="String" resultType="TransactionVO">
         SELECT * FROM transactiondetails 
         WHERE pwr_id = #{pwr_id}
     </select>
- </mapper>
+
+    <!-- 마이페이지 구매내역 조회 -->
+    <select id="getBuyData" parameterType="String" resultType="TransactionVO" resultMap="TransactionDetailsResultMap">
+    SELECT
+        td.idx, td.trans_id, td.trans_price, td.trans_date, td.is_fixed, td.trans_method, td.trans_vill, 
+        td.is_payed, td.is_zub, td.pwr_id, td.buyer_id, td.seller_id, 
+        p.selling_area_id, p.title, p.status, p.sell_price, p.view_count, 
+        p.description, p.created_at, p.sup_category, 
+        p.sub_category, ft.file_name
+    FROM
+        transactiondetails td
+    LEFT JOIN post p ON td.pwr_id = p.pwr_id
+    LEFT JOIN post_files pf ON p.pwr_id = pf.pwr_id
+    LEFT JOIN file_table ft ON pf.file_id = ft.file_id
+    WHERE
+        td.buyer_id = #{buyer_id}
+    </select>
+
+
+
+
+<resultMap id="TransactionDetailsResultMap" type="TransactionVO">
+    <!-- TransactionDetails 컬럼 -->
+    <id property="idx" column="idx"/>
+    <result property="trans_id" column="trans_id"/>
+    <result property="trans_price" column="trans_price"/>
+    <result property="trans_date" column="trans_date"/>
+    <result property="is_fixed" column="is_fixed"/>
+    <result property="trans_method" column="trans_method"/>
+    <result property="trans_vill" column="trans_vill"/>
+    <result property="is_payed" column="is_payed"/>
+    <result property="is_zub" column="is_zub"/>
+    <result property="pwr_id" column="pwr_id"/>
+    <result property="buyer_id" column="buyer_id"/>
+    <result property="seller_id" column="seller_id"/>
+
+    <!-- Post 객체 매핑 -->
+    <association property="salesPostVO" javaType="SalesPost2VO">
+        <id property="pwr_id" column="pwr_id"/>
+        <result property="member_id" column="member_id"/>
+        <result property="selling_area_id" column="selling_area_id"/>
+        <result property="title" column="title"/>
+        <result property="status" column="status"/>
+        <result property="sell_price" column="sell_price"/>
+        <result property="view_count" column="view_count"/>
+        <result property="description" column="description"/>
+        <result property="created_at" column="created_at"/>
+        <result property="is_delivery" column="is_delivery"/>
+        <result property="sup_category" column="sup_category"/>
+        <result property="sub_category" column="sub_category"/>
+        <result property="longitude" column="longitude"/>
+        <result property="latitude" column="latitude"/>
+
+        <!-- File 리스트 매핑 -->
+    <collection property="fileList" ofType="File2VO">
+        <result property="fileName" column="file_name" />
+    </collection>
+    </association>
+</resultMap>
+</mapper>
