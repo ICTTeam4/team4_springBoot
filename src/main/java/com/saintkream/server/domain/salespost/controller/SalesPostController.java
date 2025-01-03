@@ -107,7 +107,6 @@ public class SalesPostController {
       dataVO.setSuccess(true);
       dataVO.setMessage("조회 성공");
       dataVO.setData(SPVO);
-
     } catch (Exception e) {
       dataVO.setSuccess(false);
       dataVO.setMessage("조회 실패");

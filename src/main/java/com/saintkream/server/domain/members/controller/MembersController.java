@@ -3,6 +3,7 @@ package com.saintkream.server.domain.members.controller;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -312,6 +313,149 @@ public ResponseEntity<?> uploadProfileImage(@RequestParam("file") MultipartFile 
 //     }
 // }
 
+
+    @GetMapping("/userInfo")
+    public ResponseEntity<?> hayooninfo(@RequestParam String email) {
+        try {
+            MembersVO membersVO = membersService.getMembersByIdEmail(email);
+            if (membersVO == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("회원 정보가 없습니다.");
+            }
+            return ResponseEntity.ok(membersVO);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 에러 발생");
+        }
+    }
+
+    @PostMapping("/check-password")
+    public ResponseEntity<Boolean> checkPassword(@RequestBody PasswordCheckRequest request) {
+        try {
+            // 이메일로 사용자 조회
+            MembersVO member = membersService.getMembersByIdEmail(request.getEmail());
+
+            if (member == null) {
+                return ResponseEntity.ok(false); // 사용자 없음
+            }
+
+            // 비밀번호 검증
+            boolean matches = passwordEncoder.matches(request.getOldPassword(), member.getPassword());
+            return ResponseEntity.ok(matches);
+        } catch (Exception e) {
+            log.error("비밀번호 확인 중 오류 발생: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
+        }
+    }
+
+    @PostMapping("/updatePassword")
+    public ResponseEntity<Map<String, Object>> updatePassword(@RequestBody MembersVO membersVO) {
+        try {
+            // 비밀번호 암호화
+            String encodedPassword = passwordEncoder.encode(membersVO.getPassword());
+            membersVO.setPassword(encodedPassword);
+
+            // 비밀번호 변경 로직 호출
+            int updateCount = membersService.updatePassword(membersVO);
+
+            if (updateCount > 0) {
+                Map<String, Object> response = new HashMap<>();
+                response.put("success", true); // 성공 여부
+                response.put("message", "비밀번호가 성공적으로 변경되었습니다.");
+                return ResponseEntity.ok()
+                        .contentType(MediaType.APPLICATION_JSON) // Content-Type 명시
+                        .body(response);
+            } else {
+                Map<String, Object> response = new HashMap<>();
+                response.put("success", false); // 성공 여부
+                response.put("message", "비밀번호 변경에 실패했습니다. 사용자 정보를 확인하세요.");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(response);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "서버 오류로 인해 비밀번호를 변경할 수 없습니다.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(response);
+        }
+    }
+
+    @PostMapping("/updatePhone")
+    public ResponseEntity<Map<String, Object>> updatePhone(@RequestBody MembersVO membersVO) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            // 휴대폰번호 변경 로직
+            System.out.println("변경 요청된 휴대폰 번호: " + membersVO.getTel_no());
+            int updateCount = membersService.updatePhone(membersVO);
+
+            if (updateCount > 0) {
+                response.put("success", true); // 성공 여부
+                response.put("message", "휴대폰번호가 성공적으로 변경되었습니다.");
+                return ResponseEntity.ok(response);
+            } else {
+                response.put("success", false); // 성공 여부
+                response.put("message", "휴대폰번호 변경에 실패했습니다. 사용자 정보를 확인하세요.");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            }
+        } catch (Exception e) {
+            // 예외 처리
+            e.printStackTrace();
+            response.put("success", false); // 성공 여부
+            response.put("message", "서버 오류로 인해 휴대폰번호를 변경할 수 없습니다.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+    @PostMapping("/updateAdvAgree")
+    public ResponseEntity<Map<String, Object>> updateAdvAgree(@RequestBody MembersVO membersVO) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            // 광고성 정보 수신 동의 상태 변경 로직
+            System.out.println("변경 요청된 광고성 동의 상태: " + membersVO.getAdv_agree());
+            int updateCount = membersService.updateAdvAgree(membersVO);
+
+            if (updateCount > 0) {
+                response.put("success", true); // 성공 여부
+                response.put("message", "광고성 정보 수신 동의 상태가 성공적으로 변경되었습니다.");
+                return ResponseEntity.ok(response);
+            } else {
+                response.put("success", false); // 성공 여부
+                response.put("message", "광고성 정보 수신 동의 상태 변경에 실패했습니다. 사용자 정보를 확인하세요.");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            }
+        } catch (Exception e) {
+            // 예외 처리
+            e.printStackTrace();
+            response.put("success", false); // 성공 여부
+            response.put("message", "서버 오류로 인해 광고성 정보 수신 동의 상태를 변경할 수 없습니다.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+    @PostMapping("/withdraw")
+    public ResponseEntity<Map<String, Object>> withdrawMember(@RequestBody MembersVO membersVO) {
+        Map<String, Object> response = new HashMap<>();
+
+        try {
+            // 실제 탈퇴 처리 로직 (DB 삭제 or status 변경 등) 
+            int result = membersService.withdrawMember(membersVO);
+
+            response.put("success", true);
+            if (result>0) {
+                response.put("message", "회원 탈퇴가 완료되었습니다.");
+                return ResponseEntity.ok(response);
+            } else {
+                response.put("message", "회원 탈퇴에 실패했습니다. 잠시 후 다시 시도해주세요.");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.put("success", false);
+            response.put("message", "서버 오류로 인해 탈퇴가 실패하였습니다.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
 
     
 }
