@@ -57,7 +57,7 @@ public class SecurityConfig {
                         .requestMatchers("/oauth2/**").permitAll() // URL 경로
                         .requestMatchers("/gs-guide-websocket/**", "/chat/**").permitAll()
                         // 특정 URL에 인증없이 허용
-                        .requestMatchers("/members/**","/api/**","/static/**")
+                        .requestMatchers("/members/**","/api/**","/static/**","/images/**")
                         .permitAll()
                         .anyRequest().authenticated())
 
