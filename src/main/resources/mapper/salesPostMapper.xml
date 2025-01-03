@@ -6,9 +6,9 @@
  <mapper namespace="com.saintkream.server.domain.salespost.mapper.SalesPostMapper">
   <insert id="getSalesPostWrite" parameterType="SalesPostVO">
     INSERT INTO post (
-      member_id,selling_area_id,title,status,sell_price,description,sup_category,sub_category,is_direct,is_delivery
+      member_id,selling_area_id,title,status,sell_price,description,sup_category,sub_category,is_direct,is_delivery,longitude,latitude
     ) VALUES (
-      #{member_id}, #{selling_area_id}, #{title},#{status}, #{sell_price},#{description}, #{sup_category},#{sub_category},#{is_direct},#{is_delivery}
+      #{member_id}, #{selling_area_id}, #{title},#{status}, #{sell_price},#{description}, #{sup_category},#{sub_category},#{is_direct},#{is_delivery},#{longitude},#{latitude}
     )
   </insert>
 
@@ -54,7 +54,9 @@
     p.sup_category,
     p.sub_category,
     p.view_count,
-    p.description
+    p.description,
+    p.longitude,
+    p.latitude
 
     FROM 
     post AS p
@@ -86,7 +88,9 @@
     p.description,
     p.selling_area_id,
     p.is_direct,
-    p.is_delivery
+    p.is_delivery,
+    p.longitude,
+    p.latitude
 
     FROM 
     post AS p
@@ -121,6 +125,8 @@
     <result property="selling_area_id" column="selling_area_id" />
     <result property="is_direct" column="is_direct" />
     <result property="is_delivery" column="is_delivery" />
+    <result property="longitude" column="longitude" />
+    <result property="latitude" column="latitude" />
 
     <!-- FileVO 리스트를 매핑 -->
     <collection property="fileList" ofType="FileVO">
