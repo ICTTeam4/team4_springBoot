@@ -98,49 +98,54 @@ public class ReviewsServiceImpl implements ReviewsService {
     }
 
     @Override
-public List<Map<String, Object>> getReviewsByMemberId(Integer member_id) {
-    String sql = "SELECT r.review_id, r.content, r.rate, r.created_at, 'mine' as type, r.member_id, " +
-                 "f.file_url, f.file_name " +
-                 "FROM reviews r " +
-                 "LEFT JOIN review_file rf ON r.review_id = rf.review_id " +
-                 "LEFT JOIN file_table f ON rf.file_id = f.file_id " +
-                 "WHERE r.member_id = ?";
-
-    return jdbcTemplate.query(sql, ps -> {
-        ps.setInt(1, member_id);
-    }, (rs, rowNum) -> {
-        Map<String, Object> review = new HashMap<>();
-        review.put("review_id", rs.getInt("review_id"));
-        review.put("content", rs.getString("content"));
-        review.put("rate", rs.getInt("rate"));
-        review.put("created_at", rs.getTimestamp("created_at"));
-        review.put("type", rs.getString("type"));
-        review.put("member_id", rs.getInt("member_id"));
-        review.put("file_url", rs.getString("file_url")); // 이미지 URL 추가
-        review.put("file_name", rs.getString("file_name")); // 이미지 파일명 추가
-        return review;
-    });
-}
-
+    public List<Map<String, Object>> getReviewsByMemberId(Integer member_id) {
+        String sql = "SELECT r.review_id, r.content, r.rate, r.created_at, 'mine' as type, r.member_id, " +
+                     "f.file_url, f.file_name, " +
+                     "m.nickname " + // members 테이블의 nickname 추가
+                     "FROM reviews r " +
+                     "LEFT JOIN review_file rf ON r.review_id = rf.review_id " +
+                     "LEFT JOIN file_table f ON rf.file_id = f.file_id " +
+                     "LEFT JOIN members m ON r.member_id = m.member_id " + // members 테이블 조인
+                     "WHERE r.member_id = ?";
     
-@Override
+        return jdbcTemplate.query(sql, ps -> {
+            ps.setInt(1, member_id);
+        }, (rs, rowNum) -> {
+            Map<String, Object> review = new HashMap<>();
+            review.put("review_id", rs.getInt("review_id"));
+            review.put("content", rs.getString("content"));
+            review.put("rate", rs.getInt("rate"));
+            review.put("created_at", rs.getTimestamp("created_at"));
+            review.put("type", rs.getString("type"));
+            review.put("member_id", rs.getInt("member_id"));
+            review.put("file_url", rs.getString("file_url")); // 이미지 URL 추가
+            review.put("file_name", rs.getString("file_name")); // 이미지 파일명 추가
+            review.put("nickname", rs.getString("nickname")); // 닉네임 추가
+            return review;
+        });
+    }
+    
+
+    @Override
 public List<Map<String, Object>> getReviewsByBuyerOrSeller(Integer member_id) {
     String sql = "SELECT r.review_id, r.content, r.rate, r.created_at, r.member_id, " +
                  "CASE " +
                  "  WHEN r.buyer_id = ? THEN 'buyer' " +
                  "  WHEN r.seller_id = ? THEN 'seller' " +
                  "END AS type, " +
-                 "f.file_url, f.file_name " +
+                 "f.file_url, f.file_name, " +
+                 "m.nickname " + // members 테이블의 nickname 추가
                  "FROM reviews r " +
                  "LEFT JOIN review_file rf ON r.review_id = rf.review_id " +
                  "LEFT JOIN file_table f ON rf.file_id = f.file_id " +
+                 "LEFT JOIN members m ON r.member_id = m.member_id " + // members 테이블 조인
                  "WHERE r.buyer_id = ? OR r.seller_id = ?";
 
     return jdbcTemplate.query(sql, ps -> {
-        ps.setInt(1, member_id);
-        ps.setInt(2, member_id);
-        ps.setInt(3, member_id);
-        ps.setInt(4, member_id);
+        ps.setInt(1, member_id); // buyer_id 조건
+        ps.setInt(2, member_id); // seller_id 조건
+        ps.setInt(3, member_id); // buyer_id 필터
+        ps.setInt(4, member_id); // seller_id 필터
     }, (rs, rowNum) -> {
         Map<String, Object> review = new HashMap<>();
         review.put("review_id", rs.getInt("review_id"));
@@ -151,9 +156,11 @@ public List<Map<String, Object>> getReviewsByBuyerOrSeller(Integer member_id) {
         review.put("member_id", rs.getInt("member_id"));
         review.put("file_url", rs.getString("file_url")); // 이미지 URL 추가
         review.put("file_name", rs.getString("file_name")); // 이미지 파일명 추가
+        review.put("nickname", rs.getString("nickname")); // 닉네임 추가
         return review;
     });
 }
+
 
     
 }
