@@ -56,6 +56,11 @@ VALUES (#{name}, #{email}, #{tel_no}, #{password}, #{adv_agree}, #{personal_agre
     SET status = 'INACTIVE'
     WHERE member_id = #{member_id}
 </update>
+<!-- 회원 상세 조회 -->
+<select id="getMemberDetail" parameterType="String" resultType="MembersVO"> 
+	SELECT * FROM members 
+	WHERE member_id = #{member_id} 
+</select>
 
 
 

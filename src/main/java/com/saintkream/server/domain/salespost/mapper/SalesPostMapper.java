@@ -18,4 +18,5 @@ public interface SalesPostMapper {
   List<SalesPostVO> getSalesPostList();
   int upViewCount(int pwr_id);
   SalesPostVO getSalesPostOne(int pwr_id);
+  int updateStatus(int pwr_id);
 }
