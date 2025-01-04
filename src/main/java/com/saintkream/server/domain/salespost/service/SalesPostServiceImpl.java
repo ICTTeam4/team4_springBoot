@@ -63,6 +63,11 @@ public class SalesPostServiceImpl implements SalesPostService{
     return salesPostMapper.updateStatus(pwr_id);
   }
 
+  @Override
+  public List<SalesPostVO> getSaleDetail() {
+    return salesPostMapper.getSaleDetail();
+  }
+
   
   
 }

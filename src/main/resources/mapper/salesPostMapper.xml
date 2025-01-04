@@ -83,6 +83,41 @@
     p.member_id = m.member_id
   </select>
 
+  <select id="getSaleDetail" resultType="SalesPostVO" resultMap="PostWithFilesMap">
+  SELECT 
+    p.pwr_id,
+    f.file_name,
+    m.name,
+    p.title,
+    p.sell_price,
+    p.created_at,
+    p.sup_category,
+    p.sub_category,
+    p.view_count,
+    p.description,
+    p.status,
+    p.longitude,
+    p.latitude
+
+  FROM 
+    post AS p
+  LEFT JOIN 
+    post_files AS pf
+  ON 
+    p.pwr_id = pf.pwr_id
+  LEFT JOIN 
+    file_table AS f
+  ON 
+    pf.file_id = f.file_id
+  LEFT JOIN 
+    members AS m
+  ON 
+    p.member_id = m.member_id
+  WHERE 
+    p.status != "판매완료"
+  LIMIT 15
+  </select>
+
   <select id="getSalesPostOne" parameterType="int" resultType="SalesPostVO" resultMap="PostWithFilesMap">
   SELECT 
     p.pwr_id,
