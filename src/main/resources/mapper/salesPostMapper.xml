@@ -37,12 +37,14 @@
         SELECT LAST_INSERT_ID();
   </select>
 
+  <!-- 뷰 카운트 -->
   <update id="upViewCount" parameterType="int">
         UPDATE post
         SET view_count = view_count + 1
         WHERE pwr_id = #{pwr_id}
   </update>
 
+  <!-- 게시글 판매완료처리 -->
   <update id="updateStatus" parameterType="int">
         UPDATE post
         SET status = '판매완료'
