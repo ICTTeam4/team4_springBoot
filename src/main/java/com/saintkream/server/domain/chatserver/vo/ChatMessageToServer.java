@@ -1,12 +1,12 @@
-package com.saintkream.server.domain.chatserver;
+package com.saintkream.server.domain.chatserver.vo;
 
-public class HelloMessage {
+public class ChatMessageToServer {
 
     private String name;
     private String message; 
 
     // 기본 생성자
-    public HelloMessage() {}
+    public ChatMessageToServer() {}
 
     // Getter와 Setter
     public String getName() {

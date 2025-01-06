@@ -1,4 +1,4 @@
-package com.saintkream.server.domain.chatserver;
+package com.saintkream.server.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.context.annotation.Bean;
