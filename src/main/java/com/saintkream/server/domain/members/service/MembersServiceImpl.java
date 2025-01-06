@@ -76,4 +76,9 @@ public class MembersServiceImpl implements MembersService {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'updateProfileImage'");
     }
+
+    @Override
+    public MembersVO getPostMemberDetail(String pwr_id) {
+        return membersMapper.getPostMemberDetail(pwr_id);
+    }
 }

@@ -476,4 +476,23 @@ public ResponseEntity<?> uploadProfileImage(@RequestParam("file") MultipartFile 
     }
     return dataVO;
   }
+
+    /* 판매 회원 상세 조회 */
+    @GetMapping("/getpostmemberdetail")
+  public DataVO getPostMemberDetail(@RequestParam("pwr_id") String pwr_id) {
+    DataVO dataVO = new DataVO();
+    try {
+      MembersVO mvo = membersService.getPostMemberDetail(pwr_id);
+      log.info("------------");
+      log.info("mvo:", mvo.getEmail());
+      dataVO.setSuccess(true);
+      dataVO.setMessage("조회 성공");
+      dataVO.setData(mvo);
+
+    } catch (Exception e) {
+      dataVO.setSuccess(false);
+      dataVO.setMessage("조회 실패");
+    }
+    return dataVO;
+  }
 }
