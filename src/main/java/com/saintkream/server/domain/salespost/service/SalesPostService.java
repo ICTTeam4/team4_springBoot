@@ -14,4 +14,8 @@ public interface SalesPostService {
   List<SalesPostVO> getSalesPostList();
   int upViewCount(int pwr_id);
   SalesPostVO getSalesPostOne(int pwr_id);
+  int updateStatus(int pwr_id); // 판매완료 업데이트
+  List<SalesPostVO> getSaleDetail(); // 판매 상세 페이지 리스트 나열
+  List<SalesPostVO> getSellPostList(String member_id); // 판매내역 진행 중 리스트 나열
+
 }
