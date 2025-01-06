@@ -97,6 +97,23 @@ public class SalesPostController {
     return dataVO;
   }
 
+  @GetMapping("/getsellpostlist")
+  public DataVO getSellPostList(@RequestParam("member_id") String member_id) {
+    DataVO dataVO = new DataVO();
+    try {
+      List<SalesPostVO> list = salesPostService.getSellPostList(member_id);
+      System.out.println( "list to String :  "+ list.toString());
+      System.out.println("-----");
+      dataVO.setSuccess(true);
+      dataVO.setMessage("조회 성공");
+      dataVO.setData(list);
+    } catch (Exception e) {
+      dataVO.setSuccess(false);
+      dataVO.setMessage("조회 실패");
+    }
+    return dataVO;
+  }
+
   @GetMapping("/getsaledetail")
   public DataVO getSaleDetail() {
     DataVO dataVO = new DataVO();

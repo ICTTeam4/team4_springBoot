@@ -20,4 +20,5 @@ public interface SalesPostMapper {
   SalesPostVO getSalesPostOne(int pwr_id);
   int updateStatus(int pwr_id);
   List<SalesPostVO> getSaleDetail();
+  List<SalesPostVO> getSellPostList(String member_id);
 }
