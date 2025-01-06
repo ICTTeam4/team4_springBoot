@@ -1,16 +1,16 @@
-package com.saintkream.server.domain.chatserver;
+package com.saintkream.server.domain.chatserver.vo;
 
-public class Greeting {
+public class ChatMessageToClient {
 
     private String name;    // 발신자 이름
     private String message; // 메시지 내용
 
     // 기본 생성자
-    public Greeting() {
+    public ChatMessageToClient() {
     }
 
     // 모든 필드를 포함하는 생성자
-    public Greeting(String name, String message) {
+    public ChatMessageToClient(String name, String message) {
         this.name = name;
         this.message = message;
     }
