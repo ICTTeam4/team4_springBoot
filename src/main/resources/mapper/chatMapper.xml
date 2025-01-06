@@ -9,14 +9,28 @@
     SELECT * FROM message_rooms WHERE pwr_id = #{pwr_id} AND buyer_id = #{buyer_id} 
     </select>
 
-    <insert id="getChatRoomInsert" parameterType="ChatRoomVO" resultType="int">
-    insert into message_rooms(pwr_id,buyer_id) 
-    VALUES(#{pwr_id},#{buyer_id})
+    <insert id="getChatRoomInsert" parameterType="ChatRoomVO" >
+    insert into message_rooms(pwr_id,buyer_id,created_at) 
+    VALUES(#{pwr_id},#{buyer_id},now())
     </insert>
 
-    <select id="getSelectlastInsert" parameterType="int">
+    <select id="getSelectlastInsert" parameterType="int" > 
         SELECT LAST_INSERT_ID();
     </select>
+
+    <select id="getMessagesByRoomId" parameterType="String" resultType="ChatMessageVO">
+    SELECT * FROM message WHERE room_id = #{roomId} ORDER BY created_at ASC
+</select>
+
+<insert id="saveMessage" parameterType="ChatRoomVO" >
+    insert into message(room_id,content,created_at,member_id) 
+    VALUES(#{room_id},#{content},now(),#{member_id})
+    </insert>
+ <update id="updateIsRead">
+        UPDATE message
+        SET is_read = 1
+        WHERE room_id = #{roomId} AND member_id != #{memberId} 
+    </update>
 
 	
 </mapper>
