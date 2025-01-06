@@ -6,5 +6,6 @@ import com.saintkream.server.domain.salelocationmap.vo.SalesLocationMapVO;
 
 public interface SalesLocationMapService {
   SalesLocationMapVO getSellerLocation(int pwr_id);
-  List<SalesLocationMapVO> getNearbyLocations(double latitude, double longitude);
+  List<SalesLocationMapVO> getDdrLocation();
+  List<SalesLocationMapVO> getLaundryLocation();
 }

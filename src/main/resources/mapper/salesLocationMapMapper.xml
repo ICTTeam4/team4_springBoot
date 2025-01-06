@@ -2,47 +2,37 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.saintkream.server.domain.searchitems.mapper.SalesLocationMapMapper">
-  
+<mapper namespace="com.saintkream.server.domain.salelocationmap.mapper.SalesLocationMapMapper">
+
   <!-- 판매자의 위도 및 경도 정보 가져오기 -->
   <select id="getSellerLocation" resultType="com.saintkream.server.domain.salelocationmap.vo.SalesLocationMapVO">
     SELECT 
       pwr_id,
-      latitude,
-      longitude
+      COALESCE(latitude, '') AS latitude,
+      COALESCE(longitude, '') AS longitude
     FROM post
     WHERE pwr_id = #{pwr_id}
   </select>
 
-  <!-- 따릉이 및 세탁소 주변 정보 가져오기 -->
-  <select id="getNearbyLocations" resultType="com.saintkream.server.domain.salelocationmap.vo.SalesLocationMapVO">
+  <!-- 따릉이 위치 정보 가져오기 -->
+  <select id="getDdrLocation" resultType="com.saintkream.server.domain.salelocationmap.vo.SalesLocationMapVO">
     SELECT 
-      'ddareung' AS type,
-      ddr_lat AS latitude,
-      ddr_lng AS longitude
+      COALESCE(ddr_id, '') AS ddr_id,
+      COALESCE(ddr_addr_detail, '') AS ddr_addr_detail,
+      COALESCE(ddr_lat, 0.0) AS ddr_lat,
+      COALESCE(ddr_lng, 0.0) AS ddr_lng
     FROM ddareung_tb
-    WHERE 
-      (6371 * ACOS(
-        COS(RADIANS(#{latitude})) * COS(RADIANS(ddr_lat)) *
-        COS(RADIANS(ddr_lng) - RADIANS(#{longitude})) +
-        SIN(RADIANS(#{latitude})) * SIN(RADIANS(ddr_lat))
-      )) &lt;= 1
-    
-    UNION ALL
-    
+  </select>
+
+  <!-- 세탁소 위치 정보 가져오기 -->
+  <select id="getLaundryLocation" resultType="com.saintkream.server.domain.salelocationmap.vo.SalesLocationMapVO">
     SELECT 
-      'laundry' AS type,
-      laundry_lat AS latitude,
-      laundry_lng AS longitude
+      COALESCE(laundry_id, '') AS laundry_id,
+      COALESCE(laundry_name, '') AS laundry_name,
+      COALESCE(laundry_lat, 0.0) AS laundry_lat,
+      COALESCE(laundry_lng, 0.0) AS laundry_lng
     FROM laundry_tb
-    WHERE 
-      (6371 * ACOS(
-        COS(RADIANS(#{latitude})) * COS(RADIANS(laundry_lat)) *
-        COS(RADIANS(laundry_lng) - RADIANS(#{longitude})) +
-        SIN(RADIANS(#{latitude})) * SIN(RADIANS(laundry_lat))
-      )) &lt;= 1
-    
-    ORDER BY type, latitude, longitude
   </select>
 
 </mapper>
+
