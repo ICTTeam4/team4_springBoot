@@ -30,4 +30,3 @@ public class RecentViewServiceImpl implements RecentViewService {
         recentViewMapper.deleteRecentlyViewed(recentId);
     }
 }
-

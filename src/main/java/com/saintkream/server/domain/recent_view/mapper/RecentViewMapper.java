@@ -1,4 +1,3 @@
-
 package com.saintkream.server.domain.recent_view.mapper;
 
 import java.util.List;
@@ -13,4 +12,3 @@ public interface RecentViewMapper {
     void insertRecentlyViewed(RecentViewVO rvo);
     void deleteRecentlyViewed(int recentId);
 }
-

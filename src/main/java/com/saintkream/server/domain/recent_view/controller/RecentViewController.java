@@ -1,4 +1,3 @@
-
 package com.saintkream.server.domain.recent_view.controller;
 
 import java.util.List;
@@ -44,4 +43,3 @@ public class RecentViewController {
 
 
 }
-

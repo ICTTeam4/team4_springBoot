@@ -10,9 +10,3 @@ public class RecentViewVO {
     private String viewedAt;
 
 }
-
-
-
-
-
-

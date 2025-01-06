@@ -1,4 +1,3 @@
-
 package com.saintkream.server.domain.recent_view.service;
 
 import java.util.List;
