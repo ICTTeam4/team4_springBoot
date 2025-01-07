@@ -302,6 +302,10 @@ public ResponseEntity<?> getProfile(@RequestParam("email") String email) {
     try {
         MembersVO user = membersService.getMembersByIdEmail(email);
         if (user != null) {
+            if (user.getProfile_image() != null && !user.getProfile_image().startsWith("http")) {
+                String absoluteImagePath = "http://localhost:8080" + user.getProfile_image();
+                user.setProfile_image(absoluteImagePath);
+            }
             return ResponseEntity.ok(Map.of("success", true, "user", user));
         } else {
             return ResponseEntity.ok(Map.of("success", false, "message", "사용자를 찾을 수 없습니다."));

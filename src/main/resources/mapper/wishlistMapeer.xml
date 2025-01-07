@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.saintkream.server.domain.wishlist.mapper.WishListMapper">
+    <insert id="addWishList" parameterType="WishListVO">
+        INSERT INTO wishlist (member_id, pwr_id )
+        VALUES (#{member_id}, #{pwr_id} )
+    </insert>
+
+    <delete id="deleteWishListItem" parameterType="int"> 
+    DELETE FROM wishlist WHERE id = #{id};
+    </delete>
+
+
+<!-- 찜 목록 확인 (중복여부부) -->
+<select id="checkWishList" parameterType="map" resultType="int">
+    SELECT COUNT(*) 
+    FROM wishlist
+    WHERE member_id = #{memberId} AND pwr_id = #{pwr_id}
+</select>
+
+
+
+
+
+    <select id="getWishListByMemberId" resultType="WishListVO" resultMap="WishListMap">
+    SELECT 
+    p.pwr_id,
+    m.member_id,
+    f.file_name,
+    m.nickname,
+    p.title,
+    p.sell_price,
+    p.created_at
+
+    FROM 
+    wishlist AS w
+    LEFT JOIN
+    post AS p
+    ON
+    p.pwr_id = w.pwr_id
+    LEFT JOIN 
+    post_files AS pf
+    ON 
+    p.pwr_id = pf.pwr_id
+    LEFT JOIN 
+    file_table AS f
+    ON 
+    pf.file_id = f.file_id
+    LEFT JOIN 
+    members AS m
+    ON 
+    p.member_id = m.member_id
+    <!-- LEFT JOIN  -->
+    <!-- wishlist AS w
+    ON 
+    p.pwr_id = w.pwr_id -->
+    </select>
+      <resultMap id="WishListMap" type="WishListVO">
+    <!-- PostVO의 기본 필드 -->
+    <id property="pwr_id" column="pwr_id" />
+    <result property="title" column="title" />
+    <result property="sell_price" column="sell_price"/>
+    <result property="member_id" column="member_id"/>
+    <result property="nickname" column="nickname"/>
+    <result property="created_at" column="created_at"/>
+
+    <!-- FileVO 리스트를 매핑 -->
+    <collection property="fileList" ofType="FileVO">
+        <result property="fileName" column="file_name" />
+    </collection>
+  </resultMap>
+<!-- <select id="getSalesPostList" resultType="SalesPostVO" resultMap="PostWithFilesMap">
+  SELECT 
+    p.pwr_id,
+    f.file_name,
+    m.name,
+    p.title,
+    p.sell_price,
+    p.created_at,
+    p.sup_category,
+    p.sub_category,
+    p.view_count,
+    p.description,
+    p.longitude,
+    p.latitude
+
+    FROM 
+    post AS p
+    LEFT JOIN 
+    post_files AS pf
+    ON 
+    p.pwr_id = pf.pwr_id
+    LEFT JOIN 
+    file_table AS f
+    ON 
+    pf.file_id = f.file_id
+    LEFT JOIN 
+    members AS m
+    ON 
+    p.member_id = m.member_id
+  </select> 
+  <resultMap id="PostWithFilesMap" type="SalesPostVO">
+     PostVO의 기본 필드 
+    <id property="pwr_id" column="pwr_id" />
+    <result property="title" column="title" />
+    <result property="sell_price" column="sell_price"/>
+    <result property="created_at" column="created_at"/>
+    <result property="sup_category" column="sup_category"/>
+    <result property="sub_category" column="sub_category"/>
+    <result property="view_count" column="view_count" />
+    <result property="description" column="description" />
+    <result property="sup_category" column="sup_category" />
+    <result property="sub_category" column="sub_category" />
+    <result property="selling_area_id" column="selling_area_id" />
+    <result property="is_direct" column="is_direct" />
+    <result property="is_delivery" column="is_delivery" />
+    <result property="longitude" column="longitude" />
+    <result property="latitude" column="latitude" />
+
+     FileVO 리스트를 매핑 
+    <collection property="fileList" ofType="FileVO">
+        <result property="fileName" column="file_name" />
+    </collection>
+  </resultMap>
+  -->
+
+
+
+
+</mapper>
