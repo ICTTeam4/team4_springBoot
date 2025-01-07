@@ -8,6 +8,8 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.saintkream.server.domain.reviews.mapper.ReviewsMapper;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -20,6 +22,9 @@ import java.util.UUID;
 
 @Service
 public class ReviewsServiceImpl implements ReviewsService {
+
+    @Autowired
+    private ReviewsMapper reviewsMapper;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -163,6 +168,11 @@ public List<Map<String, Object>> getReviewsByBuyerOrSeller(Integer member_id) {
         return review;
     });
 }
+
+    @Override
+    public List<Integer> getReviewPwr() {
+        return reviewsMapper.getReviewPwr();
+    }
 
 
     
