@@ -85,6 +85,12 @@ WHERE
 
 </select>
 
+ <update id="updateProfileImage">
+        UPDATE members
+        SET profile_image = #{imageUrl}
+        WHERE email = #{email}
+</update>
+
 
 
 	<select id="findUserByProvider" parameterType="MembersVO" resultType="MembersVO">

@@ -1,6 +1,7 @@
 package com.saintkream.server.domain.members.service;
 
-import org.apache.ibatis.annotations.Param;
+
+import org.springframework.transaction.annotation.Transactional;
 
 import com.saintkream.server.domain.auth.vo.MembersVO;
 
@@ -17,6 +18,7 @@ public interface MembersService {
 
   public MembersVO getMembersByIdEmail(String email); // 수업버전 중복검사
 
+  @Transactional
   int updateNickname(String email, String newNickname); // 닉네임 업데이트!
 
   public int updatePassword(MembersVO mvo); // 비밀번호 업데이트( 마이페이지)
