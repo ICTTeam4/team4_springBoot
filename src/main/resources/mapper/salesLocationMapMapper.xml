@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.saintkream.server.domain.salelocationmap.mapper.SalesLocationMapMapper">
+
+  <!-- 판매자의 위도 및 경도 정보 가져오기 -->
+  <select id="getSellerLocation" resultType="com.saintkream.server.domain.salelocationmap.vo.SalesLocationMapVO">
+    SELECT 
+      pwr_id,
+      COALESCE(latitude, '') AS latitude,
+      COALESCE(longitude, '') AS longitude
+    FROM post
+    WHERE pwr_id = #{pwr_id}
+  </select>
+
+  <!-- 따릉이 위치 정보 가져오기 -->
+  <select id="getDdrLocation" resultType="com.saintkream.server.domain.salelocationmap.vo.SalesLocationMapVO">
+    SELECT 
+      COALESCE(ddr_id, '') AS ddr_id,
+      COALESCE(ddr_addr_detail, '') AS ddr_addr_detail,
+      COALESCE(ddr_lat, 0.0) AS ddr_lat,
+      COALESCE(ddr_lng, 0.0) AS ddr_lng
+    FROM ddareung_tb
+  </select>
+
+  <!-- 세탁소 위치 정보 가져오기 -->
+  <select id="getLaundryLocation" resultType="com.saintkream.server.domain.salelocationmap.vo.SalesLocationMapVO">
+    SELECT 
+      COALESCE(laundry_id, '') AS laundry_id,
+      COALESCE(laundry_name, '') AS laundry_name,
+      COALESCE(laundry_lat, 0.0) AS laundry_lat,
+      COALESCE(laundry_lng, 0.0) AS laundry_lng
+    FROM laundry_tb
+  </select>
+
+</mapper>
+

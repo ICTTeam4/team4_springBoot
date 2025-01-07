@@ -25,7 +25,7 @@ INSERT INTO members
 VALUES (#{name}, #{email}, #{tel_no}, #{password}, #{adv_agree}, #{personal_agree}, NOW(), #{status}, #{nickname}) 
 </insert>
 
-<!-- 마이페이지 닉네임 변경경 -->
+<!-- 마이페이지 닉네임 변경 -->
 <update id="updateNickname" parameterType="MembersVO">
     UPDATE members
     SET nickname = #{newNickname}
@@ -56,6 +56,34 @@ VALUES (#{name}, #{email}, #{tel_no}, #{password}, #{adv_agree}, #{personal_agre
     SET status = 'INACTIVE'
     WHERE member_id = #{member_id}
 </update>
+<!-- 회원 상세 조회 -->
+<select id="getMemberDetail" parameterType="String" resultType="MembersVO"> 
+	SELECT * FROM members 
+	WHERE member_id = #{member_id} 
+</select>
+<!-- 판매 회원 상세 조회 -->
+<select id="getPostMemberDetail" parameterType="String" resultType="MembersVO"> 
+SELECT 
+    m.member_id,
+    m.name,
+    m.status,
+    m.zipcode,
+    m.address,
+    m.extra_addr,
+    m.tel_no,
+    m.email,
+    m.nickname,
+    m.profile_image
+FROM 
+    post AS p
+INNER JOIN 
+    members AS m
+ON 
+    p.member_id = m.member_id
+WHERE 
+    p.pwr_id = #{pwr_id}
+
+</select>
 
  <update id="updateProfileImage">
         UPDATE members

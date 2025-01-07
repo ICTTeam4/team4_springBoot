@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.saintkream.server.domain.auth.mapper.AuthMapper;
 import com.saintkream.server.domain.auth.vo.MembersVO;
@@ -18,10 +19,12 @@ import com.saintkream.server.domain.members.mapper.MembersMapper;
 @Service
 public class MyUserDetailService implements UserDetailsService {
     @Autowired
-     private AuthMapper authMapper;
+    private AuthMapper authMapper;
     @Autowired
     private MembersMapper membersMapper;
-//authmapper가 아닌  membersMapper로 통합. 반드시 필요함. 필수필수필수
+
+    // authmapper가 아닌 membersMapper로 통합. 반드시 필요함. 필수필수필수
+    @Transactional
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         MembersVO member = membersMapper.getMembersByIdEmail(email);

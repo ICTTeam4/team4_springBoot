@@ -9,20 +9,17 @@
         VALUES (#{member_id}, #{pwr_id} )
     </insert>
 
-    <delete id="deleteWishListItem" parameterType="int"> 
+    <delete id="deleteWishListItem" parameterType="String"> 
     DELETE FROM wishlist WHERE id = #{id};
     </delete>
 
 
 <!-- 찜 목록 확인 (중복여부부) -->
-<select id="checkWishList" parameterType="map" resultType="int">
+<select id="checkWishList" parameterType="map" resultType="String">
     SELECT COUNT(*) 
     FROM wishlist
     WHERE member_id = #{memberId} AND pwr_id = #{pwr_id}
 </select>
-
-
-
 
 
     <select id="getWishListByMemberId" resultType="WishListVO" resultMap="WishListMap">
@@ -30,7 +27,6 @@
     p.pwr_id,
     m.member_id,
     f.file_name,
-    m.nickname,
     p.title,
     p.sell_price,
     p.created_at
@@ -64,7 +60,6 @@
     <result property="title" column="title" />
     <result property="sell_price" column="sell_price"/>
     <result property="member_id" column="member_id"/>
-    <result property="nickname" column="nickname"/>
     <result property="created_at" column="created_at"/>
 
     <!-- FileVO 리스트를 매핑 -->

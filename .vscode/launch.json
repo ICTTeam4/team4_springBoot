@@ -42,11 +42,11 @@
     },
     {
       "type": "java",
-      "name": "Spring Boot-FinalApplication<saintkreamserver>",
+      "name": "Spring Boot-FinalApplication<final-saintkream>",
       "request": "launch",
       "cwd": "${workspaceFolder}",
       "mainClass": "com.saintkream.server.FinalApplication",
-      "projectName": "saintkreamserver",
+      "projectName": "final-saintkream",
       "args": "",
       "envFile": "${workspaceFolder}/.env"
     },
@@ -57,6 +57,16 @@
       "cwd": "${workspaceFolder}",
       "mainClass": "com.saintkream.server.FinalApplication",
       "projectName": "final-team4_springBoot-testhayoon",
+      "args": "",
+      "envFile": "${workspaceFolder}/.env"
+    },
+    {
+      "type": "java",
+      "name": "Spring Boot-FinalApplication<saintkreamserver>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "mainClass": "com.saintkream.server.FinalApplication",
+      "projectName": "saintkreamserver",
       "args": "",
       "envFile": "${workspaceFolder}/.env"
     },

@@ -6,9 +6,9 @@
  <mapper namespace="com.saintkream.server.domain.salespost.mapper.SalesPostMapper">
   <insert id="getSalesPostWrite" parameterType="SalesPostVO">
     INSERT INTO post (
-      member_id,selling_area_id,title,sell_price,description,sup_category,sub_category,is_direct,is_delivery
+      member_id,selling_area_id,title,status,sell_price,description,sup_category,sub_category,is_direct,is_delivery,longitude,latitude
     ) VALUES (
-      #{member_id}, #{selling_area_id}, #{title}, #{sell_price},#{description}, #{sup_category},#{sub_category},#{is_direct},#{is_delivery}
+      #{member_id}, #{selling_area_id}, #{title},#{status}, #{sell_price},#{description}, #{sup_category},#{sub_category},#{is_direct},#{is_delivery},#{longitude},#{latitude}
     )
   </insert>
 
@@ -37,9 +37,17 @@
         SELECT LAST_INSERT_ID();
   </select>
 
+  <!-- 뷰 카운트 -->
   <update id="upViewCount" parameterType="int">
         UPDATE post
         SET view_count = view_count + 1
+        WHERE pwr_id = #{pwr_id}
+  </update>
+
+  <!-- 게시글 판매완료처리 -->
+  <update id="updateStatus" parameterType="int">
+        UPDATE post
+        SET status = '판매완료'
         WHERE pwr_id = #{pwr_id}
   </update>
 
@@ -54,7 +62,10 @@
     p.sup_category,
     p.sub_category,
     p.view_count,
-    p.description
+    p.description,
+    p.status,
+    p.longitude,
+    p.latitude
 
     FROM 
     post AS p
@@ -72,6 +83,77 @@
     p.member_id = m.member_id
   </select>
 
+  <!-- 판매내역 진행중 리스트 출력 -->
+  <select id="getSellPostList" resultType="SalesPostVO" resultMap="PostWithFilesMap" parameterType="String">
+  SELECT 
+    p.pwr_id,
+    f.file_name,
+    m.name,
+    p.title,
+    p.sell_price,
+    p.created_at,
+    p.sup_category,
+    p.sub_category,
+    p.view_count,
+    p.description,
+    p.status,
+    p.longitude,
+    p.latitude
+
+    FROM 
+    post AS p
+    LEFT JOIN 
+    post_files AS pf
+    ON 
+    p.pwr_id = pf.pwr_id
+    LEFT JOIN 
+    file_table AS f
+    ON 
+    pf.file_id = f.file_id
+    LEFT JOIN 
+    members AS m
+    ON 
+    p.member_id = m.member_id
+    WHERE
+    p.member_id = #{member_id}
+  </select>
+
+  <!-- 판매상세페이지 무작위 리스트 출력 -->
+  <select id="getSaleDetail" resultType="SalesPostVO" resultMap="PostWithFilesMap">
+  SELECT 
+    p.pwr_id,
+    f.file_name,
+    m.name,
+    p.title,
+    p.sell_price,
+    p.created_at,
+    p.sup_category,
+    p.sub_category,
+    p.view_count,
+    p.description,
+    p.status,
+    p.longitude,
+    p.latitude
+
+  FROM 
+    post AS p
+  LEFT JOIN 
+    post_files AS pf
+  ON 
+    p.pwr_id = pf.pwr_id
+  LEFT JOIN 
+    file_table AS f
+  ON 
+    pf.file_id = f.file_id
+  LEFT JOIN 
+    members AS m
+  ON 
+    p.member_id = m.member_id
+  WHERE 
+    p.status != "판매완료"
+  LIMIT 15
+  </select>
+
   <select id="getSalesPostOne" parameterType="int" resultType="SalesPostVO" resultMap="PostWithFilesMap">
   SELECT 
     p.pwr_id,
@@ -86,7 +168,10 @@
     p.description,
     p.selling_area_id,
     p.is_direct,
-    p.is_delivery
+    p.is_delivery,
+    p.status,
+    p.longitude,
+    p.latitude
 
     FROM 
     post AS p
@@ -112,7 +197,8 @@
     <result property="title" column="title" />
     <result property="sell_price" column="sell_price"/>
     <result property="created_at" column="created_at"/>
-    <result property="category_id" column="category_id"/>
+    <result property="sup_category" column="sup_category"/>
+    <result property="sub_category" column="sub_category"/>
     <result property="view_count" column="view_count" />
     <result property="description" column="description" />
     <result property="sup_category" column="sup_category" />
@@ -120,6 +206,9 @@
     <result property="selling_area_id" column="selling_area_id" />
     <result property="is_direct" column="is_direct" />
     <result property="is_delivery" column="is_delivery" />
+    <result property="longitude" column="longitude" />
+    <result property="latitude" column="latitude" />
+    <result property="status" column="status" />
 
     <!-- FileVO 리스트를 매핑 -->
     <collection property="fileList" ofType="FileVO">

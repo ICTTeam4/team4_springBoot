@@ -46,6 +46,7 @@ public class SalesPostController {
       } else {
         svo.setIs_direct("1");
       }
+      svo.setStatus("판매중");
       List<String> file_names = new ArrayList<>();
       salesPostService.getSalesPostWrite(svo);
       int pwr_id = salesPostService.getSelectLastInsert();
@@ -67,11 +68,11 @@ public class SalesPostController {
         int result = salesPostService.getPostFileTableWrite(file_ids,pwr_id);
         if (result == 0) {
           dataVO.setSuccess(false);
-          dataVO.setMessage("게스트북 수정 실패");
+          dataVO.setMessage("오류가 발생하였습니다");
           return dataVO;
       }
       dataVO.setSuccess(true);
-      dataVO.setMessage("게스트북 수정 성공");
+      dataVO.setMessage("판매글이 등록되었습니다다");
       }
     } catch (Exception e) {
       // TODO: handle exception
@@ -96,6 +97,40 @@ public class SalesPostController {
     return dataVO;
   }
 
+  @GetMapping("/getsellpostlist")
+  public DataVO getSellPostList(@RequestParam("member_id") String member_id) {
+    DataVO dataVO = new DataVO();
+    try {
+      List<SalesPostVO> list = salesPostService.getSellPostList(member_id);
+      System.out.println( "list to String :  "+ list.toString());
+      System.out.println("-----");
+      dataVO.setSuccess(true);
+      dataVO.setMessage("조회 성공");
+      dataVO.setData(list);
+    } catch (Exception e) {
+      dataVO.setSuccess(false);
+      dataVO.setMessage("조회 실패");
+    }
+    return dataVO;
+  }
+
+  @GetMapping("/getsaledetail")
+  public DataVO getSaleDetail() {
+    DataVO dataVO = new DataVO();
+    try {
+      List<SalesPostVO> list = salesPostService.getSaleDetail();
+      System.out.println( "list to String :  "+ list.toString());
+      System.out.println("-----");
+      dataVO.setSuccess(true);
+      dataVO.setMessage("조회 성공");
+      dataVO.setData(list);
+    } catch (Exception e) {
+      dataVO.setSuccess(false);
+      dataVO.setMessage("조회 실패");
+    }
+    return dataVO;
+  }
+
   @GetMapping("/itemone")
   public DataVO getitemOne(@RequestParam("id") int pwr_id) {
     DataVO dataVO = new DataVO();
@@ -106,7 +141,6 @@ public class SalesPostController {
       dataVO.setSuccess(true);
       dataVO.setMessage("조회 성공");
       dataVO.setData(SPVO);
-
     } catch (Exception e) {
       dataVO.setSuccess(false);
       dataVO.setMessage("조회 실패");
@@ -124,6 +158,20 @@ public class SalesPostController {
         response.put("message", "조회수 증가 완료");
     } else {
         response.put("message", "조회수 증가 실패");
+    }
+    return response;
+  }
+  
+  @PostMapping("/updatestatus")
+  public Map<String, String> updataStatus(@RequestBody Map<String, Integer> request) {
+    int pwr_id = request.get("pwr_id");
+    int result = salesPostService.updateStatus(pwr_id);
+
+    Map<String, String> response = new HashMap<>();
+    if (result > 0) {
+        response.put("message", "판매 완료");
+    } else {
+        response.put("message", "판매완료 실패");
     }
     return response;
   }

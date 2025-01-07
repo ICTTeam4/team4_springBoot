@@ -6,14 +6,14 @@ import com.saintkream.server.domain.wishlist.vo.WishListVO;
 
 public interface WishListService {
     // 찜 추가
-    void addWishList(int member_id, int pwr_id);
+    void addWishList(String member_id, String pwr_id);
 
 
-    List<WishListVO> getWishList(int member_id);
+    List<WishListVO> getWishList(String member_id);
 
     // 찜 지우기기
-    void deleteWishListItem(int id);
+    void deleteWishListItem(String id);
 
-    boolean isWishListed(int member_id, int pwr_id); // 찜 상태 확인 메서드
+    boolean isWishListed(String member_id, String pwr_id); // 찜 상태 확인 메서드
 
 }

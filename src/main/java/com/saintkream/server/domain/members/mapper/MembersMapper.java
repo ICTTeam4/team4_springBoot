@@ -27,4 +27,6 @@ public interface MembersMapper {
     public int updatePhone(MembersVO mvo);
     public int updateAdvAgree(MembersVO mvo);
     public int  withdrawMember(MembersVO mvo);
+    public MembersVO getMemberDetail(String member_id); // 회원 상세 조회
+    public MembersVO getPostMemberDetail(String pwr_id); //판매 회원 상세 조회
 }

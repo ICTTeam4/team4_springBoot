@@ -20,19 +20,19 @@ public class WishListServiceImpl implements WishListService{
     }
 
     @Override
-    public boolean isWishListed(int member_id, int pwr_id) {
+    public boolean isWishListed(String member_id, String pwr_id) {
         return mapper.checkWishList(member_id, pwr_id) > 0;
     }
 
 
  
     @Override
-    public void deleteWishListItem(int id) {
+    public void deleteWishListItem(String id) {
         mapper.deleteWishListItem(id);
     }
 
     @Override
-    public void addWishList(int member_id, int pwr_id) {
+    public void addWishList(String member_id, String pwr_id) {
         WishListVO wishlist = new WishListVO();
         wishlist.setMember_id(member_id);
         wishlist.setPwr_id(pwr_id);
@@ -42,7 +42,7 @@ public class WishListServiceImpl implements WishListService{
 
 
     @Override
-    public List<WishListVO> getWishList(int member_id) {
+    public List<WishListVO> getWishList(String member_id) {
         return mapper.getWishListByMemberId(member_id);
     }
 
