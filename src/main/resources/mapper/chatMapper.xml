@@ -9,7 +9,7 @@
     SELECT * FROM message_rooms WHERE pwr_id = #{pwr_id} AND buyer_id = #{buyer_id} 
     </select>
 
-    <insert id="getChatRoomInsert" parameterType="ChatRoomVO" resultType="int">
+    <insert id="getChatRoomInsert" parameterType="ChatRoomVO">
     insert into message_rooms(pwr_id,buyer_id) 
     VALUES(#{pwr_id},#{buyer_id})
     </insert>
