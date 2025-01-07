@@ -6,11 +6,18 @@
  <mapper namespace="com.saintkream.server.domain.transaction.mapper.TransactionMapper">
     <insert id="setTransactionDetails" parameterType="TransactionVO">
         INSERT INTO transactiondetails (
-            trans_id,trans_price,pwr_id,buyer_id,trans_method
+            trans_id,trans_price,pwr_id,buyer_id,seller_id,trans_method
             ) VALUES (
-            #{trans_id},#{trans_price},#{pwr_id},#{buyer_id},#{trans_method}
+            #{trans_id},#{trans_price},#{pwr_id},#{buyer_id},#{seller_id},#{trans_method}
             )
     </insert>
+
+    <!-- 구매확정 업데이트 -->
+    <update id="updateIsFixed" parameterType="int">
+        UPDATE transactiondetails
+        SET is_fixed = '1'
+        WHERE pwr_id = #{pwr_id}
+    </update>
 
     <!-- 주문내역 상세조회 -->
     <select id="getTransactionDetails" parameterType="String" resultType="TransactionVO">

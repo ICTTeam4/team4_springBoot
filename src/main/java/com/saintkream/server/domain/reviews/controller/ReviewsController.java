@@ -27,17 +27,23 @@ public class ReviewsController {
     @RequestMapping("/submit")
     public ResponseEntity<?> submitReview(
             @RequestParam(name = "content") String content,
+            @RequestParam(name = "seller_id") String seller_id,
+            @RequestParam(name = "buyer_id") String buyer_id,
+            @RequestParam(name = "pwr_id") int pwr_id,
             @RequestParam(name = "rate") int rate,
             @RequestParam(name = "member_id") int member_id, // member_id를 int로 변경
             @RequestParam(name = "images", required = false) MultipartFile[] images) {
         log.info("content: {}", content);
+        log.info("seller_id: {}", seller_id);
+        log.info("buyer_id: {}", buyer_id);
+        log.info("pwr_id: {}", pwr_id);
         log.info("rate: {}", rate);
         log.info("member_id: {}", member_id);
         log.info("images: {}", (images != null ? images.length : 0));
 
         try {
             // 이미지가 없더라도 예외가 발생하지 않도록 서비스 호출
-            reviewsService.saveReview(content, rate, images, member_id);
+            reviewsService.saveReview(seller_id, buyer_id, pwr_id, content, rate, images, member_id);
             return ResponseEntity.ok().body(Map.of(
                     "success", true,
                     "message", "Review submitted successfully"));
@@ -48,39 +54,34 @@ public class ReviewsController {
                     "message", "Failed to submit review: " + e.getMessage()));
         }
     }
+
     @GetMapping("/list")
     public ResponseEntity<?> getReviews(@RequestParam(name = "member_id", required = true) Integer member_id) {
         log.info("Received request with member_id: {}", member_id);
-    
+
         try {
             // 내 후기만 가져옴
             List<Map<String, Object>> myReviews = reviewsService.getReviewsByMemberId(member_id);
-            
+
             // 구매자와 판매자 리뷰를 가져옴
             List<Map<String, Object>> buyerOrSellerReviews = reviewsService.getReviewsByBuyerOrSeller(member_id);
-    
+
             // 모든 데이터를 합침
             List<Map<String, Object>> allReviews = new ArrayList<>();
             allReviews.addAll(myReviews);
             allReviews.addAll(buyerOrSellerReviews);
-    
+
             log.info("Fetched reviews: {}", allReviews);
-    
+
             return ResponseEntity.ok(Map.of(
-                "success", true,
-                "data", allReviews
-            ));
+                    "success", true,
+                    "data", allReviews));
         } catch (Exception e) {
             log.error("Error fetching reviews", e);
             return ResponseEntity.status(500).body(Map.of(
-                "success", false,
-                "message", "Failed to fetch reviews: " + e.getMessage()
-            ));
+                    "success", false,
+                    "message", "Failed to fetch reviews: " + e.getMessage()));
         }
     }
-    
-    
 
-    
-    
 }

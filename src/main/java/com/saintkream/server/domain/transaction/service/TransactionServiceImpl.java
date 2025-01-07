@@ -34,5 +34,10 @@ public class TransactionServiceImpl implements TransactionService {
         return transactionMapper.getBuyData(buyer_id);
     }
 
+    @Override
+    public int updateIsFixed(int pwr_id) {
+        return transactionMapper.updateIsFixed(pwr_id);
+    }
+
  
 }
