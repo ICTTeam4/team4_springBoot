@@ -12,6 +12,7 @@ stompClient.onConnect = (frame) => {
     // 서버에서 메시지를 수신
     stompClient.subscribe('/topic/greetings', (message) => {
         try {
+            console.log('Raw message:', message.body);
             const parsedData = JSON.parse(message.body); // JSON 데이터 파싱
             console.log('Received:', parsedData);
 
@@ -77,7 +78,7 @@ function sendName() {
         destination: "/app/hello", // 서버의 MessageMapping 경로
         body: JSON.stringify({
             name: name,
-            message: message
+            content: message
         }),
     });
 
@@ -88,11 +89,11 @@ function sendName() {
 
 // 수신 메시지 화면에 표시
 function showGreeting(data) {
-    const { name, message } = data;
+    const { name, content } = data;
 
     // 화면에 닉네임과 메시지를 추가
     $("#greetings").append(
-        `<tr><td><strong>${name}:</strong> ${message}</td></tr>`
+        `<tr><td><strong>${name}:</strong> ${content}</td></tr>`
     );
 }
 

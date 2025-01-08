@@ -10,4 +10,6 @@ public interface ReviewsService {
  public void saveReview(String seller_id, String buyer_id, Integer pwr_id, String content, int rate, MultipartFile[] images,Integer member_id);
  public List<Map<String, Object>> getReviewsByMemberId(Integer member_id);
  public List<Map<String, Object>> getReviewsByBuyerOrSeller(Integer member_id);
+ public List<Integer> getReviewPwr(String member_id);
+ public List<Integer> getSellReviewPwr(String member_id);
 }

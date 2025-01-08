@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.saintkream.server.domain.auth.vo.DataVO;
 import com.saintkream.server.domain.reviews.service.ReviewsService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -84,4 +85,39 @@ public class ReviewsController {
         }
     }
 
+    /* 구매내역 pwr_id 검열 */
+    @GetMapping("/getreviewpwr")
+    public DataVO getReviewPwr(@RequestParam("member_id") String member_id) {
+        DataVO dataVO = new DataVO();
+        try{
+        List<Integer> list = reviewsService.getReviewPwr(member_id);
+        System.out.println( "list to String :  "+ list.toString());
+        System.out.println("-----");
+        dataVO.setSuccess(true);
+        dataVO.setMessage("조회 성공");
+        dataVO.setData(list);
+        } catch (Exception e) {
+        dataVO.setSuccess(false);
+        dataVO.setMessage("조회 실패");
+    }
+    return dataVO;
+    }
+
+    /* 판매내역 pwr_id 검열 */
+    @GetMapping("/getsellreviewpwr")
+    public DataVO getSellReviewPwr(@RequestParam("member_id") String member_id) {
+        DataVO dataVO = new DataVO();
+        try{
+        List<Integer> list = reviewsService.getSellReviewPwr(member_id);
+        System.out.println( "list to String :  "+ list.toString());
+        System.out.println("-----");
+        dataVO.setSuccess(true);
+        dataVO.setMessage("조회 성공");
+        dataVO.setData(list);
+        } catch (Exception e) {
+        dataVO.setSuccess(false);
+        dataVO.setMessage("조회 실패");
+    }
+    return dataVO;
+    }
 }
