@@ -1,14 +1,27 @@
-// package com.saintkream.server.domain.chatserver.mapper;
+package com.saintkream.server.domain.chatserver.mapper;
 
-// import org.apache.ibatis.annotations.Mapper;
+import java.util.List;
 
-// import com.saintkream.server.domain.chatserver.vo.ChatRoomVO;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
-// @Mapper
-// public interface ChatMapper {
-//   public ChatRoomVO getOneRoom(ChatRoomVO cvo);
+import com.saintkream.server.domain.chatserver.vo.ChatMessageVO;
+import com.saintkream.server.domain.chatserver.vo.ChatRoomVO;
 
-//   int getChatRoomInsert(ChatRoomVO cvo);
 
-//   int getSelectlastInsert();
-// }
+@Mapper
+public interface ChatMapper {
+public ChatRoomVO getOneRoom(ChatRoomVO cvo);
+
+int getChatRoomInsert(ChatRoomVO cvo);
+
+  int getSelectlastInsert();
+
+  public List<ChatMessageVO> getMessagesByRoomId(String room_id);
+
+  int updateIsRead(@Param("roomId") String roomId, @Param("memberId") String memberId);
+
+  int saveMessage(ChatMessageVO messageVO);
+
+  public List<ChatMessageVO> getMessagesListByMember_Id(String member_id);
+}

@@ -1,9 +1,19 @@
-// package com.saintkream.server.domain.chatserver.service;
+package com.saintkream.server.domain.chatserver.service;
 
-// import com.saintkream.server.domain.chatserver.vo.ChatRoomVO;
+import java.util.List;
 
-// public interface ChatService {
-//   public ChatRoomVO getOneRoom(ChatRoomVO cvo);
-//   int getChatRoomInsert(ChatRoomVO cvo);
-//   int getSelectlastInsert();
-// }
+import com.saintkream.server.domain.chatserver.vo.ChatMessageVO;
+import com.saintkream.server.domain.chatserver.vo.ChatRoomVO;
+
+public interface ChatService {
+  public ChatRoomVO getOneRoom(ChatRoomVO cvo);
+  int getChatRoomInsert(ChatRoomVO cvo);
+  int getSelectlastInsert();
+  public List<ChatMessageVO> getMessagesByRoomId(String room_id);
+   // 메시지 저장 메서드 추가
+   int saveMessage(String roomId,String member_id,String content);
+   int updateIsRead(String roomId, String memberId);
+
+  public List<ChatMessageVO> getMessagesListByMember_Id(String member_id);
+   
+}
