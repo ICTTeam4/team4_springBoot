@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.saintkream.server.domain.auth.vo.DataVO;
 import com.saintkream.server.domain.salepage.service.SalePageService;
 import com.saintkream.server.domain.salepage.vo.SalePageVO;
+import com.saintkream.server.domain.salepage.vo.SaleReviewPageVO;
 import com.saintkream.server.domain.salepage.vo.SaleTabPageVO;
 import com.saintkream.server.domain.salespost.vo.SalesPostVO;
 
@@ -47,17 +48,35 @@ public class SalePageController {
     DataVO dataVO = new DataVO();
     try {
       List<SaleTabPageVO> list = salePageService.getSaleTabPageDataList(member_id);
-      if (list == null || list.isEmpty()) {
-        log.warn("No data found for member_id: {}", member_id);
-        dataVO.setSuccess(false);
-        dataVO.setMessage("데이터가 없습니다.");
-        return dataVO;
-      }
-      log.info("Data fetched successfully.");
+      System.out.println( "list to String :  "+ list.toString());
+      System.out.println("-----");
       dataVO.setSuccess(true);
       dataVO.setMessage("조회 성공");
       dataVO.setData(list);
     } catch (Exception e) {
+      dataVO.setSuccess(false);
+      dataVO.setMessage("조회 실패");
+    }
+    return dataVO;
+  }
+
+  @GetMapping("/getreviewdata")
+  public DataVO getReviewData(@RequestParam("id") String member_id) {
+    log.info("@@@@@@@ReviewData@@@@@@ member_id : {}", member_id);
+    DataVO dataVO = new DataVO();
+    try {
+      List<SaleReviewPageVO> list = salePageService.getSaleReviewDataList(member_id);
+      log.info("쿼리 결과: {}", list);
+      System.out.println( "list to String :  "+ list.toString());
+      System.out.println("-----");
+      if (list.isEmpty()) {
+        log.warn("쿼리 결과가 비어 있습니다.");
+    }
+      dataVO.setSuccess(true);
+      dataVO.setMessage("조회 성공");
+      dataVO.setData(list);
+    } catch (Exception e) {
+      log.error("리뷰 데이터 조회 실패", e);
       dataVO.setSuccess(false);
       dataVO.setMessage("조회 실패");
     }

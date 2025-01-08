@@ -7,8 +7,12 @@ import org.springframework.stereotype.Service;
 
 import com.saintkream.server.domain.salepage.mapper.SalePageMapper;
 import com.saintkream.server.domain.salepage.vo.SalePageVO;
+import com.saintkream.server.domain.salepage.vo.SaleReviewPageVO;
 import com.saintkream.server.domain.salepage.vo.SaleTabPageVO;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class SalePageServiceImpl implements SalePageService {
 
@@ -23,6 +27,14 @@ public class SalePageServiceImpl implements SalePageService {
   @Override
   public List<SaleTabPageVO> getSaleTabPageDataList(int member_id) {
     return salePageMapper.getSaleTabPageDataList(member_id);
+  }
+
+  @Override
+  public List<SaleReviewPageVO> getSaleReviewDataList(String member_id) {
+    List<SaleReviewPageVO> result = salePageMapper.getSaleReviewDataList(member_id);
+    log.info("쿼리 결과: {}", result);
+    return salePageMapper.getSaleReviewDataList(member_id);
+
   }
   
 }

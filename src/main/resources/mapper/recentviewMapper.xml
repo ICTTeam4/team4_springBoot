@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace는 반드시 mapper 위치로 설정해야 된다. -->
+<mapper namespace="com.saintkream.server.domain.recent_view.mapper.RecentViewMapper">
+    
+    <select id="getRecentlyViewedByMemberId" parameterType="int">
+        select * from recent_view WHERE member_id = #{memberId} ORDER BY viewed_at DESC
+    </select>
+
+    <insert id="insertRecentlyViewed" parameterType="RecentViewVO">
+        insert into recent_view (member_id, pwr_id, viewed_at) 
+        VALUES (${memberId}, #{pwrId}, NOW())
+    </insert>
+
+    <delete id="deleteRecentlyViewed" parameterType="int">
+        DELETE from recent_view WHERE recent_id = #{recentId}
+    </delete>
+
+	
+</mapper>
+

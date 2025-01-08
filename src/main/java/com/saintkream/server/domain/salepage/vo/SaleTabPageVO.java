@@ -7,18 +7,31 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.saintkream.server.domain.salespost.vo.FileVO;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class SaleTabPageVO {
-  int member_id = 0;
-  private int pwr_id;          // 게시물 ID
-    private String file_name;    // 게시물 이미지 파일 이름
-    private String title;        // 게시물 제목
-    private int sell_price;      // 게시물 가격
-    private String created_at;   // 등록 시간
-    private String status;       // 게시물 상태 (판매중/종료)
-    private String trans_date;   // 거래 완료 시간 (판매 완료 시)
-  private List<MultipartFile> files = Collections.emptyList();
-  private List<FileVO> fileList = Collections.emptyList();
+  private String pwr_id,
+                member_id,
+                selling_area_id,
+                title,
+                status,
+                sell_price,
+                view_count,
+                description,
+                created_at,
+                file_name,
+                sup_category,
+                sub_category,
+                is_direct,
+                is_delivery,
+                longitude,
+                latitude;
+  private List<MultipartFile> files;
+  private List<FileVO> fileList;
+  private String name;
 }

@@ -7,9 +7,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.saintkream.server.domain.salespost.vo.FileVO;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class SalePageVO {
   int member_id = 0;
   String nickname = "닉네임 없음";
