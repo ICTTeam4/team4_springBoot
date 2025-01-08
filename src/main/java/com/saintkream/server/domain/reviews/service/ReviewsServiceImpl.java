@@ -28,9 +28,9 @@ public class ReviewsServiceImpl implements ReviewsService {
     // 실제 이미지 저장 경로로 수정 필요
 
     @Override
-    public void saveReview(String content, int rate, MultipartFile[] images, Integer member_id) {
+    public void saveReview(String seller_id, String buyer_id, Integer pwr_id, String content, int rate, MultipartFile[] images, Integer member_id) {
         // 리뷰 데이터베이스 저장
-        int reviewId = saveReviewToDatabase(content, rate, member_id);
+        int reviewId = saveReviewToDatabase(seller_id, buyer_id, pwr_id, content, rate, member_id);
 
         // 이미지를 선택한 경우에만 처리
         if (images != null && images.length > 0) {
@@ -46,14 +46,17 @@ public class ReviewsServiceImpl implements ReviewsService {
         // 이미지를 업로드하지 않은 경우에도 리뷰 저장이 완료됨
     }
 
-    private int saveReviewToDatabase(String content, int rate, int member_id) {
+    private int saveReviewToDatabase(String seller_id, String buyer_id, int pwr_id, String content, int rate, int member_id) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        String sql = "INSERT INTO reviews (content, rate, created_at,member_id) VALUES (?, ?, NOW(),?)";
+        String sql = "INSERT INTO reviews (seller_id, buyer_id, pwr_id, content, rate, created_at, member_id) VALUES (?, ?, ?, ?, ?, NOW(),?)";
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[] { "review_id" });
-            ps.setString(1, content);
-            ps.setInt(2, rate);
-            ps.setInt(3, member_id);
+            ps.setString(1, seller_id);
+            ps.setString(2, buyer_id);
+            ps.setInt(3, pwr_id);
+            ps.setString(4, content);
+            ps.setInt(5, rate);
+            ps.setInt(6, member_id);
             return ps;
         }, keyHolder);
         if (keyHolder.getKey() == null) {

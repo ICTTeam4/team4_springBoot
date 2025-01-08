@@ -90,7 +90,7 @@ mybatis:
   mapper-locations: mapper/*.xml
   type-aliases-package: com.saintkream.server
   configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
 
 jwt:
   # JWT 비밀키 및 만료 시간 설정

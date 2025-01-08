@@ -299,20 +299,24 @@ public ResponseEntity<?> uploadProfileImage(@RequestParam("file") MultipartFile 
     }
 
 
-//     @GetMapping("/members/get-profile")
-// public ResponseEntity<?> getProfile(@RequestParam("email") String email) {
-//     try {
-//         MembersVO user = membersService.getMembersByIdEmail(email);
-//         if (user != null) {
-//             return ResponseEntity.ok(Map.of("success", true, "user", user));
-//         } else {
-//             return ResponseEntity.ok(Map.of("success", false, "message", "사용자를 찾을 수 없습니다."));
-//         }
-//     } catch (Exception e) {
-//         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-//                 .body(Map.of("success", false, "message", e.getMessage()));
-//     }
-// }
+    @GetMapping("/get-profile")
+public ResponseEntity<?> getProfile(@RequestParam("email") String email) {
+    try {
+        MembersVO user = membersService.getMembersByIdEmail(email);
+        if (user != null) {
+            if (user.getProfile_image() != null && !user.getProfile_image().startsWith("http")) {
+                String absoluteImagePath = "http://localhost:8080" + user.getProfile_image();
+                user.setProfile_image(absoluteImagePath);
+            }
+            return ResponseEntity.ok(Map.of("success", true, "user", user));
+        } else {
+            return ResponseEntity.ok(Map.of("success", false, "message", "사용자를 찾을 수 없습니다."));
+        }
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(Map.of("success", false, "message", e.getMessage()));
+    }
+}
 
 
     @GetMapping("/userInfo")
@@ -464,6 +468,25 @@ public ResponseEntity<?> uploadProfileImage(@RequestParam("file") MultipartFile 
     DataVO dataVO = new DataVO();
     try {
       MembersVO mvo = membersService.getMemberDetail(member_id);
+      log.info("------------");
+      log.info("mvo:", mvo.getEmail());
+      dataVO.setSuccess(true);
+      dataVO.setMessage("조회 성공");
+      dataVO.setData(mvo);
+
+    } catch (Exception e) {
+      dataVO.setSuccess(false);
+      dataVO.setMessage("조회 실패");
+    }
+    return dataVO;
+  }
+
+    /* 판매 회원 상세 조회 */
+    @GetMapping("/getpostmemberdetail")
+  public DataVO getPostMemberDetail(@RequestParam("pwr_id") String pwr_id) {
+    DataVO dataVO = new DataVO();
+    try {
+      MembersVO mvo = membersService.getPostMemberDetail(pwr_id);
       log.info("------------");
       log.info("mvo:", mvo.getEmail());
       dataVO.setSuccess(true);
