@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace는 반드시 mapper 위치로 설정해야 된다. -->
+<mapper namespace="com.saintkream.server.domain.chatserver.mapper.ChatMapper">
+    <select id="getOneRoom" parameterType="ChatRoomVO" resultType="ChatRoomVO"> SELECT * FROM
+        message_rooms WHERE pwr_id = #{pwr_id} AND buyer_id = #{buyer_id} </select>
+
+    <insert id="getChatRoomInsert" parameterType="ChatRoomVO"> insert into
+        message_rooms(pwr_id,buyer_id,created_at) VALUES(#{pwr_id},#{buyer_id},now()) </insert>
+
+    <select id="getSelectlastInsert" parameterType="int"> SELECT LAST_INSERT_ID(); </select>
+
+    <select id="getMessagesByRoomId" parameterType="String" resultType="ChatMessageVO"> SELECT *
+        FROM message WHERE room_id = #{roomId} ORDER BY created_at ASC </select>
+
+    <insert id="saveMessage" parameterType="ChatRoomVO"> insert into
+        message(room_id,content,created_at,member_id)
+        VALUES(#{room_id},#{content},now(),#{member_id}) </insert>
+    <update id="updateIsRead"> UPDATE message SET is_read = 1 WHERE room_id = #{roomId} AND
+        member_id != #{memberId} </update>
+    <!-- 채팅방리스트, 메세지리스트로 관리해야함  -->
+    <select id="getMessagesListByMember_Id"> SELECT * FROM message WHERE member_id = #{member_id} </select>
+
+</mapper>
