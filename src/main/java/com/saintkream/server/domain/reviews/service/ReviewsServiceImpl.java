@@ -170,8 +170,13 @@ public List<Map<String, Object>> getReviewsByBuyerOrSeller(Integer member_id) {
 }
 
     @Override
-    public List<Integer> getReviewPwr() {
-        return reviewsMapper.getReviewPwr();
+    public List<Integer> getReviewPwr(String member_id) {
+        return reviewsMapper.getReviewPwr(member_id);
+    }
+
+    @Override
+    public List<Integer> getSellReviewPwr(String member_id) {
+        return reviewsMapper.getSellReviewPwr(member_id);
     }
 
 

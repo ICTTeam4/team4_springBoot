@@ -6,5 +6,6 @@ import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface ReviewsMapper {    
-   List<Integer> getReviewPwr();
+   List<Integer> getReviewPwr(String member_id);
+   List<Integer> getSellReviewPwr(String member_id);
 }

@@ -85,12 +85,30 @@ public class ReviewsController {
         }
     }
 
-    /* pwr_id 검열 */
+    /* 구매내역 pwr_id 검열 */
     @GetMapping("/getreviewpwr")
-    public DataVO getReviewPwr() {
+    public DataVO getReviewPwr(@RequestParam("member_id") String member_id) {
         DataVO dataVO = new DataVO();
         try{
-        List<Integer> list = reviewsService.getReviewPwr();
+        List<Integer> list = reviewsService.getReviewPwr(member_id);
+        System.out.println( "list to String :  "+ list.toString());
+        System.out.println("-----");
+        dataVO.setSuccess(true);
+        dataVO.setMessage("조회 성공");
+        dataVO.setData(list);
+        } catch (Exception e) {
+        dataVO.setSuccess(false);
+        dataVO.setMessage("조회 실패");
+    }
+    return dataVO;
+    }
+
+    /* 판매내역 pwr_id 검열 */
+    @GetMapping("/getsellreviewpwr")
+    public DataVO getSellReviewPwr(@RequestParam("member_id") String member_id) {
+        DataVO dataVO = new DataVO();
+        try{
+        List<Integer> list = reviewsService.getSellReviewPwr(member_id);
         System.out.println( "list to String :  "+ list.toString());
         System.out.println("-----");
         dataVO.setSuccess(true);
