@@ -24,4 +24,6 @@ int getChatRoomInsert(ChatRoomVO cvo);
   int saveMessage(ChatMessageVO messageVO);
 
   public List<ChatMessageVO> getMessagesListByMember_Id(String member_id);
+
+  public List<String> getRoomIdsByMemberId(String member_id);
 }
