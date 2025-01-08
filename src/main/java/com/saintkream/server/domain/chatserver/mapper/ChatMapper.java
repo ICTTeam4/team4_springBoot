@@ -1,14 +1,14 @@
-package com.saintkream.server.domain.chatserver.mapper;
+// package com.saintkream.server.domain.chatserver.mapper;
 
-import org.apache.ibatis.annotations.Mapper;
+// import org.apache.ibatis.annotations.Mapper;
 
-import com.saintkream.server.domain.chatserver.vo.ChatRoomVO;
+// import com.saintkream.server.domain.chatserver.vo.ChatRoomVO;
 
-@Mapper
-public interface ChatMapper {
-  public ChatRoomVO getOneRoom(ChatRoomVO cvo);
+// @Mapper
+// public interface ChatMapper {
+//   public ChatRoomVO getOneRoom(ChatRoomVO cvo);
 
-  int getChatRoomInsert(ChatRoomVO cvo);
+//   int getChatRoomInsert(ChatRoomVO cvo);
 
-  int getSelectlastInsert();
-}
+//   int getSelectlastInsert();
+// }
