@@ -47,5 +47,4 @@ public class ChatServiceImpl implements ChatService  {
     return chatMapper.getMessagesListByMember_Id(member_id);  }
 
 
-  
-}
+  }
