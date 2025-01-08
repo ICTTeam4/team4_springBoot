@@ -69,6 +69,16 @@
       "projectName": "saintkreamserver",
       "args": "",
       "envFile": "${workspaceFolder}/.env"
+    },
+    {
+      "type": "java",
+      "name": "Spring Boot-FinalApplication<team4_springBoot-develop>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "mainClass": "com.saintkream.server.FinalApplication",
+      "projectName": "team4_springBoot-develop",
+      "args": "",
+      "envFile": "${workspaceFolder}/.env"
     }
   ]
 }
