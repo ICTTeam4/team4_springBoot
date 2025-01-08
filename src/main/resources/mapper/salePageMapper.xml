@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.saintkream.server.domain.salepage.mapper.SalePageMapper">
+
+<!-- 특정 회원의 판매 페이지 데이터 조회 -->
+    <select id="getSalePageData" 
+    resultType="com.saintkream.server.domain.salepage.vo.SalePageVO">
+        SELECT 
+            m.member_id AS memberId,
+            m.nickname AS nickname,
+            r.content AS content,
+            ROUND(AVG(r.rate), 1) AS rate, -- 평균 평점
+            f.file_name AS fileName
+        FROM members m
+        LEFT JOIN reviews r ON m.member_id = r.member_id
+        LEFT JOIN review_file rf ON r.review_id = rf.review_id
+        LEFT JOIN file_table f ON rf.file_id = f.file_id
+        WHERE m.member_id = #{member_id}
+        GROUP BY m.member_id, m.nickname, r.content, f.file_name
+    </select>
+
+    <select id="getSaleTabPageDataList" 
+    resultType="com.saintkream.server.domain.salepage.vo.SaleTabPageVO" 
+    resultMap="PageTabWithFilesMap" 
+    parameterType="int">
+        SELECT 
+    p.pwr_id,
+    f.file_name,
+    m.name,
+    p.title,
+    p.sell_price,
+    p.created_at,
+    p.sup_category,
+    p.sub_category,
+    p.view_count,
+    p.description,
+    p.status,
+    p.longitude,
+    p.latitude
+
+  FROM 
+    post AS p
+  LEFT JOIN 
+    post_files AS pf
+  ON 
+    p.pwr_id = pf.pwr_id
+  LEFT JOIN 
+    file_table AS f
+  ON 
+    pf.file_id = f.file_id
+  LEFT JOIN 
+    members AS m
+  ON 
+    p.member_id = m.member_id
+  WHERE 
+    p.member_id = #{member_id}
+  LIMIT 15
+  </select>
+
+    <select id="getSaleReviewDataList" 
+    resultType="com.saintkream.server.domain.salepage.vo.SaleReviewPageVO" 
+    resultMap="ReviewMap" 
+    parameterType="String">
+
+    SELECT
+        r.review_id,
+        r.content,
+        r.created_at,
+        r.rate,
+        m.nickname,
+        COALESCE(m.profile_image, 'default_profile.png') AS profile_image,
+        CASE
+            WHEN r.seller_id = #{member_id} THEN r.buyer_id
+            WHEN r.buyer_id = #{member_id} THEN r.seller_id
+            ELSE NULL
+        END AS related_member_id
+    FROM
+        reviews r
+    JOIN
+        members m
+    ON
+       CAST(r.member_id AS SIGNED) = m.member_id
+    WHERE
+        (r.seller_id = #{member_id} OR r.buyer_id = #{member_id})
+        AND r.is_deleted = '0'
+    ORDER BY
+        r.created_at DESC
+       
+    </select>
+
+    <resultMap id="PageTabWithFilesMap" type="SaleTabPageVO">
+    <!-- PostVO의 기본 필드 -->
+    <id property="pwr_id" column="pwr_id" />
+    <result property="title" column="title" />
+    <result property="member_id" column="member_id" />
+    <result property="sell_price" column="sell_price"/>
+    <result property="created_at" column="created_at"/>
+    <result property="sup_category" column="sup_category"/>
+    <result property="sub_category" column="sub_category"/>
+    <result property="view_count" column="view_count" />
+    <result property="description" column="description" />
+    <result property="sup_category" column="sup_category" />
+    <result property="sub_category" column="sub_category" />
+    <result property="selling_area_id" column="selling_area_id" />
+    <result property="is_direct" column="is_direct" />
+    <result property="is_delivery" column="is_delivery" />
+    <result property="longitude" column="longitude" />
+    <result property="latitude" column="latitude" />
+    <result property="status" column="status" />
+    <!-- FileVO 리스트를 매핑 -->
+    <collection property="fileList" ofType="FileVO">
+        <result property="fileName" column="file_name" />
+    </collection>
+    </resultMap>
+
+   <resultMap id="ReviewMap" type="SaleReviewPageVO">
+    <id property="review_id" column="review_id" />
+    <result property="content" column="content" />
+    <result property="rate" column="rate" />
+    <result property="seller_id" column="seller_id" />
+    <result property="buyer_id" column="buyer_id" />
+    <result property="nickname" column="nickname" />
+    <result property="created_at" column="created_at" />
+    <result property="is_deleted" column="is_deleted" />
+    <result property="profile_image" column="profile_image" />
+   </resultMap>
+</mapper>
