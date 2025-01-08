@@ -17,7 +17,7 @@ public interface WishListMapper {
     List<WishListVO> getWishListByMemberId(String member_id);
 
     // 찜 지우기기
-    void deleteWishListItem(String id);
+    void deleteWishListItem(@Param("member_id") String member_id, @Param("pwr_id") String pwr_id);
 
         // 찜 상태 확인 
      int checkWishList(@Param("member_id") String member_id, @Param("pwr_id") String pwr_id);
