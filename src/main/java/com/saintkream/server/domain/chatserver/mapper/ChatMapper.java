@@ -21,4 +21,6 @@ public interface ChatMapper {
   int updateIsRead(@Param("roomId") String roomId, @Param("memberId") String memberId);
 
   int saveMessage(ChatMessageVO messageVO);
+
+  public List<ChatMessageVO> getMessagesListByMember_Id(String member_id);
 }

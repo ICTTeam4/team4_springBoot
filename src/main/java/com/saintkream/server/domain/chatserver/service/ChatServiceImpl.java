@@ -42,6 +42,10 @@ public class ChatServiceImpl implements ChatService  {
   public int updateIsRead(String roomId, String memberId) {
       return chatMapper.updateIsRead(roomId, memberId);
   }
+  @Override
+  public List<ChatMessageVO> getMessagesListByMember_Id(String member_id) {
+    return chatMapper.getMessagesListByMember_Id(member_id);  }
+
 
   
 }

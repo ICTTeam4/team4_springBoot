@@ -13,5 +13,7 @@ public interface ChatService {
    // 메시지 저장 메서드 추가
    int saveMessage(String roomId,String member_id,String content);
    int updateIsRead(String roomId, String memberId);
+
+  public List<ChatMessageVO> getMessagesListByMember_Id(String member_id);
    
 }
