@@ -11,9 +11,12 @@ import com.saintkream.server.domain.salespost.vo.SalesPostVO;
 @Mapper
 public interface SalesPostMapper {
   int getSalesPostWrite(SalesPostVO svo);
+  int getSalesPostUpdate(SalesPostVO svo);
   List<String> getFileIds(@Param("file_names") List<String> file_names);
   int getPostFileWrite(@Param("file_names") List<String> file_names);
+  int getPostFileUpdate(@Param("file_names") List<String> file_names);
   int getPostFileTableWrite(@Param("file_ids") List<String> file_ids, @Param("pwr_id") Integer pwr_id);
+  int getPostFileTableUpdate(@Param("file_ids") List<String> file_ids, @Param("pwr_id") Integer pwr_id);
   int getSelectlastInsert();
   List<SalesPostVO> getSalesPostList();
   int upViewCount(int pwr_id);
@@ -21,4 +24,8 @@ public interface SalesPostMapper {
   int updateStatus(int pwr_id);
   List<SalesPostVO> getSaleDetail();
   List<SalesPostVO> getSellPostList(String member_id);
+  List<String> getFileIdsByPwrId(String pwr_id);
+  int deletePostFile(String file_id);
+  int deleteFileTable(String file_id);
+  int deletePost(String pwr_id);
 }

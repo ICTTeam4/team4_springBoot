@@ -12,6 +12,24 @@
     )
   </insert>
 
+  <update id="getSalesPostUpdate" parameterType="SalesPostVO">
+    UPDATE post
+    SET 
+      member_id = #{member_id},
+      selling_area_id = #{selling_area_id},
+      title = #{title},
+      status = #{status},
+      sell_price = #{sell_price},
+      description = #{description},
+      sup_category = #{sup_category},
+      sub_category = #{sub_category},
+      is_direct = #{is_direct},
+      is_delivery = #{is_delivery},
+      longitude = #{longitude},
+      latitude = #{latitude}
+    WHERE pwr_id = #{pwr_id} <!-- 업데이트 대상 조건 -->
+  </update>
+
   <insert id="getPostFileWrite" parameterType="list">
     INSERT INTO file_table (file_name) VALUES 
     <foreach collection="file_names" item="fileName" separator=",">
@@ -19,12 +37,42 @@
     </foreach>
   </insert>
 
+  <update id="getPostFileUpdate" parameterType="list">
+    <foreach collection="file_names" item="file" separator=";">
+        UPDATE file_table
+        SET file_name = #{file.fileName}
+        WHERE file_id = #{file.fileId}
+    </foreach>
+</update>
+
+
   <select id="getFileIds" parameterType="list" resultType="String">
     SELECT * FROM file_table WHERE file_name IN  
     <foreach collection="file_names" item="fileName" open="(" separator="," close=")">
         #{fileName}
     </foreach>
   </select>
+
+  <select id="getFileIdsByPwrId" parameterType="String" resultType="String">
+    SELECT file_id 
+    FROM post_files 
+    WHERE pwr_id = #{pwr_id}
+  </select>
+
+  <delete id="deletePostFile" parameterType="String">
+    DELETE FROM post_files 
+    WHERE file_id = #{file_id}
+  </delete>
+
+  <delete id="deleteFileTable" parameterType="String">
+    DELETE FROM file_table 
+    WHERE file_id = #{file_id}
+  </delete>
+
+  <delete id="deletePost" parameterType="String">
+    DELETE FROM post
+    WHERE pwr_id = #{pwr_id}
+  </delete>
 
   <insert id="getPostFileTableWrite" parameterType="map">
     INSERT INTO post_files (pwr_id,file_id) VALUES 
