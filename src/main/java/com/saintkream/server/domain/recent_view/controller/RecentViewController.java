@@ -127,6 +127,6 @@ public ResponseEntity<?> insertRecentlyViewed(@RequestBody RecentViewVO rvo) {
         logger.info("최근 본 상품 아이디 지우기!!! recentId: {}", recentViewVO);
         recentViewService.deleteRecentlyViewed(recentViewVO.getMember_id(), recentViewVO.getPwr_id());
         logger.info("최근 본 상품 아이디 지우기 성공!! recentId: {}", recentViewVO);
-        return ResponseEntity.ok("Item successfully deleted");
+        return ResponseEntity.ok("최근 본 상품 삭제 성공!");
     }
 }
