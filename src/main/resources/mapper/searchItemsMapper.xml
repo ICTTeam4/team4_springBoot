@@ -69,7 +69,55 @@
             )
         </if>
     GROUP BY p.pwr_id -->
-</select>
+    </select>
+
+    <select id="getCategoryList" resultType="SearchItemsVO" resultMap="SearchItemsResultMap" parameterType="String">
+    SELECT 
+        p.pwr_id,
+        f.file_name,
+        p.title,
+        p.sell_price,
+        p.created_at,
+        p.sup_category,
+        p.sub_category,
+        p.view_count,
+        p.description,
+        p.status,
+        p.longitude,
+        p.latitude
+    FROM post p
+        LEFT JOIN post_files AS pf ON p.pwr_id = pf.pwr_id
+        LEFT JOIN file_table AS f ON pf.file_id = f.file_id
+    WHERE 
+        p.sup_category = #{category}
+    GROUP BY p.pwr_id
+    ORDER BY p.created_at DESC
+    </select>
+
+    <select id="getSubCategoryList" resultType="SearchItemsVO" resultMap="SearchItemsResultMap" parameterType="String">
+    SELECT 
+        p.pwr_id,
+        f.file_name,
+        p.title,
+        p.sell_price,
+        p.created_at,
+        p.sup_category,
+        p.sub_category,
+        p.view_count,
+        p.description,
+        p.status,
+        p.longitude,
+        p.latitude
+    FROM post p
+        LEFT JOIN post_files AS pf ON p.pwr_id = pf.pwr_id
+        LEFT JOIN file_table AS f ON pf.file_id = f.file_id
+    WHERE 
+        p.sub_category = #{sub_category}
+    GROUP BY p.pwr_id
+    ORDER BY p.created_at DESC
+    </select>
+
+    
 
 
     <!-- 검색 결과 매핑 -->
