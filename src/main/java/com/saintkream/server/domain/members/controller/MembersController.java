@@ -76,7 +76,7 @@ public class MembersController {
             Message message = new Message();
             message.setFrom("010-2826-0931"); // 발신 번호 입력
             message.setTo(phoneNumber);
-            message.setText("인증번호는 153425입니다."); // 여기서 인증번호를 동적으로 생성하여 전송 가능
+            message.setText("인증번호는 240725."); // 여기서 인증번호를 동적으로 생성하여 전송 가능
 
             SingleMessageSentResponse response = messageService.sendOne(new SingleMessageSendingRequest(message));
             System.out.println("SMS 발송 성공: " + response);
@@ -94,7 +94,7 @@ public class MembersController {
     public ResponseEntity<?> verifyPhoneAuth(@RequestParam("phone") String phoneNumber,
             @RequestParam("code") String code) {
         // 인증번호 검증 로직 구현 필요
-        if ("123456".equals(code)) { // 예제에서 인증번호를 123456으로 설정
+        if ("240725".equals(code)) { // 예제에서 인증번호를 123456으로 설정
             return ResponseEntity.ok(Map.of("message", "인증 성공", "status", "success"));
         } else {
             return ResponseEntity.badRequest().body(Map.of("message", "인증번호가 올바르지 않습니다.", "status", "failure"));
