@@ -63,6 +63,51 @@ public class SalesPostServiceImpl implements SalesPostService{
     return salesPostMapper.updateStatus(pwr_id);
   }
 
+  @Override
+  public List<SalesPostVO> getSaleDetail() {
+    return salesPostMapper.getSaleDetail();
+  }
+
+  @Override
+  public List<SalesPostVO> getSellPostList(String member_id) {
+    return salesPostMapper.getSellPostList(member_id);
+  }
+
+  @Override
+  public int getSalesPostUpdate(SalesPostVO svo) {
+    return salesPostMapper.getSalesPostUpdate(svo);
+  }
+
+  @Override
+  public int getPostFileUpdate(List<String> file_names) {
+    return salesPostMapper.getPostFileUpdate(file_names);
+  }
+
+  @Override
+  public int getPostFileTableUpdate(List<String> file_ids, Integer pwr_id) {
+    return salesPostMapper.getPostFileTableUpdate(file_ids, pwr_id);
+  }
+
+  @Override
+  public List<String> getFileIdsByPwrId(String pwr_id) {
+    return salesPostMapper.getFileIdsByPwrId(pwr_id);
+  }
+
+  @Override
+  public int deletePostFile(String file_id) {
+    return salesPostMapper.deletePostFile(file_id);
+  }
+
+  @Override
+  public int deleteFileTable(String file_id) {
+    return salesPostMapper.deleteFileTable(file_id);
+  }
+
+  @Override
+  public int deletePost(String pwr_id) {
+    return salesPostMapper.deletePost(pwr_id);
+  }
+
   
   
 }

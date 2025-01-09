@@ -11,4 +11,5 @@ public interface TransactionMapper {
     int setTransactionDetails(TransactionVO tvo);
     TransactionVO getTransactionDetails(String pwr_id);
     List<TransactionVO> getBuyData(String buyer_id);
+    int updateIsFixed(int pwr_id);
 }

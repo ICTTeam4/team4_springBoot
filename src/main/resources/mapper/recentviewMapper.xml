@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace는 반드시 mapper 위치로 설정해야 된다. -->
+<mapper namespace="com.saintkream.server.domain.recent_view.mapper.RecentViewMapper">
+    
+    <!-- <select id="getRecentlyViewedByMemberId" parameterType="String">
+        select * from recent_view WHERE member_id = #{memberId} ORDER BY viewed_at DESC
+    </select> -->
+
+    <insert id="insertRecentlyViewed" parameterType="RecentViewVO">
+        insert into recent_view (member_id, pwr_id, viewed_at) 
+        VALUES (#{member_id}, #{pwr_id}, NOW())
+    </insert>
+
+    <delete id="deleteRecentlyViewed" parameterType="RecentViewVO">
+        DELETE from recent_view WHERE member_id = #{member_id} AND pwr_id = #{pwr_id};
+    </delete>
+
+
+       <select id="getRecentlyViewedByMemberId" parameterType="String" resultType="RecentViewVO" resultMap="RecentViewMap">
+    SELECT 
+    p.pwr_id,
+    m.member_id,
+    f.file_name,
+    p.title,
+    p.sell_price,
+    p.created_at
+
+    FROM 
+    recent_view AS w
+    LEFT JOIN
+    post AS p
+    ON
+    p.pwr_id = w.pwr_id
+    LEFT JOIN 
+    post_files AS pf
+    ON 
+    p.pwr_id = pf.pwr_id
+    LEFT JOIN 
+    file_table AS f
+    ON 
+    pf.file_id = f.file_id
+    LEFT JOIN 
+    members AS m
+    ON 
+    p.member_id = m.member_id
+    <!-- WHERE member_id = #{member_id} -->
+    <!-- LEFT JOIN  -->
+    <!-- wishlist AS w
+    ON 
+    p.pwr_id = w.pwr_id -->
+    </select>
+      <resultMap id="RecentViewMap" type="RecentViewVO">
+    <!-- PostVO의 기본 필드 -->
+    <id property="pwr_id" column="pwr_id" />
+    <result property="title" column="title" />
+    <result property="sell_price" column="sell_price"/>
+    <result property="member_id" column="member_id"/>
+    <result property="created_at" column="created_at"/>
+
+    <!-- FileVO 리스트를 매핑 -->
+    <collection property="fileList" ofType="FileVO">
+        <result property="fileName" column="file_name" />
+    </collection>
+  </resultMap>
+	
+</mapper>

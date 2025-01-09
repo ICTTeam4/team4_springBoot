@@ -9,6 +9,36 @@
     <select id="searchItems" resultMap="SearchItemsResultMap" parameterType="map">
     SELECT 
         p.pwr_id,
+        f.file_name,
+        p.title,
+        p.sell_price,
+        p.created_at,
+        p.sup_category,
+        p.sub_category,
+        p.view_count,
+        p.description,
+        p.status,
+        p.longitude,
+        p.latitude
+    FROM post p
+    LEFT JOIN post_files AS pf ON p.pwr_id = pf.pwr_id
+    LEFT JOIN file_table AS f ON pf.file_id = f.file_id
+    WHERE 1=1
+        <if test="category != null and category != ''">
+            AND p.sup_category = #{category}
+        </if>
+        <if test="keyword != null and keyword != ''">
+            AND (
+                p.title LIKE CONCAT('%', #{keyword}, '%')
+                OR p.description LIKE CONCAT('%', #{keyword}, '%')
+                OR p.selling_area_id LIKE CONCAT('%', #{keyword}, '%')
+                OR p.sup_category LIKE CONCAT('%', #{keyword}, '%')
+                OR p.sub_category LIKE CONCAT('%', #{keyword}, '%')
+            )
+        </if>
+    GROUP BY p.pwr_id
+    <!-- SELECT 
+        p.pwr_id,
         p.member_id,
         p.selling_area_id,
         p.title,
@@ -38,8 +68,56 @@
                 OR p.sub_category LIKE CONCAT('%', #{keyword}, '%')
             )
         </if>
+    GROUP BY p.pwr_id -->
+    </select>
+
+    <select id="getCategoryList" resultType="SearchItemsVO" resultMap="SearchItemsResultMap" parameterType="String">
+    SELECT 
+        p.pwr_id,
+        f.file_name,
+        p.title,
+        p.sell_price,
+        p.created_at,
+        p.sup_category,
+        p.sub_category,
+        p.view_count,
+        p.description,
+        p.status,
+        p.longitude,
+        p.latitude
+    FROM post p
+        LEFT JOIN post_files AS pf ON p.pwr_id = pf.pwr_id
+        LEFT JOIN file_table AS f ON pf.file_id = f.file_id
+    WHERE 
+        p.sup_category = #{category}
     GROUP BY p.pwr_id
-</select>
+    ORDER BY p.created_at DESC
+    </select>
+
+    <select id="getSubCategoryList" resultType="SearchItemsVO" resultMap="SearchItemsResultMap" parameterType="String">
+    SELECT 
+        p.pwr_id,
+        f.file_name,
+        p.title,
+        p.sell_price,
+        p.created_at,
+        p.sup_category,
+        p.sub_category,
+        p.view_count,
+        p.description,
+        p.status,
+        p.longitude,
+        p.latitude
+    FROM post p
+        LEFT JOIN post_files AS pf ON p.pwr_id = pf.pwr_id
+        LEFT JOIN file_table AS f ON pf.file_id = f.file_id
+    WHERE 
+        p.sub_category = #{sub_category}
+    GROUP BY p.pwr_id
+    ORDER BY p.created_at DESC
+    </select>
+
+    
 
 
     <!-- 검색 결과 매핑 -->
@@ -58,7 +136,7 @@
         <result property="sup_category" column="sup_category"/>
         <result property="sub_category" column="sub_category"/>
         <collection property="fileList" ofType="com.saintkream.server.domain.searchitems.vo.SearchItemsFileVO">
-            <result property="fileName" column="fileName"/>
+            <result property="fileName" column="file_name"/>
         </collection>
     </resultMap>
 </mapper>

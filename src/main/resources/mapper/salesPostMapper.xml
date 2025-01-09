@@ -12,6 +12,24 @@
     )
   </insert>
 
+  <update id="getSalesPostUpdate" parameterType="SalesPostVO">
+    UPDATE post
+    SET 
+      member_id = #{member_id},
+      selling_area_id = #{selling_area_id},
+      title = #{title},
+      status = #{status},
+      sell_price = #{sell_price},
+      description = #{description},
+      sup_category = #{sup_category},
+      sub_category = #{sub_category},
+      is_direct = #{is_direct},
+      is_delivery = #{is_delivery},
+      longitude = #{longitude},
+      latitude = #{latitude}
+    WHERE pwr_id = #{pwr_id} <!-- 업데이트 대상 조건 -->
+  </update>
+
   <insert id="getPostFileWrite" parameterType="list">
     INSERT INTO file_table (file_name) VALUES 
     <foreach collection="file_names" item="fileName" separator=",">
@@ -19,12 +37,42 @@
     </foreach>
   </insert>
 
+  <update id="getPostFileUpdate" parameterType="list">
+    <foreach collection="file_names" item="file" separator=";">
+        UPDATE file_table
+        SET file_name = #{file.fileName}
+        WHERE file_id = #{file.fileId}
+    </foreach>
+</update>
+
+
   <select id="getFileIds" parameterType="list" resultType="String">
     SELECT * FROM file_table WHERE file_name IN  
     <foreach collection="file_names" item="fileName" open="(" separator="," close=")">
         #{fileName}
     </foreach>
   </select>
+
+  <select id="getFileIdsByPwrId" parameterType="String" resultType="String">
+    SELECT file_id 
+    FROM post_files 
+    WHERE pwr_id = #{pwr_id}
+  </select>
+
+  <delete id="deletePostFile" parameterType="String">
+    DELETE FROM post_files 
+    WHERE file_id = #{file_id}
+  </delete>
+
+  <delete id="deleteFileTable" parameterType="String">
+    DELETE FROM file_table 
+    WHERE file_id = #{file_id}
+  </delete>
+
+  <delete id="deletePost" parameterType="String">
+    DELETE FROM post
+    WHERE pwr_id = #{pwr_id}
+  </delete>
 
   <insert id="getPostFileTableWrite" parameterType="map">
     INSERT INTO post_files (pwr_id,file_id) VALUES 
@@ -54,6 +102,7 @@
   <select id="getSalesPostList" resultType="SalesPostVO" resultMap="PostWithFilesMap">
   SELECT 
     p.pwr_id,
+    p.member_id,
     f.file_name,
     m.name,
     p.title,
@@ -83,9 +132,81 @@
     p.member_id = m.member_id
   </select>
 
+  <!-- 판매내역 진행중 리스트 출력 -->
+  <select id="getSellPostList" resultType="SalesPostVO" resultMap="PostWithFilesMap" parameterType="String">
+  SELECT 
+    p.pwr_id,
+    f.file_name,
+    m.name,
+    p.title,
+    p.sell_price,
+    p.created_at,
+    p.sup_category,
+    p.sub_category,
+    p.view_count,
+    p.description,
+    p.status,
+    p.longitude,
+    p.latitude
+
+    FROM 
+    post AS p
+    LEFT JOIN 
+    post_files AS pf
+    ON 
+    p.pwr_id = pf.pwr_id
+    LEFT JOIN 
+    file_table AS f
+    ON 
+    pf.file_id = f.file_id
+    LEFT JOIN 
+    members AS m
+    ON 
+    p.member_id = m.member_id
+    WHERE
+    p.member_id = #{member_id}
+  </select>
+
+  <!-- 판매상세페이지 무작위 리스트 출력 -->
+  <select id="getSaleDetail" resultType="SalesPostVO" resultMap="PostWithFilesMap">
+  SELECT 
+    p.pwr_id,
+    f.file_name,
+    m.name,
+    p.title,
+    p.sell_price,
+    p.created_at,
+    p.sup_category,
+    p.sub_category,
+    p.view_count,
+    p.description,
+    p.status,
+    p.longitude,
+    p.latitude
+
+  FROM 
+    post AS p
+  LEFT JOIN 
+    post_files AS pf
+  ON 
+    p.pwr_id = pf.pwr_id
+  LEFT JOIN 
+    file_table AS f
+  ON 
+    pf.file_id = f.file_id
+  LEFT JOIN 
+    members AS m
+  ON 
+    p.member_id = m.member_id
+  WHERE 
+    p.status != "판매완료"
+  LIMIT 15
+  </select>
+
   <select id="getSalesPostOne" parameterType="int" resultType="SalesPostVO" resultMap="PostWithFilesMap">
   SELECT 
     p.pwr_id,
+    p.member_id,
     f.file_name,
     m.name,
     p.title,
@@ -123,6 +244,7 @@
   <resultMap id="PostWithFilesMap" type="SalesPostVO">
     <!-- PostVO의 기본 필드 -->
     <id property="pwr_id" column="pwr_id" />
+    <id property="member_id" column="member_id" />
     <result property="title" column="title" />
     <result property="sell_price" column="sell_price"/>
     <result property="created_at" column="created_at"/>
