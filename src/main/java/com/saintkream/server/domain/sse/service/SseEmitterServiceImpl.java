@@ -2,7 +2,7 @@
 
 // import org.springframework.stereotype.Service;
 
-
-// public interface SseEmitterService {
+// @Service
+// public class SseEmitterService implements SseEmitterService {
 
 // }

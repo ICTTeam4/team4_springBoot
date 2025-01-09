@@ -32,6 +32,8 @@ public class SalesPostController {
 
   @PostMapping("/salesinsert")
   public DataVO getPostDetail(@ModelAttribute("data") SalesPostVO svo) {
+
+
     DataVO dataVO = new DataVO();
     System.out.println("svo.tostring()"+svo.toString());
     try {
