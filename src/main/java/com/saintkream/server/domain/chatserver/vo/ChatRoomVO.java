@@ -8,5 +8,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ChatRoomVO {
-  private String room_id,pwr_id,buyer_id;
+  private String room_id,pwr_id,buyer_id,seller_id;
 }

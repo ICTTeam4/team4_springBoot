@@ -45,6 +45,10 @@ public class ChatServiceImpl implements ChatService  {
   @Override
   public List<ChatMessageVO> getMessagesListByMember_Id(String member_id) {
     return chatMapper.getMessagesListByMember_Id(member_id);  }
+  @Override
+  public List<String> getRoomIdsByMemberId(String member_id) {
+    return chatMapper.getRoomIdsByMemberId(member_id);
+  }
 
 
   }

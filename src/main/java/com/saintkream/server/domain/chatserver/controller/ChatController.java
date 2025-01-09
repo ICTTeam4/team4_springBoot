@@ -28,6 +28,7 @@ public class ChatController {
     @GetMapping("/room")
     @ResponseBody
     public DataVO getChatRoomId(
+            @RequestParam("seller_id") String sellerId,
             @RequestParam("buyer_id") String buyerId,
             @RequestParam("pwr_id") String pwrId) {
 
@@ -35,6 +36,7 @@ public class ChatController {
 
         // ChatRoomVO 객체 생성
         ChatRoomVO cvo = new ChatRoomVO();
+        cvo.setSeller_id(sellerId);
         cvo.setBuyer_id(buyerId);
         cvo.setPwr_id(pwrId);
 
@@ -45,6 +47,7 @@ public class ChatController {
         if (cvo2 == null) {
             // 채팅방이 없으면 새로 생성
             int result = chatService.getChatRoomInsert(cvo);
+            // 그래도 실패시
             if (result == 0) {
                 dataVo.setSuccess(false);
                 dataVo.setMessage("채팅방 생성 오류");
@@ -68,13 +71,32 @@ public class ChatController {
         return dataVo;
     }
 
-    // 메세지들을 전부 줘야함. 룸 이 아니라.
+    // 메세지들을 전부 줘야함. 룸 이 아니라......
     @GetMapping("/roomList")
     @ResponseBody
     public List<ChatMessageVO> getMessagesListByMember_Id(@RequestParam("member_id") String member_id) {
+        System.out.println("요청 받은 member_id: " + member_id);
 
-        System.out.println(member_id);
-        List<ChatMessageVO> messages = chatService.getMessagesListByMember_Id(member_id);
+        // 1. buyer_id 또는 seller_id가 member_id와 일치하는 room_id 가져오기
+        List<String> roomIds = chatService.getRoomIdsByMemberId(member_id);
+
+        // 2. 각 room_id에 해당하는 메시지 가져오기
+        List<ChatMessageVO> messages = new ArrayList<>();
+        for (String roomId : roomIds) {
+            List<ChatMessageVO> roomMessages = chatService.getMessagesByRoomId(roomId);
+            messages.addAll(roomMessages);
+        }
+
+        return messages; // 모든 메시지 리스트 반환
+    }
+
+    // 메세지리스트 가져오기. 판매자 ,구매자 포함..... 위는 잘못되었음...
+    @GetMapping("/messageListForAll")
+    @ResponseBody
+    public List<ChatMessageVO> messageListForAll(@RequestParam("room_id") String room_id) {
+
+        System.out.println("최종룸아이디테스트" + room_id);
+        List<ChatMessageVO> messages = chatService.getMessagesByRoomId(room_id);
         return messages; // 메시지 리스트 반환
     }
 

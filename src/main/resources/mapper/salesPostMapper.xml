@@ -102,6 +102,7 @@
   <select id="getSalesPostList" resultType="SalesPostVO" resultMap="PostWithFilesMap">
   SELECT 
     p.pwr_id,
+    p.member_id,
     f.file_name,
     m.name,
     p.title,
@@ -205,7 +206,6 @@
   <select id="getSalesPostOne" parameterType="int" resultType="SalesPostVO" resultMap="PostWithFilesMap">
   SELECT 
     p.pwr_id,
-    p.member_id,
     f.file_name,
     m.name,
     p.title,
@@ -244,7 +244,6 @@
     <!-- PostVO의 기본 필드 -->
     <id property="pwr_id" column="pwr_id" />
     <result property="title" column="title" />
-    <result property="member_id" column="member_id" />
     <result property="sell_price" column="sell_price"/>
     <result property="created_at" column="created_at"/>
     <result property="sup_category" column="sup_category"/>

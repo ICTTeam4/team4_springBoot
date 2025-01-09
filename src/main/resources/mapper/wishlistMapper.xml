@@ -10,7 +10,7 @@
     </insert>
 
     <delete id="deleteWishListItem" parameterType="String"> 
-    DELETE FROM wishlist WHERE id = #{id};
+   DELETE FROM wishlist WHERE member_id = #{member_id} AND pwr_id = #{pwr_id};
     </delete>
 
 

@@ -4,15 +4,14 @@ import com.saintkream.server.domain.searchitems.service.SearchItemsService;
 import com.saintkream.server.domain.searchitems.vo.SearchItemsVO;
 import com.saintkream.server.domain.auth.vo.DataVO;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
 
 @Slf4j
 @RestController
@@ -80,6 +79,18 @@ public class SearchItemsController {
     @GetMapping("/{category}List")
     public DataVO searchCategoryList(@RequestParam String keyword, @PathVariable String category) {
         log.info("{} 카테고리 검색 요청 - keyword: '{}'", category, keyword);
-        return processSearchRequest(keyword, category);
+        Map<String, String> categoryMap = new HashMap<>();
+        categoryMap.put("outer", "아우터");
+        categoryMap.put("top", "상의");
+        categoryMap.put("bottom", "하의");
+        categoryMap.put("shoes", "신발");
+        categoryMap.put("bags", "가방");
+        categoryMap.put("accessories", "패션잡화");
+        
+        String translatedCategory = categoryMap.getOrDefault(category, category);
+        
+        log.info("변환된 카테고리: '{}'", translatedCategory);
+
+        return processSearchRequest(keyword, translatedCategory);
     }
 }
