@@ -9,5 +9,6 @@ public interface AccountService {
     void updateAccount(Long id, AccountVO accountVO);
     void deleteAccount(Long id);
     void setDefaultAccount(Long id, Long member_id);
+    void clearDefaultAccount(Long member_id);
     List<AccountVO> getAccountsByMemberId(Long member_id);
 }
