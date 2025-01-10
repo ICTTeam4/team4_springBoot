@@ -281,7 +281,7 @@ public class ChatController {
                     message.setHas_file("1");
                     chatService.saveMedia(message);
 
-                        System.err.println("찐마지막 사진체크 ");
+                
                    
                     ChatMessageToClient webSocketMessage = new ChatMessageToClient(memberId, fileUrl);
                     messagingTemplate.convertAndSend("/topic/chat/" + roomId, webSocketMessage);
