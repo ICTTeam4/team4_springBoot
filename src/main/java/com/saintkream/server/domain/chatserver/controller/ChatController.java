@@ -165,46 +165,68 @@ public class ChatController {
     }
     
     @GetMapping("/getHostName")
-public Map<String, Object> getHostName(@RequestParam("room_id") String room_id) {
-    System.out.println("판매자 정보 찾기 실행");
-    Map<String, Object> response = new HashMap<>();
-    try {
-        // room_id로 seller_id 가져오기
-        String sellerIdQuery = "SELECT seller_id FROM message_rooms WHERE room_id = ?";
-        String sellerId = jdbcTemplate.queryForObject(sellerIdQuery, new Object[]{room_id}, String.class);
-
-        if (sellerId == null) {
+    public Map<String, Object> getHostName(@RequestParam("room_id") String room_id) {
+        System.out.println("판매자 정보 찾기 실행");
+        Map<String, Object> response = new HashMap<>();
+        try {
+            // Step 1: room_id로 pwr_id 가져오기
+            String pwrIdQuery = "SELECT pwr_id FROM message_rooms WHERE room_id = ?";
+            String pwrId = jdbcTemplate.queryForObject(pwrIdQuery, new Object[]{room_id}, String.class);
+    
+            if (pwrId == null) {
+                response.put("success", false);
+                response.put("hostname", "");
+                response.put("profile_image", "");
+                response.put("price", null);
+                response.put("message", "pwr_id not found for room_id: " + room_id);
+                return response;
+            }
+    
+            // Step 2: pwr_id로 sell_price 가져오기
+            String sellPriceQuery = "SELECT sell_price FROM post WHERE pwr_id = ?";
+            Double sellPrice = jdbcTemplate.queryForObject(sellPriceQuery, new Object[]{pwrId}, Double.class);
+    
+            // Step 3: room_id로 seller_id 가져오기
+            String sellerIdQuery = "SELECT seller_id FROM message_rooms WHERE room_id = ?";
+            String sellerId = jdbcTemplate.queryForObject(sellerIdQuery, new Object[]{room_id}, String.class);
+    
+            if (sellerId == null) {
+                response.put("success", false);
+                response.put("hostname", "");
+                response.put("profile_image", "");
+                response.put("price", sellPrice);
+                response.put("message", "seller_id not found for room_id: " + room_id);
+                return response;
+            }
+    
+            // Step 4: seller_id로 nickname과 profile_image 가져오기
+            String hostInfoQuery = "SELECT nickname, profile_image FROM members WHERE member_id = ?";
+            Map<String, Object> hostInfo = jdbcTemplate.queryForMap(hostInfoQuery, sellerId);
+    
+            if (hostInfo == null || !hostInfo.containsKey("nickname") || !hostInfo.containsKey("profile_image")) {
+                response.put("success", false);
+                response.put("hostname", "");
+                response.put("profile_image", "");
+                response.put("price", sellPrice);
+                response.put("message", "host information not found for seller_id: " + sellerId);
+                return response;
+            }
+    
+            response.put("success", true);
+            response.put("hostname", hostInfo.get("nickname"));
+            response.put("profile_image", hostInfo.get("profile_image"));
+            response.put("price", sellPrice);
+        } catch (Exception e) {
             response.put("success", false);
             response.put("hostname", "");
             response.put("profile_image", "");
-            response.put("message", "seller_id not found for room_id: " + room_id);
-            return response;
+            response.put("price", null);
+            response.put("message", "Error occurred: " + e.getMessage());
         }
-
-        // seller_id로 nickname과 profile_image 가져오기
-        String hostInfoQuery = "SELECT nickname, profile_image FROM members WHERE member_id = ?";
-        Map<String, Object> hostInfo = jdbcTemplate.queryForMap(hostInfoQuery, sellerId);
-
-        if (hostInfo == null || !hostInfo.containsKey("nickname") || !hostInfo.containsKey("profile_image")) {
-            response.put("success", false);
-            response.put("hostname", "");
-            response.put("profile_image", "");
-            response.put("message", "host information not found for seller_id: " + sellerId);
-            return response;
-        }
-
-        response.put("success", true);
-        response.put("hostname", hostInfo.get("nickname"));
-        response.put("profile_image", hostInfo.get("profile_image"));
-    } catch (Exception e) {
-        response.put("success", false);
-        response.put("hostname", "");
-        response.put("profile_image", "");
-        response.put("message", "Error occurred: " + e.getMessage());
+        System.out.println("판매자 정보 찾기 결과: " + response);
+        return response;
     }
-    System.out.println("판매자 정보 찾기 결과: " + response);
-    return response;
-}
+    
 
 
 }
