@@ -4,6 +4,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.annotation.RequestScope;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import com.saintkream.server.domain.sse.vo.NotificationVO;
+
 // import com.saintkream.server.domain.sse.service.SseEmitterService;
 
 import lombok.RequiredArgsConstructor;
@@ -15,6 +17,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -65,7 +68,12 @@ public ResponseEntity<SseEmitter> connect(@PathVariable("id") String id) {
         System.out.println("broadcast 테스트중-----------------"+"id="+id+"-"+"message :"+message+"--------------------------------------");
         if (emitter != null) {
             try {
-                emitter.send(SseEmitter.event().name("update").data(message));
+                NotificationVO notiVO = new NotificationVO();
+                notiVO.setIs_read("1");
+                notiVO.setMember_id("99");
+                notiVO.setPwr_id("333");
+                notiVO.setType("review");
+                emitter.send(SseEmitter.event().name("update").data(notiVO, MediaType.APPLICATION_JSON));
                 return ResponseEntity.ok("Message sent to user: " + id);
             } catch (IOException e) {
                 emitter.complete();
