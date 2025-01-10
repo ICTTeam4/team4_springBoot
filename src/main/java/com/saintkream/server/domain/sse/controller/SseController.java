@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.annotation.RequestScope;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import com.saintkream.server.domain.auth.vo.DataVO;
 import com.saintkream.server.domain.sse.vo.NotificationVO;
 
 // import com.saintkream.server.domain.sse.service.SseEmitterService;
@@ -69,10 +70,12 @@ public ResponseEntity<SseEmitter> connect(@PathVariable("id") String id) {
         if (emitter != null) {
             try {
                 NotificationVO notiVO = new NotificationVO();
+                DataVO dataVO = new DataVO();
                 notiVO.setIs_read("1");
                 notiVO.setMember_id("99");
                 notiVO.setPwr_id("333");
                 notiVO.setType("review");
+                dataVO.setData(notiVO);
                 emitter.send(SseEmitter.event().name("update").data(notiVO, MediaType.APPLICATION_JSON));
                 return ResponseEntity.ok("Message sent to user: " + id);
             } catch (IOException e) {
