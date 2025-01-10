@@ -23,4 +23,7 @@
     <select id="getMessagesListByMember_Id"> SELECT * FROM message WHERE member_id = #{member_id} </select>
     <!-- 채팅룸리스트 검색.... 생각좀 하고 한번에 잘 짜자.. -->
     <select id="getRoomIdsByMemberId">SELECT room_id FROM message_rooms WHERE buyer_id = #{member_id} OR seller_id = #{member_id} </select>
+    <insert id="saveMedia" parameterType="ChatMessageVO"> insert into
+        message(room_id,content,created_at,member_id,has_file)
+        VALUES(#{room_id},#{content},now(),#{member_id},1) </insert>
 </mapper>
