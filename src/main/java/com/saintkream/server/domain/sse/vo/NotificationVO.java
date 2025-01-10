@@ -8,5 +8,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class NotificationVO {
-private String noti_id,pwr_id,member_id,is_read,type;
+private String noti_id,pwr_id,is_deleted,type,name,title,sender_id,receiver_id,created_at,file_name;
 }
