@@ -1,22 +1,32 @@
 package com.saintkream.server.domain.chatserver.controller;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.saintkream.server.domain.auth.vo.DataVO;
 import com.saintkream.server.domain.chatserver.service.ChatService;
+import com.saintkream.server.domain.chatserver.vo.ChatMessageToClient;
 import com.saintkream.server.domain.chatserver.vo.ChatMessageVO;
 import com.saintkream.server.domain.chatserver.vo.ChatRoomVO;
 
@@ -28,6 +38,9 @@ public class ChatController {
     public ChatService chatService;
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+      @Autowired
+    private SimpMessagingTemplate messagingTemplate; // WebSocket 메시지 전송을 위한 Bean 주입
 
     // 이건 채팅방에 들어왔을때
     @GetMapping("/room")
@@ -165,46 +178,127 @@ public class ChatController {
     }
     
     @GetMapping("/getHostName")
-public Map<String, Object> getHostName(@RequestParam("room_id") String room_id) {
-    System.out.println("판매자 정보 찾기 실행");
-    Map<String, Object> response = new HashMap<>();
-    try {
-        // room_id로 seller_id 가져오기
-        String sellerIdQuery = "SELECT seller_id FROM message_rooms WHERE room_id = ?";
-        String sellerId = jdbcTemplate.queryForObject(sellerIdQuery, new Object[]{room_id}, String.class);
-
-        if (sellerId == null) {
+    public Map<String, Object> getHostName(@RequestParam("room_id") String room_id) {
+        System.out.println("판매자 정보 찾기 실행");
+        Map<String, Object> response = new HashMap<>();
+        try {
+            // Step 1: room_id로 pwr_id 가져오기
+            String pwrIdQuery = "SELECT pwr_id FROM message_rooms WHERE room_id = ?";
+            String pwrId = jdbcTemplate.queryForObject(pwrIdQuery, new Object[]{room_id}, String.class);
+    
+            if (pwrId == null) {
+                response.put("success", false);
+                response.put("hostname", "");
+                response.put("profile_image", "");
+                response.put("price", null);
+                response.put("message", "pwr_id not found for room_id: " + room_id);
+                return response;
+            }
+    
+            // Step 2: pwr_id로 sell_price 가져오기
+            String sellPriceQuery = "SELECT sell_price FROM post WHERE pwr_id = ?";
+            Double sellPrice = jdbcTemplate.queryForObject(sellPriceQuery, new Object[]{pwrId}, Double.class);
+    
+            // Step 3: room_id로 seller_id 가져오기
+            String sellerIdQuery = "SELECT seller_id FROM message_rooms WHERE room_id = ?";
+            String sellerId = jdbcTemplate.queryForObject(sellerIdQuery, new Object[]{room_id}, String.class);
+    
+            if (sellerId == null) {
+                response.put("success", false);
+                response.put("hostname", "");
+                response.put("profile_image", "");
+                response.put("price", sellPrice);
+                response.put("message", "seller_id not found for room_id: " + room_id);
+                return response;
+            }
+    
+            // Step 4: seller_id로 nickname과 profile_image 가져오기
+            String hostInfoQuery = "SELECT nickname, profile_image FROM members WHERE member_id = ?";
+            Map<String, Object> hostInfo = jdbcTemplate.queryForMap(hostInfoQuery, sellerId);
+    
+            if (hostInfo == null || !hostInfo.containsKey("nickname") || !hostInfo.containsKey("profile_image")) {
+                response.put("success", false);
+                response.put("hostname", "");
+                response.put("profile_image", "");
+                response.put("price", sellPrice);
+                response.put("message", "host information not found for seller_id: " + sellerId);
+                return response;
+            }
+    
+            response.put("success", true);
+            response.put("hostname", hostInfo.get("nickname"));
+            response.put("profile_image", hostInfo.get("profile_image"));
+            response.put("price", sellPrice);
+        } catch (Exception e) {
             response.put("success", false);
             response.put("hostname", "");
             response.put("profile_image", "");
-            response.put("message", "seller_id not found for room_id: " + room_id);
-            return response;
+            response.put("price", null);
+            response.put("message", "Error occurred: " + e.getMessage());
         }
-
-        // seller_id로 nickname과 profile_image 가져오기
-        String hostInfoQuery = "SELECT nickname, profile_image FROM members WHERE member_id = ?";
-        Map<String, Object> hostInfo = jdbcTemplate.queryForMap(hostInfoQuery, sellerId);
-
-        if (hostInfo == null || !hostInfo.containsKey("nickname") || !hostInfo.containsKey("profile_image")) {
-            response.put("success", false);
-            response.put("hostname", "");
-            response.put("profile_image", "");
-            response.put("message", "host information not found for seller_id: " + sellerId);
-            return response;
-        }
-
-        response.put("success", true);
-        response.put("hostname", hostInfo.get("nickname"));
-        response.put("profile_image", hostInfo.get("profile_image"));
-    } catch (Exception e) {
-        response.put("success", false);
-        response.put("hostname", "");
-        response.put("profile_image", "");
-        response.put("message", "Error occurred: " + e.getMessage());
+        System.out.println("판매자 정보 찾기 결과: " + response);
+        return response;
     }
-    System.out.println("판매자 정보 찾기 결과: " + response);
-    return response;
-}
+     // 사진보내기
+    @PostMapping("/mediaUpload")
+    public List<String> uploadMedia(
+            @RequestParam("files") List<MultipartFile> files,
+            @RequestParam("roomId") String roomId,
+            @RequestParam("memberId") String memberId) {
+
+        List<String> fileUrls = new ArrayList<>();
+        String staticPath = new File("src/main/resources/static/images").getAbsolutePath();
+
+        // 디렉토리 생성 확인
+        Path directory = Paths.get(staticPath);
+        if (!Files.exists(directory)) {
+            try {
+                Files.createDirectories(directory);
+            } catch (IOException e) {
+                e.printStackTrace();
+                throw new RuntimeException("Failed to create directory: " + staticPath);
+            }
+        }
+
+        for (MultipartFile file : files) {
+            if (!file.isEmpty()) {
+                // UUID를 사용하여 고유한 파일 이름 생성
+                String uniqueFileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
+                Path filePath = directory.resolve(uniqueFileName);
+
+                try {
+                    file.transferTo(filePath.toFile());
+
+                    // URL로 반환
+                    String fileUrl = "/images/" + uniqueFileName;
+                    fileUrls.add(fileUrl);
+
+                    // 메시지 DB 저장
+                    ChatMessageVO message = new ChatMessageVO();
+                    message.setRoom_id(roomId);
+                    message.setMember_id(memberId);
+                    message.setContent(fileUrl);
+                    message.setHas_file("1");
+                    chatService.saveMedia(message);
+
+                
+                   
+                    ChatMessageToClient webSocketMessage = new ChatMessageToClient(memberId, fileUrl);
+                    messagingTemplate.convertAndSend("/topic/chat/" + roomId, webSocketMessage);
+
+                    System.out.println("저장된 파일 경로: " + filePath.toAbsolutePath());
+                    System.out.println("파일 URL: " + fileUrl);
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        return fileUrls;
+    }
+
+} 
 
 
-}
+
