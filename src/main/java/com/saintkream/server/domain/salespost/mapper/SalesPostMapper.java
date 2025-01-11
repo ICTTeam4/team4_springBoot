@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import com.saintkream.server.domain.salespost.vo.BookMarkVO;
 import com.saintkream.server.domain.salespost.vo.SalesPostVO;
 
 @Mapper
@@ -21,6 +22,7 @@ public interface SalesPostMapper {
   List<SalesPostVO> getSalesPostList();
   int upViewCount(int pwr_id);
   SalesPostVO getSalesPostOne(int pwr_id);
+  // BookMarkVO getBookMarkCheck(int pwr_id, int member_id);
   int updateStatus(int pwr_id);
   List<SalesPostVO> getSaleDetail();
   List<SalesPostVO> getSellPostList(String member_id);

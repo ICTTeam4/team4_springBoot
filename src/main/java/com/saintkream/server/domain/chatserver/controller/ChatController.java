@@ -247,7 +247,7 @@ public class ChatController {
             @RequestParam("memberId") String memberId) {
 
         List<String> fileUrls = new ArrayList<>();
-        String staticPath = new File("src/main/resources/static/images").getAbsolutePath();
+        String staticPath = new File("src/main/resources/static/chatimages").getAbsolutePath();
 
         // 디렉토리 생성 확인
         Path directory = Paths.get(staticPath);
@@ -270,7 +270,7 @@ public class ChatController {
                     file.transferTo(filePath.toFile());
 
                     // URL로 반환
-                    String fileUrl = "/images/" + uniqueFileName;
+                    String fileUrl = "/chatimages/" + uniqueFileName;
                     fileUrls.add(fileUrl);
 
                     // 메시지 DB 저장

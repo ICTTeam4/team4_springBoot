@@ -9,6 +9,7 @@ import com.saintkream.server.domain.salepage.mapper.SalePageMapper;
 import com.saintkream.server.domain.salepage.vo.SalePageVO;
 import com.saintkream.server.domain.salepage.vo.SaleReviewPageVO;
 import com.saintkream.server.domain.salepage.vo.SaleTabPageVO;
+import com.saintkream.server.domain.salespost.vo.SalesPostVO;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -35,6 +36,13 @@ public class SalePageServiceImpl implements SalePageService {
     log.info("쿼리 결과: {}", result);
     return salePageMapper.getSaleReviewDataList(member_id);
 
+  }
+
+  @Override
+  public List<SalesPostVO> getSellDoneData(String member_id) {
+    List<SalesPostVO> result = salePageMapper.getSellDoneData(member_id);
+    log.info("쿼리 결과: {}", result);
+    return salePageMapper.getSellDoneData(member_id);
   }
   
 }

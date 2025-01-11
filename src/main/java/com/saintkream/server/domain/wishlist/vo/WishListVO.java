@@ -15,5 +15,6 @@ public class WishListVO{
     private List<FileVO> fileList; // 파일리스트 추가가
     private String sell_price;
     private String title;
+    private boolean status;
     // 
 }
