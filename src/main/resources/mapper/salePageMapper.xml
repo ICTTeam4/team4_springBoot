@@ -56,7 +56,7 @@
     p.member_id = m.member_id
   WHERE 
     p.member_id = #{member_id}
-  LIMIT 15
+  
   </select>
 
     <select id="getSaleReviewDataList" 
@@ -64,6 +64,7 @@
     resultMap="ReviewMap" 
     parameterType="String">
 
+    <![CDATA[
     SELECT
         r.review_id,
         r.content,
@@ -81,14 +82,52 @@
     JOIN
         members m
     ON
-       CAST(r.member_id AS SIGNED) = m.member_id
+        CAST(r.member_id AS SIGNED) = m.member_id
     WHERE
         (r.seller_id = #{member_id} OR r.buyer_id = #{member_id})
         AND r.is_deleted = '0'
+        AND r.member_id <> #{member_id}
     ORDER BY
         r.created_at DESC
+    ]]>
        
     </select>
+
+    <select id="getSellDoneData" resultType="SalesPostVO" resultMap="PostWithFilesMap" parameterType="String">
+  SELECT 
+    p.pwr_id,
+    f.file_name,
+    m.name,
+    p.title,
+    p.sell_price,
+    p.created_at,
+    p.sup_category,
+    p.sub_category,
+    p.view_count,
+    p.description,
+    p.status,
+    p.longitude,
+    p.latitude
+
+    FROM 
+    post AS p
+    LEFT JOIN 
+    post_files AS pf
+    ON 
+    p.pwr_id = pf.pwr_id
+    LEFT JOIN 
+    file_table AS f
+    ON 
+    pf.file_id = f.file_id
+    LEFT JOIN 
+    members AS m
+    ON 
+    p.member_id = m.member_id
+    WHERE
+    p.member_id = #{member_id}
+    AND
+    p.status = "판매완료"
+  </select>
 
     <resultMap id="PageTabWithFilesMap" type="SaleTabPageVO">
     <!-- PostVO의 기본 필드 -->
@@ -126,4 +165,30 @@
     <result property="is_deleted" column="is_deleted" />
     <result property="profile_image" column="profile_image" />
    </resultMap>
+
+   <resultMap id="PostWithFilesMap" type="SalesPostVO">
+    <!-- PostVO의 기본 필드 -->
+    <id property="pwr_id" column="pwr_id" />
+    <id property="member_id" column="member_id" />
+    <result property="title" column="title" />
+    <result property="sell_price" column="sell_price"/>
+    <result property="created_at" column="created_at"/>
+    <result property="sup_category" column="sup_category"/>
+    <result property="sub_category" column="sub_category"/>
+    <result property="view_count" column="view_count" />
+    <result property="description" column="description" />
+    <result property="sup_category" column="sup_category" />
+    <result property="sub_category" column="sub_category" />
+    <result property="selling_area_id" column="selling_area_id" />
+    <result property="is_direct" column="is_direct" />
+    <result property="is_delivery" column="is_delivery" />
+    <result property="longitude" column="longitude" />
+    <result property="latitude" column="latitude" />
+    <result property="status" column="status" />
+
+    <!-- FileVO 리스트를 매핑 -->
+    <collection property="fileList" ofType="FileVO">
+        <result property="fileName" column="file_name" />
+    </collection>
+  </resultMap>
 </mapper>

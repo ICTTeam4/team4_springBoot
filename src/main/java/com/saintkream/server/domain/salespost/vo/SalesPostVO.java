@@ -30,5 +30,5 @@ public class SalesPostVO {
                 latitude;
   private List<MultipartFile> files;
   private List<FileVO> fileList;
-  private String name;
+  private String nickname;
 }
