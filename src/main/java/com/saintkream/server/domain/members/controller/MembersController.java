@@ -200,7 +200,7 @@ public class MembersController {
         dataVO.setMessage("로그인 성공");
         dataVO.setToken(token);
         dataVO.setData(Map.of(
-            "member_id", membersVO.getMember_id(),  
+            "member_id", membersVO.getMember_id(),
             "email", membersVO.getEmail(),
             "nickname", membersVO.getNickname(),
             "name", membersVO.getName(),
