@@ -68,27 +68,26 @@ public ResponseEntity<SseEmitter> connect(@PathVariable("id") String id) {
 }
 
 @GetMapping("/broadcast/{id}")
-    public ResponseEntity<String> broadcastToUser(@PathVariable("id") String id,@RequestParam("sender_id") String sender_id,@RequestParam("pwr_id") String pwr_id,@RequestParam("nickname") String nickname,@RequestParam("title") String title,@RequestParam("file_name") String file_name) {
+    public ResponseEntity<String> broadcastToUser(@PathVariable("id") String id,@RequestParam("sender_id") String sender_id,@RequestParam("pwr_id") String pwr_id,@RequestParam("title") String title,@RequestParam("file_name") String file_name) {
         SseEmitter emitter = emitterMap.get(id);
-        System.out.println("broadcast 테스트중-----------------"+"id="+id+"-"+"sender_id :"+sender_id+"pwr_id:"+ pwr_id +"-"+ nickname +"--"+ title +"--file_name "+file_name+"---------------------------");
+        System.out.println("broadcast 테스트중-----------------"+"id="+id+"-"+"sender_id :"+sender_id+"pwr_id:"+ pwr_id +"--"+ title +"--file_name "+file_name+"---------------------------");
         if (emitter != null) {
             executor.execute(() -> {
             try {
 
                 NotificationVO notiVO1 = new NotificationVO();
                 notiVO1.setIs_deleted("0");
-                notiVO1.setName(nickname);
                 notiVO1.setPwr_id(pwr_id);
                 notiVO1.setReceiver_id(id);
                 notiVO1.setSender_id(sender_id);
                 notiVO1.setTitle(title);
                 notiVO1.setType("bookmark");
-                notiVO1.setFile_name(file_name);;
+                notiVO1.setFile_name(file_name);
                 int result = sseEmitterService.getNotiInsert(notiVO1);
-
+                System.out.println("-------gggg");
                 List<NotificationVO> notiList = sseEmitterService.getNotiListById(id);
                 System.out.println("notiList ---:"+notiList.toString());
-                DataVO dataVO = new DataVO();  
+                DataVO dataVO = new DataVO();
                 // List<NotificationVO> notiList = service.getnotilistfromOne(member_id);
                 dataVO.setData(notiList);
                 emitter.send(SseEmitter.event().name("update").data(dataVO.getData(), MediaType.APPLICATION_JSON));
