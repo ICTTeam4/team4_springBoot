@@ -35,4 +35,42 @@ public class SearchItemsServiceImpl implements SearchItemsService {
 
         return results;
     }
+
+    @Override
+    public List<SearchItemsVO> getCategoryList(String category) {
+        log.info("요청 실행 - category: '{}'", category);
+
+        // Mapper에서 검색 결과를 가져옵니다.
+        List<SearchItemsVO> results = searchItemsMapper.getCategoryList(category);
+
+        if (results.isEmpty()) {
+            log.info("결과가 없습니다. keyword: {}, category: {}", category);
+        } else {
+            log.info("성공 - 결과 항목 수: {}", results.size());
+            for (SearchItemsVO item : results) {
+                log.debug("상품 ID: {}, 파일 리스트: {}", item.getPwr_id(), item.getFileList());
+            }
+        }
+
+        return results;
+    }
+
+    @Override
+    public List<SearchItemsVO> getSubCategoryList(String sub_category) {
+        log.info("요청 실행 - sub_category: '{}'", sub_category);
+
+        // Mapper에서 검색 결과를 가져옵니다.
+        List<SearchItemsVO> results = searchItemsMapper.getSubCategoryList(sub_category);
+
+        if (results.isEmpty()) {
+            log.info("결과가 없습니다. sub_category: {}", sub_category);
+        } else {
+            log.info("성공 - 결과 항목 수: {}", results.size());
+            for (SearchItemsVO item : results) {
+                log.debug("상품 ID: {}, 파일 리스트: {}", item.getPwr_id(), item.getFileList());
+            }
+        }
+
+        return results;
+    }
 }

@@ -48,6 +48,7 @@ public class SalePageController {
     DataVO dataVO = new DataVO();
     try {
       List<SaleTabPageVO> list = salePageService.getSaleTabPageDataList(member_id);
+      System.out.println( "list.size :  "+ list.size());
       System.out.println( "list to String :  "+ list.toString());
       System.out.println("-----");
       dataVO.setSuccess(true);
@@ -68,6 +69,31 @@ public class SalePageController {
       List<SaleReviewPageVO> list = salePageService.getSaleReviewDataList(member_id);
       log.info("쿼리 결과: {}", list);
       System.out.println( "list to String :  "+ list.toString());
+      System.out.println( "리뷰 list 갯수 :  "+ list.size());
+      System.out.println("-----");
+      if (list.isEmpty()) {
+        log.warn("쿼리 결과가 비어 있습니다.");
+    }
+      dataVO.setSuccess(true);
+      dataVO.setMessage("조회 성공");
+      dataVO.setData(list);
+    } catch (Exception e) {
+      log.error("리뷰 데이터 조회 실패", e);
+      dataVO.setSuccess(false);
+      dataVO.setMessage("조회 실패");
+    }
+    return dataVO;
+  }
+
+  @GetMapping("/getselldonedata")
+  public DataVO getSellDoneData(@RequestParam("id") String member_id) {
+    log.info("@@@@@@@ReviewData@@@@@@ member_id : {}", member_id);
+    DataVO dataVO = new DataVO();
+    try {
+      List<SalesPostVO> list = salePageService.getSellDoneData(member_id);
+      log.info("쿼리 결과: {}", list);
+      System.out.println( "list to String :  "+ list.toString());
+      System.out.println( "리뷰 list 갯수 :  "+ list.size());
       System.out.println("-----");
       if (list.isEmpty()) {
         log.warn("쿼리 결과가 비어 있습니다.");

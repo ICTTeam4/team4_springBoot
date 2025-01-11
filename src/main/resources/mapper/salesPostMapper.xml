@@ -104,7 +104,7 @@
     p.pwr_id,
     p.member_id,
     f.file_name,
-    m.name,
+    m.nickname,
     p.title,
     p.sell_price,
     p.created_at,
@@ -137,7 +137,7 @@
   SELECT 
     p.pwr_id,
     f.file_name,
-    m.name,
+    m.nickname,
     p.title,
     p.sell_price,
     p.created_at,
@@ -172,7 +172,7 @@
   SELECT 
     p.pwr_id,
     f.file_name,
-    m.name,
+    m.nickname,
     p.title,
     p.sell_price,
     p.created_at,
@@ -208,7 +208,7 @@
     p.pwr_id,
     p.member_id,
     f.file_name,
-    m.name,
+    m.nickname,
     p.title,
     p.sell_price,
     p.created_at,
@@ -246,6 +246,7 @@
     <id property="pwr_id" column="pwr_id" />
     <id property="member_id" column="member_id" />
     <result property="title" column="title" />
+    <result property="nickname" column="nickname" />
     <result property="sell_price" column="sell_price"/>
     <result property="created_at" column="created_at"/>
     <result property="sup_category" column="sup_category"/>
