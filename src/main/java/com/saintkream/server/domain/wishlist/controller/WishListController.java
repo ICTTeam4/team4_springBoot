@@ -20,8 +20,6 @@ public class WishListController {
         this.wishListService = wishListService;
     }
 
-
-
     @PostMapping("/add")
 public ResponseEntity<String> addWishList(@RequestBody WishListVO wishListVO) {
     try {
@@ -34,7 +32,6 @@ public ResponseEntity<String> addWishList(@RequestBody WishListVO wishListVO) {
     }
 }
 
-    
     @GetMapping("/list")
     public ResponseEntity<List<WishListVO>> getWishList(@RequestParam("memberId") String memberId) {
         log.info("찜 목록 조회 요청 - 회원 ID: {}", memberId);
@@ -53,8 +50,7 @@ public ResponseEntity<String> deleteWishListItem(@RequestBody WishListVO wishLis
     return ResponseEntity.ok("찜한 상품 삭제 완료~!");
 }
 
-
-    // 찜 상태 확인
+// 찜 상태 확인
     @GetMapping("/check")
     public ResponseEntity<Boolean> checkWishList(
             @RequestParam("memberId") String memberId,
@@ -64,4 +60,5 @@ public ResponseEntity<String> deleteWishListItem(@RequestBody WishListVO wishLis
         log.info("찜 상태 확인 결과 - 회원 ID: {}, 상품 ID: {}, 찜 상태: {}", memberId, pwr_id, isWishListed ? "찜함" : "찜하지 않음");
         return ResponseEntity.ok(isWishListed);
     }
+    
 }
