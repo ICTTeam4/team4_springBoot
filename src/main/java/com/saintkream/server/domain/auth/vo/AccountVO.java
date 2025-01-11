@@ -9,5 +9,5 @@ public class AccountVO {
     private String bankName;
     private String accountNumber;
     private String accountHolderName;
-    private boolean isDefault;
+    private String isDefault;
 }

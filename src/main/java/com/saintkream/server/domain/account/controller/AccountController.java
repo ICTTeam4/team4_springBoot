@@ -26,6 +26,10 @@ public class AccountController {
     public ResponseEntity<Map<String, String>> addAccount(@RequestBody AccountVO account) {
         log.info("계좌 추가 요청 데이터: {}", account);
         Map<String, String> response = new HashMap<>();
+        String isDefault = account.getIsDefault();
+        if("1".equals(isDefault)){
+            accountService.clearDefaultAccount(account.getMember_id());
+        }
         try {
             accountService.addAccount(account);
             response.put("message", "계좌 추가 완료!");
