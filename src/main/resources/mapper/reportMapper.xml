@@ -11,8 +11,8 @@
     VALUES (#{member_id}, #{pwr_id}, #{report_reason}, NOW());
     </insert> -->
  <insert id="insertReport" parameterType="ReportVO">
-        INSERT INTO reports (member_id, pwr_id, report_reason)
-        VALUES (#{member_id}, #{pwr_id}, #{report_reason});
+        INSERT INTO report_tb (report_id,member_id, board_id, report_reason, report_detail)
+        VALUES (#{report_id},#{member_id}, #{board_id}, #{report_reason}, #{report_detail});
     </insert>
 
 	

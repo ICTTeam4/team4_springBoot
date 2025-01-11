@@ -71,7 +71,7 @@ public class SearchItemsController {
      * 1차 검색 요청 처리
      */
     @GetMapping("/itemSearchResult")
-    public DataVO searchItems(@RequestParam String keyword, @RequestParam(required = false) String category) {
+    public DataVO searchItems(@RequestParam("keyword") String keyword, @RequestParam(required = false) String category) {
         log.info("일반 검색 요청 - keyword: '{}', category: '{}'", keyword, category);
         return processSearchRequest(keyword, category);
     }

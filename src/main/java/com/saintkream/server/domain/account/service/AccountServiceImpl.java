@@ -44,4 +44,9 @@ public class AccountServiceImpl implements AccountService { // interface → cla
     public List<AccountVO> getAccountsByMemberId(Long member_id) {
         return accountMapper.getAccountsByMemberId(member_id);
     }
+
+    @Override
+    public void clearDefaultAccount(Long member_id) {
+        accountMapper.clearDefaultAccount(member_id);
+    }
 }

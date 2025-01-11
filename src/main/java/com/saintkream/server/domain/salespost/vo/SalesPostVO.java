@@ -31,5 +31,5 @@ public class SalesPostVO {
   // private boolean status;              
   private List<MultipartFile> files;
   private List<FileVO> fileList;
-  private String name;
+  private String nickname;
 }
