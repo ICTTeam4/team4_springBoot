@@ -32,6 +32,11 @@ VALUES (#{name}, #{email}, #{tel_no}, #{password}, #{adv_agree}, #{personal_agre
     FROM members
     WHERE tel_no = #{tel_no}
 </select>
+<select id="findMemberByEmail" parameterType="String" resultType="MembersVO">
+    SELECT *
+    FROM members
+    WHERE email = #{email}
+</select>
 
 
 
@@ -48,6 +53,11 @@ VALUES (#{name}, #{email}, #{tel_no}, #{password}, #{adv_agree}, #{personal_agre
     UPDATE members
     SET password = #{password}
     WHERE member_id = #{member_id}
+</update>
+<update id="updatePasswordByEmail" parameterType="MembersVO">
+    UPDATE members
+    SET password = #{password}
+    WHERE email = #{email}
 </update>
 <!-- 폰번호 업데이트 - 마이페이지  -->
 <update id="updatePhone" parameterType="MembersVO">
