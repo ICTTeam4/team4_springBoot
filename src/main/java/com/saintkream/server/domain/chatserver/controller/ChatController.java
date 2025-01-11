@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -17,6 +15,9 @@ import com.saintkream.server.domain.chatserver.service.ChatService;
 import com.saintkream.server.domain.chatserver.vo.ChatMessageVO;
 import com.saintkream.server.domain.chatserver.vo.ChatRoomVO;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @RestController
 @RequestMapping("/api/chat")
 public class ChatController {
@@ -99,5 +100,23 @@ public class ChatController {
         List<ChatMessageVO> messages = chatService.getMessagesByRoomId(room_id);
         return messages; // 메시지 리스트 반환
     }
+
+    @GetMapping("/getroomidsbypwrid")
+    public DataVO getRoomIdsByPwrId(@RequestParam("pwr_id") String pwrId) {
+    DataVO dataVO = new DataVO();
+    int pwr_id = Integer.parseInt(pwrId);
+    try {
+      int result = chatService.getRoomIdsByPwrId(pwr_id);
+      log.info("------------");
+      log.info("crvo:", result);
+      dataVO.setSuccess(true);
+      dataVO.setMessage("조회 성공");
+      dataVO.setData(result);
+    } catch (Exception e) {
+      dataVO.setSuccess(false);
+      dataVO.setMessage("조회 실패");
+    }
+    return dataVO;
+  }
 
 }
