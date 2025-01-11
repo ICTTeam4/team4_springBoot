@@ -10,5 +10,6 @@ public class ReportVO {
     private String member_id;         // 신고자 ID
     private String board_id;           // 신고 대상 게시물 ID
     private String report_reason;  // 신고 사유
+    private String report_detail; //신고 사유 디테일일
     // private String created_at;
 }

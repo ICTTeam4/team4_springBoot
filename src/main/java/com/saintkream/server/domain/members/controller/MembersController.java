@@ -499,4 +499,45 @@ public ResponseEntity<?> getProfile(@RequestParam("email") String email) {
     }
     return dataVO;
   }
+
+
+
+
+
+  @PostMapping("/find-email-by-phone")
+  public ResponseEntity<?> findEmailByPhone(@RequestParam("phone") String phone) {
+      log.info("요청 도착 - phone: {}", phone);
+  
+      try {
+          // 데이터베이스에서 tel_no로 조회
+          MembersVO member = membersService.findMemberByPhone(phone);
+          log.info("멤버 받기: {}", member);
+  
+          if (member == null) {
+              log.warn("휴대폰 번호를 찾을 수 없음: {}", phone);
+              return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of(
+                  "message", "해당 번호로 가입된 이메일이 없습니다.",
+                  "status", "failure"
+              ));
+          }
+  
+          // 이메일 일부 마스킹 처리 (예: a****@example.com)
+          String email = member.getEmail();
+          String maskedEmail = email.replaceAll("(?<=.{4}).(?=.*@)", "*");
+          log.info("마스킹된 이메일: {}", maskedEmail);
+  
+          return ResponseEntity.ok(Map.of(
+              "message", "이메일 찾기 성공",
+              "email", maskedEmail,
+              "status", "success"
+          ));
+      } catch (Exception e) {
+          log.error("이메일 찾기 중 오류 발생: {}", e.getMessage());
+          return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of(
+              "message", "이메일 조회 중 오류가 발생했습니다.",
+              "status", "failure"
+          ));
+      }
+  }
+  
 }

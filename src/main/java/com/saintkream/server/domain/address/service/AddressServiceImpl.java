@@ -24,6 +24,9 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     public void addAddress(AddressVO addressVO) {
+        if (addressVO.getMemberId() == null) {
+            throw new IllegalArgumentException("member_id는 필수 값입니다.");
+        }
         addressMapper.insertAddress(addressVO);
     }
 
