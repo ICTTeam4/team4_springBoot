@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.saintkream.server.domain.auth.vo.DataVO;
 import com.saintkream.server.domain.salespost.service.SalesPostService;
+import com.saintkream.server.domain.salespost.vo.BookMarkVO;
 import com.saintkream.server.domain.salespost.vo.FileVO;
 import com.saintkream.server.domain.salespost.vo.SalesPostVO;
 
@@ -275,6 +276,25 @@ public class SalesPostController {
     }
     return dataVO;
   }
+
+  // @GetMapping("/getstatusdata")
+  // public DataVO getBookMarkCheck(@RequestParam("pwr_id") int pwr_id, @RequestParam("member_id") int member_id) {
+  //   DataVO dataVO = new DataVO();
+  //   try {
+  //     BookMarkVO BMVO = salesPostService.getBookMarkCheck(pwr_id, member_id);
+  //     log.info("------------");
+  //     Map<String, Object> responseData = new HashMap<>();
+  //       responseData.put("bookmark", BMVO);  // 북마크 데이터
+  //       // DataVO에 Map 설정
+  //       dataVO.setSuccess(true);
+  //       dataVO.setMessage("조회 성공");
+  //       dataVO.setData(responseData); // Map으로 설정
+  //   } catch (Exception e) {
+  //       dataVO.setSuccess(false);
+  //       dataVO.setMessage("조회 실패");
+  //   }
+  //   return dataVO;
+  // }
 
   @PostMapping("/upviewcount")
   public Map<String, String> upViewCount(@RequestBody Map<String, Integer> request) {

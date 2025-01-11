@@ -8,10 +8,22 @@
         INSERT INTO wishlist (member_id, pwr_id )
         VALUES (#{member_id}, #{pwr_id} )
     </insert>
+    <!-- <insert id="addOrUpdateWishList" parameterType="WishListVO">
+    INSERT INTO wishlist (member_id, pwr_id, status)
+    VALUES (#{member_id}, #{pwr_id}, 1)
+    ON DUPLICATE KEY UPDATE
+        status = 1;
+    </insert> -->
 
     <delete id="deleteWishListItem" parameterType="String"> 
    DELETE FROM wishlist WHERE member_id = #{member_id} AND pwr_id = #{pwr_id};
     </delete>
+
+    <update id="updateWishListItem" parameterType="String"> 
+    UPDATE wishlist
+    SET status = 0
+    WHERE member_id = #{member_id} AND pwr_id = #{pwr_id};
+    </update>
 
 
 <!-- 찜 목록 확인 (중복여부부) -->

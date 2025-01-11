@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.saintkream.server.domain.salespost.mapper.SalesPostMapper;
+import com.saintkream.server.domain.salespost.vo.BookMarkVO;
 import com.saintkream.server.domain.salespost.vo.SalesPostVO;
 
 @Service
@@ -107,6 +108,11 @@ public class SalesPostServiceImpl implements SalesPostService{
   public int deletePost(String pwr_id) {
     return salesPostMapper.deletePost(pwr_id);
   }
+
+  // @Override
+  // public BookMarkVO getBookMarkCheck(int pwr_id, int member_id) {
+  //   return salesPostMapper.getBookMarkCheck(pwr_id, member_id);
+  // }
 
   
   
