@@ -90,4 +90,14 @@ public class MembersServiceImpl implements MembersService {
         log.info("findMemberByPhone 결과 - 멤버 정보: {}", member);
         return member;
     }
+
+    @Override
+    public MembersVO findMemberByEmail(String email) {
+        return membersMapper.findMemberByEmail(email);
+    }
+
+    @Override
+    public int updatePasswordByEmail(MembersVO mvo) {
+        return membersMapper.updatePasswordByEmail(mvo);
+    }
 }
