@@ -25,6 +25,22 @@ INSERT INTO members
 VALUES (#{name}, #{email}, #{tel_no}, #{password}, #{adv_agree}, #{personal_agree}, NOW(), #{status}, #{nickname}) 
 </insert>
 
+
+<!-- phone 번호로 회원 정보 조회 -->
+<select id="findMemberByPhone" parameterType="String" resultType="MembersVO">
+    SELECT *
+    FROM members
+    WHERE tel_no = #{tel_no}
+</select>
+<select id="findMemberByEmail" parameterType="String" resultType="MembersVO">
+    SELECT *
+    FROM members
+    WHERE email = #{email}
+</select>
+
+
+
+
 <!-- 마이페이지 닉네임 변경 -->
 <update id="updateNickname" parameterType="MembersVO">
     UPDATE members
@@ -37,6 +53,11 @@ VALUES (#{name}, #{email}, #{tel_no}, #{password}, #{adv_agree}, #{personal_agre
     UPDATE members
     SET password = #{password}
     WHERE member_id = #{member_id}
+</update>
+<update id="updatePasswordByEmail" parameterType="MembersVO">
+    UPDATE members
+    SET password = #{password}
+    WHERE email = #{email}
 </update>
 <!-- 폰번호 업데이트 - 마이페이지  -->
 <update id="updatePhone" parameterType="MembersVO">

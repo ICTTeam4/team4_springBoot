@@ -241,6 +241,16 @@
     p.pwr_id = #{pwr_id}
   </select>
 
+  <!-- <select id="getBookMarkCheck" parameterType="map" resultType="BookMarkVO">
+    SELECT 
+    status
+    FROM 
+    wishlist
+    WHERE
+    pwr_id = #{pwr_id}
+    AND member_id = #{member_id}
+  </select> -->
+
   <resultMap id="PostWithFilesMap" type="SalesPostVO">
     <!-- PostVO의 기본 필드 -->
     <id property="pwr_id" column="pwr_id" />

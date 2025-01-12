@@ -28,4 +28,6 @@ int getChatRoomInsert(ChatRoomVO cvo);
   public List<String> getRoomIdsByMemberId(String member_id);
 
   public int getRoomIdsByPwrId(int pwr_id);
+  
+  public int saveMedia(ChatMessageVO cvo);
 }

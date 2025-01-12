@@ -53,6 +53,10 @@ public class ChatServiceImpl implements ChatService  {
   public int getRoomIdsByPwrId(int pwr_id) {
     return chatMapper.getRoomIdsByPwrId(pwr_id);
   }
+  @Override
+  public int saveMedia(ChatMessageVO cvo) {
+    return chatMapper.saveMedia(cvo);
+  }
 
 
   }

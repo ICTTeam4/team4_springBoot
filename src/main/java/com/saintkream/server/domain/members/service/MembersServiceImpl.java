@@ -6,8 +6,10 @@ import org.springframework.stereotype.Service;
 import com.saintkream.server.domain.auth.vo.MembersVO;
 import com.saintkream.server.domain.members.mapper.MembersMapper;
 
+import lombok.extern.slf4j.Slf4j;
 
 
+@Slf4j
 @Service
 public class MembersServiceImpl implements MembersService {
     @Autowired
@@ -79,5 +81,23 @@ public class MembersServiceImpl implements MembersService {
     @Override
     public MembersVO getPostMemberDetail(String pwr_id) {
         return membersMapper.getPostMemberDetail(pwr_id);
+    }
+
+    @Override
+    public MembersVO findMemberByPhone(String tel_no) {
+        log.info("findMemberByPhone 호출됨 - 입력된 전화번호: {}", tel_no);
+        MembersVO member = membersMapper.findMemberByPhone(tel_no);
+        log.info("findMemberByPhone 결과 - 멤버 정보: {}", member);
+        return member;
+    }
+
+    @Override
+    public MembersVO findMemberByEmail(String email) {
+        return membersMapper.findMemberByEmail(email);
+    }
+
+    @Override
+    public int updatePasswordByEmail(MembersVO mvo) {
+        return membersMapper.updatePasswordByEmail(mvo);
     }
 }

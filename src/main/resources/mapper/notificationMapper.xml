@@ -7,14 +7,16 @@
  <mapper namespace="com.saintkream.server.domain.sse.mapper.SseMapper">
   <insert id="getNotiInsert" parameterType="NotificationVO">
     INSERT INTO notification (
-      pwr_id,is_deleted,type,name,title,sender_id,receiver_id,file_name
+      pwr_id,is_deleted,type,title,sender_id,receiver_id,file_name
     ) VALUES (
-      #{pwr_id}, #{is_deleted},#{type}, #{name},#{title}, #{sender_id},#{receiver_id},#{file_name}
+      #{pwr_id}, #{is_deleted},#{type},#{title}, #{sender_id},#{receiver_id},#{file_name}
     )
   </insert>
   <select id="getNotiListById" parameterType="String" resultType="NotificationVO">
-  SELECT * FROM notification
-  WHERE receiver_id = #{receiver_id} AND is_deleted = "0"
+  SELECT n.*, m.nickname
+  FROM notification n
+  JOIN members m ON n.receiver_id = m.member_id
+  WHERE n.receiver_id = #{member_id} AND n.is_deleted = "0"
   </select>
   <update id="getNotiDelete" parameterType="String">
   UPDATE notification

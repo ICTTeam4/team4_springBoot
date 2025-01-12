@@ -29,4 +29,8 @@
         FROM message_rooms 
         WHERE pwr_id = #{pwr_id} 
     </select>
+    
+    <insert id="saveMedia" parameterType="ChatMessageVO"> insert into
+        message(room_id,content,created_at,member_id,has_file)
+        VALUES(#{room_id},#{content},now(),#{member_id},1) </insert>
 </mapper>
