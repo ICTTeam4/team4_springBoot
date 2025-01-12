@@ -79,6 +79,7 @@ public class SalesPostController {
         }
         dataVO.setSuccess(true);
         dataVO.setMessage("판매글이 등록되었습니다");
+        log.info("dataVO.getMessage() : {}", dataVO.getMessage());
       }
     } catch (Exception e) {
       // TODO: handle exception
