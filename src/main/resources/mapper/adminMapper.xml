@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace는 반드시 mapper 위치로 설정해야 된다. -->
+<mapper namespace="com.saintkream.server.domain.admin.mapper.AdminMapper">
+
+	<select id="getAdminList" resultType="AdminVO">
+		select * from admin order by admin_id asc
+	</select>
+	<update id="getAdminUpdate" parameterType="AdminVO">
+		update admin
+		set admin_password = #{admin_password},
+		    tel_no=#{tel_no}, 
+				status=#{status}
+		where admin_id = #{admin_id}
+	</update>
+
+	<insert id="getAdminWrite" parameterType="AdminVO">
+   insert into admin
+	 (  admin_id, admin_password, admin_name, status, tel_no, level , reg_date)
+	 values
+	 ( #{admin_id}, #{admin_password}, #{admin_name}, 1, #{tel_no}, #{level} , now() )
+
+	</insert>
+
+	<update id="getAdminDelete" parameterType="String">
+		update admin
+		set status= 0 ,
+		    delete_date = now()
+		where admin_id = #{admin_id}
+	</update>
+	
+ 	<select id="getAdminById" parameterType="String" resultType="AdminVO">
+		select * from Admin where admin_id = #{admin_id}
+	</select>
+
+  <!-- Member 조회  -->
+	<select id="getAdmMemberList" resultType="AdmMemberVO">
+		select * from members order by member_id asc
+	</select>
+
+  <!--  Member 수정 -->
+	<update id="getAdmMemberUpdate" parameterType="AdmMemberVO">
+		update members
+		set status  = #{status} ,
+				member_delete_reason = #{member_delete_reason} ,
+				deleted_admin = #{deleted_admin} ,
+				delete_date = now() 
+		where member_id = #{member_id}
+	</update>
+
+  <!-- Member 삭제 -->
+	<update id="getAdmMemberDelete" parameterType="String">
+		update members
+		set status  = #{status} ,
+				member_delete_reason = #{member_delete_reason} ,
+				deleted_admin = #{deleted_admin} ,
+				delete_date = #{deleted_admin} 
+		where member_id = #{member_id}
+	</update>
+
+   <!-- Category 대분류 조회  -->
+	<select id="getAdmCtgList" resultType="AdmCtgVO" >
+		select * from categories where  parent_category_id = 0 order by category_id asc
+	</select>
+
+   <!-- Category 중분류 조회  -->
+	<select id="getAdmCtgList2" resultType="AdmCtgVO" parameterType="String" >
+		select * from categories where  parent_category_id = #{ctg_level} order by category_id asc
+	</select>
+
+	<!-- Category 수정  -->
+	<update id="getAdmCtgUpdate" parameterType="AdmCtgVO">
+		update categories
+		set category_name = #{category_name}
+		where category_id = #{category_id}
+	</update>
+
+  <!-- Category 생성  -->
+	<insert id="getAdmCtgWrite" parameterType="AdmCtgVO">
+   insert into categories
+	 (   category_name, parent_category_id )
+	 values
+	 ( #{category_name}, #{parent_category_id} )
+
+	</insert>
+
+  <!-- Category 삭제  -->
+	<update id="getAdmCtgDelete" parameterType="String">
+		update admin
+		set status= 0 ,
+		    delete_date = now()
+		where admin_id = #{admin_id}
+	</update>
+
+   <!-- 팝업 List 조회  -->
+	<select id="getPopupList" resultType="AdmPopupVO" >
+		select * from popup order by pu_id asc
+	</select>
+
+  <!-- 팝업 생성 -->
+	<insert id="getPopupWrite" parameterType="AdmPopupVO">
+        INSERT INTO popup (
+            pu_title, pu_start_time, pu_end_time, pu_disable_hours, pu_x, pu_y, pu_height, pu_width, pu_subject, pu_content, crt_by, crt_dt, upd_by, upd_dt, f_name
+        ) VALUES (
+            #{pu_title}, #{pu_start_time}, #{pu_end_time}, #{pu_disable_hours}, #{pu_x}, #{pu_y}, #{pu_height}, #{pu_width}, #{pu_subject}, #{pu_content}, #{crt_by}, now(), #{upd_by}, now(), #{f_name}
+        )
+  </insert>
+
+
+  <!-- 팝업 업데이트  -->
+	<update id="getPopupUpdate" parameterType="AdmPopupVO">
+		update popup
+		set pu_title        = #{pu_title},        
+		    pu_start_time   = #{pu_start_time},   
+		    pu_end_time     = #{pu_end_time},     
+		    pu_disable_hours = #{pu_disable_hours},
+		    pu_x            = #{pu_x},            
+		    pu_y            = #{pu_y},            
+		    pu_height       = #{pu_height},       
+		    pu_width        = #{pu_width},        
+		    pu_content      = #{pu_content},      
+		    upd_by          = #{upd_by},          
+		    upd_dt          = now(),  
+        <if test="f_name != null and f_name != ''">
+            f_name       = #{f_name}
+        </if>
+		where pu_id = #{pu_id}
+	</update>
+
+   <!-- 공지사항/FAQ List 조회  -->
+	<select id="getAdmBbsList" resultType="AdmBbsVO" parameterType='String'>
+		select * from customer_service_tb where cs_type = #{cs_type} order by cs_id asc
+	</select>
+
+
+  <!-- 공지사항/FAQ 생성 -->
+	<insert id="getAdmBbsWrite" parameterType="AdmBbsVO">
+        INSERT INTO customer_service_tb (
+            cs_type, cs_subject, cs_content, cs_view_count, cs_status, cs_faq_priority, cs_notice_is_pinned, cs_crt_dt, cs_upd_dt, admin_id
+        ) VALUES (
+            #{cs_type}, #{cs_subject}, #{cs_content}, #{cs_view_count}, #{cs_status}, #{cs_faq_priority}, #{cs_notice_is_pinned}, now(), now(), #{admin_id}
+        )
+  </insert>
+
+	<!-- 공지사항/FAQ 삭제 수정  -->
+	<update id="getAdmBbsUpdate" parameterType="AdmBbsVO">
+		update customer_service_tb
+		set cs_subject = #{cs_subject},
+		    cs_content = #{cs_content},
+				cs_status  = #{cs_status},
+				cs_notice_is_pinned = #{cs_notice_is_pinned},
+				cs_faq_priority = #{cs_faq_priority},
+				admin_id = #{admin_id},
+				cs_upd_dt = now()
+		where cs_id = #{cs_id}
+	</update>
+
+   <!-- 신고 리스트 조회  -->
+	<select id="getAdmCmpList" resultType="AdmCmpVO">
+		select * from report_tb order by report_id asc
+	</select>
+
+
+  <!-- 신고 생성 -->
+	<insert id="getAdmCmpWrite" parameterType="AdmCmpVO">
+        INSERT INTO report_tb (
+            member_id, reported_id, report_type, board_id, report_reason, report_detail, report_status, created_at, resolved_at
+            #{member_id}, #{reported_id}, #{report_type}, #{board_id}, #{report_reason}, #{report_detail}, #{report_status}, #{created_at}, #{resolved_at}
+        )
+  </insert>
+
+	<!-- 신고 수정   -->
+	<update id="getAdmCmpUpdate" parameterType="AdmCmpVO">
+		update report_tb
+		set report_status = #{report_status},
+		    resolved_at = now()
+		where report_id = #{report_id}
+	</update>	
+
+
+   <!-- 판매글 리스트 조회  -->
+	<select id="getAdmPostList" resultType="AdmPostVO">
+		select * from post order by pwr_id asc
+	</select>
+
+   <!-- 판매글 상세 조회  -->
+	<select id="getAdmPostListById" resultType="AdmPostVO">
+		select * from v_post_detail where pwr_id = #{pwr_id}
+	</select>
+
+	<!-- 판매글 수정   -->
+	<update id="getAdmPostUpdate" parameterType="AdmPostVO">
+		update post
+		set status = #{status}
+		where pwr_id = #{pwr_id}
+	</update>		
+
+   <!-- 거래글 리스트 조회  -->
+	<select id="getAdmTransList" resultType="AdmTransVO">
+		select * from v_transaction order by trans_id asc
+	</select>	
+
+   <!-- 따릉이 리스트 조회  -->
+	<select id="getAdmCycleList" resultType="AdmCycleVO">
+		select * from ddareung_tb order by ddr_id asc
+	</select>	
+</mapper>
+
+
+
+
+
+
