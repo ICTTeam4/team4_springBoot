@@ -84,6 +84,7 @@ public class ChatController {
       }
     } // 공통 로직: 채팅방 메시지 가져오기
     List<ChatMessageVO> messages = chatService.getMessagesByRoomId(cvo2.getRoom_id());
+    System.out.println("하윤 업데이트로직"+cvo2);
     chatService.updateIsRead(cvo2.getRoom_id(), buyerId);
     dataVo.setSuccess(true);
     dataVo.setMessage(cvo2.getRoom_id()); // datavo일관성위해서 여기선 message에 룸아이디 반환.
@@ -114,10 +115,12 @@ public class ChatController {
   // 메세지리스트 가져오기. 판매자 ,구매자 포함..... 위는 잘못되었음...
   @GetMapping("/messageListForAll")
   @ResponseBody
-  public List<ChatMessageVO> messageListForAll(@RequestParam("room_id") String room_id) {
+  public List<ChatMessageVO> messageListForAll(@RequestParam("room_id") String room_id,@RequestParam("member_id") String member_id) {
 
     System.out.println("최종룸아이디테스트" + room_id);
+    chatService.updateIsRead(room_id, member_id);
     List<ChatMessageVO> messages = chatService.getMessagesByRoomId(room_id);
+
     return messages; // 메시지 리스트 반환
   }
 
