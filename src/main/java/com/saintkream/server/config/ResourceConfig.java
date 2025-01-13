@@ -19,5 +19,10 @@ public class ResourceConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/uploads/**")
                 .addResourceLocations("file:" + System.getProperty("user.dir") + "/src/main/resources/static/uploads/")
                 .setCachePeriod(3600); // 캐시 기간 1시간
+
+        // /images/** URL 패턴 매핑
+        registry.addResourceHandler("/images/**")
+        .addResourceLocations("file:" + System.getProperty("user.dir") + "/src/main/resources/static/images/")
+        .setCachePeriod(3600); // 캐시 기간 1시간
     }
 }
