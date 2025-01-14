@@ -8,11 +8,12 @@ import org.apache.ibatis.annotations.Param;
 import com.saintkream.server.domain.chatserver.vo.ChatMessageVO;
 import com.saintkream.server.domain.chatserver.vo.ChatRoomVO;
 
+
 @Mapper
 public interface ChatMapper {
-  public ChatRoomVO getOneRoom(ChatRoomVO cvo);
+public ChatRoomVO getOneRoom(ChatRoomVO cvo);
 
-  int getChatRoomInsert(ChatRoomVO cvo);
+int getChatRoomInsert(ChatRoomVO cvo);
 
   int getSelectlastInsert();
 
@@ -23,4 +24,10 @@ public interface ChatMapper {
   int saveMessage(ChatMessageVO messageVO);
 
   public List<ChatMessageVO> getMessagesListByMember_Id(String member_id);
+
+  public List<String> getRoomIdsByMemberId(String member_id);
+
+  public int getRoomIdsByPwrId(int pwr_id);
+  
+  public int saveMedia(ChatMessageVO cvo);
 }

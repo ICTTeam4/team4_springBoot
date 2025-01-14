@@ -27,8 +27,8 @@ public class WishListServiceImpl implements WishListService{
 
  
     @Override
-    public void deleteWishListItem(String id) {
-        mapper.deleteWishListItem(id);
+    public void deleteWishListItem(String member_id, String pwr_id) {
+        mapper.deleteWishListItem(member_id, pwr_id);
     }
 
     @Override

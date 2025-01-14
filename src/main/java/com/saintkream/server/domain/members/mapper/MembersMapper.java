@@ -24,9 +24,16 @@ public interface MembersMapper {
 
     public void updateProfileImage(@Param("email") String email, @Param("imageUrl") String imageUrl); // 마이페이지 이미지 변경경
     public int updatePassword(MembersVO mvo);
+    public int updatePasswordByEmail(MembersVO mvo);
     public int updatePhone(MembersVO mvo);
     public int updateAdvAgree(MembersVO mvo);
     public int  withdrawMember(MembersVO mvo);
     public MembersVO getMemberDetail(String member_id); // 회원 상세 조회
     public MembersVO getPostMemberDetail(String pwr_id); //판매 회원 상세 조회
+
+
+
+    public MembersVO findMemberByPhone(String tel_no);
+    public MembersVO findMemberByEmail(String email);
+
 }

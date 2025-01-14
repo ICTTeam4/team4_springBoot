@@ -15,5 +15,9 @@ public interface ChatService {
    int updateIsRead(String roomId, String memberId);
 
   public List<ChatMessageVO> getMessagesListByMember_Id(String member_id);
+  public List<String> getRoomIdsByMemberId(String member_id);
+  public int saveMedia(ChatMessageVO cvo);
+
+  public int getRoomIdsByPwrId(int pwr_id);
    
 }

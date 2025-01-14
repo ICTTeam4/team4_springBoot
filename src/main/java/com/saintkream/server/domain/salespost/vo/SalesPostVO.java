@@ -28,7 +28,8 @@ public class SalesPostVO {
                 is_delivery,
                 longitude,
                 latitude;
+  // private boolean status;              
   private List<MultipartFile> files;
   private List<FileVO> fileList;
-  private String name;
+  private String nickname;
 }

@@ -11,7 +11,6 @@ import org.springframework.web.util.HtmlUtils;
 import com.saintkream.server.domain.chatserver.service.ChatService;
 import com.saintkream.server.domain.chatserver.vo.ChatMessageToClient;
 import com.saintkream.server.domain.chatserver.vo.ChatMessageToServer;
-
 @Controller
 public class MessageController {
   @Autowired

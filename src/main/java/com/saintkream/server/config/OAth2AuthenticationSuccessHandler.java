@@ -102,7 +102,7 @@ public class OAth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSu
 
                 if (mvo.isNew()) {
                     // **신규**: 회원가입 페이지로 이동
-                    // /signup?email=...&provider=...
+        
                      email = mvo.getEmail() != null ? mvo.getEmail() : "unknown";
                     String redirectUrl = String.format(
                         "http://localhost:3000/register?email=%s&provider=%s",

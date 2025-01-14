@@ -76,7 +76,7 @@ public class MembersController {
             Message message = new Message();
             message.setFrom("010-2826-0931"); // 발신 번호 입력
             message.setTo(phoneNumber);
-            message.setText("인증번호는 153425입니다."); // 여기서 인증번호를 동적으로 생성하여 전송 가능
+            message.setText("인증번호는 240725."); // 여기서 인증번호를 동적으로 생성하여 전송 가능
 
             SingleMessageSentResponse response = messageService.sendOne(new SingleMessageSendingRequest(message));
             System.out.println("SMS 발송 성공: " + response);
@@ -94,7 +94,7 @@ public class MembersController {
     public ResponseEntity<?> verifyPhoneAuth(@RequestParam("phone") String phoneNumber,
             @RequestParam("code") String code) {
         // 인증번호 검증 로직 구현 필요
-        if ("123456".equals(code)) { // 예제에서 인증번호를 123456으로 설정
+        if ("240725".equals(code)) { // 예제에서 인증번호를 123456으로 설정
             return ResponseEntity.ok(Map.of("message", "인증 성공", "status", "success"));
         } else {
             return ResponseEntity.badRequest().body(Map.of("message", "인증번호가 올바르지 않습니다.", "status", "failure"));
@@ -200,7 +200,7 @@ public class MembersController {
         dataVO.setMessage("로그인 성공");
         dataVO.setToken(token);
         dataVO.setData(Map.of(
-            "member_id", membersVO.getMember_id(),  
+            "member_id", membersVO.getMember_id(),
             "email", membersVO.getEmail(),
             "nickname", membersVO.getNickname(),
             "name", membersVO.getName(),
@@ -385,6 +385,31 @@ public ResponseEntity<?> getProfile(@RequestParam("email") String email) {
                     .body(response);
         }
     }
+    @PostMapping("/updatePasswordByEmail")
+    public ResponseEntity<Map<String, Object>> updatePasswordByEmail(@RequestBody MembersVO membersVO) {
+        try {
+            // 비밀번호 암호화
+            System.out.println("----------업데이트 바이 이메일 :"+membersVO.getEmail() +"pw :"+ membersVO.getPassword());
+            String encodedPassword = passwordEncoder.encode(membersVO.getPassword());
+            membersVO.setPassword(encodedPassword);
+
+            // 비밀번호 변경 로직 호출
+            int updateCount = membersService.updatePasswordByEmail(membersVO);
+            System.out.println("--성공확인");
+            return ResponseEntity.ok(Map.of(
+                "message", "회원 조회 성공",
+                "status", "success"
+            ));
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "서버 오류로 인해 비밀번호를 변경할 수 없습니다.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(response);
+        }
+    }
 
     @PostMapping("/updatePhone")
     public ResponseEntity<Map<String, Object>> updatePhone(@RequestBody MembersVO membersVO) {
@@ -499,4 +524,84 @@ public ResponseEntity<?> getProfile(@RequestParam("email") String email) {
     }
     return dataVO;
   }
+
+
+
+
+
+  @PostMapping("/find-email-by-phone")
+  public ResponseEntity<?> findEmailByPhone(@RequestParam("phone") String phone) {
+      log.info("요청 도착 - phone: {}", phone);
+  
+      try {
+          // 데이터베이스에서 tel_no로 조회
+          MembersVO member = membersService.findMemberByPhone(phone);
+          log.info("멤버 받기: {}", member);
+  
+          if (member == null) {
+              log.warn("휴대폰 번호를 찾을 수 없음: {}", phone);
+              return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of(
+                  "message", "해당 번호로 가입된 이메일이 없습니다.",
+                  "status", "failure"
+              ));
+          }
+  
+          // 이메일 일부 마스킹 처리 (예: a****@example.com)
+          String email = member.getEmail();
+        //   String maskedEmail = email.replaceAll("(?<=.{4}).(?=.*@)", "*");
+        //   log.info("마스킹된 이메일: {}", maskedEmail);
+  
+          return ResponseEntity.ok(Map.of(
+              "message", "이메일 찾기 성공",
+              "email", email,
+              "status", "success"
+          ));
+      } catch (Exception e) {
+          log.error("이메일 찾기 중 오류 발생: {}", e.getMessage());
+          return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of(
+              "message", "이메일 조회 중 오류가 발생했습니다.",
+              "status", "failure"
+          ));
+      }
+  }
+  @PostMapping("/match-phone-email")
+  public ResponseEntity<?> checkEmailByPhone(@RequestParam("phone") String phone,@RequestParam("email") String email) {
+      log.info("요청 도착 - phone: {}", phone);
+  
+      try {
+          // 데이터베이스에서 tel_no로 조회
+          MembersVO member1 = membersService.findMemberByPhone(phone);
+          log.info("멤버 받기: {}", member1);
+  
+          if (member1 == null) {
+              log.warn("휴대폰 번호를 찾을 수 없음: {}", phone);
+              return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of(
+                  "message", "해당 번호로 가입된 이메일이 없습니다.",
+                  "status", "failure"
+              ));
+          }
+          MembersVO member2 = membersService.findMemberByPhone(phone);
+
+          if (member1.getMember_id().equals(member2.getMember_id())) {
+
+            return ResponseEntity.ok(Map.of(
+                "message", "회원 조회 성공",
+                "status", "success"
+            ));
+          }
+
+  
+          return ResponseEntity.ok(Map.of(
+              "message", "아이디 또는 전화번호가 다릅니다.",
+              "status", "fail"
+          ));
+      } catch (Exception e) {
+          log.error("이메일 찾기 중 오류 발생: {}", e.getMessage());
+          return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of(
+              "message", "이메일 조회 중 오류가 발생했습니다.",
+              "status", "failure"
+          ));
+      }
+  }
+  
 }

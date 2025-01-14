@@ -22,6 +22,7 @@ public interface MembersService {
   int updateNickname(String email, String newNickname); // 닉네임 업데이트!
 
   public int updatePassword(MembersVO mvo); // 비밀번호 업데이트( 마이페이지)
+  public int updatePasswordByEmail(MembersVO mvo);
   public int updatePhone(MembersVO mvo); // 휴대폰번호 업데이트( 마이페이지)
   public int updateAdvAgree(MembersVO mvo); // 휴대폰번호 업데이트( 마이페이지)
   public int  withdrawMember(MembersVO mvo); // 삭제
@@ -33,5 +34,10 @@ public interface MembersService {
 
 
   public void updateProfileImage(String email, String imageUrl); // 이미지 변경 업데이트
+
+
+
+  public MembersVO findMemberByPhone(String tel_no);
+  public MembersVO findMemberByEmail(String email);
 
 }
